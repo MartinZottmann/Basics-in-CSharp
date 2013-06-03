@@ -10,20 +10,29 @@ namespace MartinZottmann
     {
         public Game game;
 
-        public Window(GraphicsMode mode)
-            : base(800, 600, mode, "Test")
-        {
-            VSync = VSyncMode.On;
-            //WindowState = WindowState.Fullscreen;
-
-            game = new Game(this.ClientSize);
-        }
+        public Window(GraphicsMode mode) : base(800, 600, mode, "Test") { }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            VSync = VSyncMode.On;
+
             // Initialize OpenGL properties
+            GL.ClearColor(System.Drawing.Color.Black);
+            //GL.AlphaFunc(AlphaFunction.Greater, 0.1f);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            //GL.Enable(EnableCap.AlphaTest);
+            GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.PointSmooth);
+            GL.Disable(EnableCap.CullFace);
+            GL.Disable(EnableCap.DepthTest);
+            GL.Disable(EnableCap.Lighting);
+
             // Subscribe to mouse events
+            game = new Game(ClientSize);
+            game.Mouse = Mouse;
+            game.Keyboard = Keyboard;
         }
 
         protected override void OnResize(EventArgs e)
@@ -48,9 +57,22 @@ namespace MartinZottmann
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
+
             if (Keyboard[Key.Escape])
             {
                 Exit();
+            }
+
+            if (Keyboard[Key.F11])
+            {
+                if (WindowState != WindowState.Fullscreen)
+                {
+                    WindowState = WindowState.Fullscreen;
+                }
+                else
+                {
+                    WindowState = WindowState.Normal;
+                }
             }
 
             game.Update(e.Time);

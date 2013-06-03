@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Drawing;
 
-namespace MartinZottmann
+namespace MartinZottmann.Entities
 {
     public class Entity
     {
@@ -22,7 +22,6 @@ namespace MartinZottmann
 
         public virtual void Reposition(float max_x, float max_y)
         {
-
             if (Position.X < 0)
             {
                 Position.X = max_x;
@@ -42,13 +41,12 @@ namespace MartinZottmann
             }
         }
 
-        public virtual void Update(double delta_time)
-        {
-        }
+        public virtual void Update(double delta_time) { }
 
         public virtual void Render(double delta_time)
         {
             GL.PushMatrix();
+            GL.PointSize(2);
             GL.Color3(color);
             GL.Translate(Position.X, Position.Y, 0);
             GL.Begin(BeginMode.Points);

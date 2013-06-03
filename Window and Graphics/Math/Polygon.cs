@@ -1,7 +1,7 @@
 ﻿using OpenTK;
 using System;
 
-namespace MartinZottmann
+namespace MartinZottmann.Math
 {
     class Polygon
     {

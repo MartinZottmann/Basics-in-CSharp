@@ -1,27 +1,13 @@
-﻿using OpenTK;
+﻿using MartinZottmann.Math;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MartinZottmann
+namespace MartinZottmann.Entities
 {
-    class Asteroid : SuperBall
+    class Asteroid : Physical
     {
         public Polygon Polygon = Polygon.Zero;
-
-        public double Angle = 0;
-
-        public double AngleVelocity = 100;
-
-        public override void Update(double delta_time)
-        {
-            base.Update(delta_time);
-
-            Angle += AngleVelocity * delta_time;
-            if (Angle > 359)
-            {
-                Angle -= 360;
-            }
-        }
 
         public override void Render(double delta_time)
         {
@@ -36,6 +22,10 @@ namespace MartinZottmann
             }
             GL.End();
             GL.PopMatrix();
+
+#if DEBUG
+            RenderVelocity(delta_time);
+#endif
         }
     }
 }
