@@ -1,119 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Reflection;
-using System.Threading;
+﻿using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
+using System;
 
 namespace MartinZottmann
 {
-    public partial class Window : Form
+    class Window : GameWindow
     {
-        protected Bitmap back_buffer;
+        public Game game;
 
-        protected Game game;
-
-        protected GameLoop game_loop;
-
-        public Window()
+        public Window(GraphicsMode mode)
+            : base(800, 600, mode, "Test")
         {
-            InitializeComponent();
-            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer, true);
-            //FormBorderStyle = FormBorderStyle.None;
-            ClientSize = new Size(640, 480);
-            BackBuffer();
+            VSync = VSyncMode.On;
+            //WindowState = WindowState.Fullscreen;
 
-            game = new Game(ClientSize);
-            ClientSizeChanged += new EventHandler(Window_ClientSizeChanged);
-            Paint += new PaintEventHandler(Window_Paint);
-
-            //game_loop = new GameLoop(Update);
-            //LostFocus += new EventHandler(Window_LostFocus);
-            //GotFocus += new EventHandler(Window_GotFocus);
-
-            Show();
-
-            Thread t = new Thread(Loop);
-            t.Start();
+            game = new Game(this.ClientSize);
         }
 
-        public void Loop()
+        protected override void OnLoad(EventArgs e)
         {
-            DateTime previous_frame = DateTime.Now;
-            DateTime current_frame;
-            double delta_time;
-            while (Created)
-            {
-                current_frame = DateTime.Now;
-                delta_time = current_frame.Subtract(previous_frame).TotalMilliseconds;
-                previous_frame = current_frame;
-                
-                Console.WriteLine("{0:F}, {1:F}", 1000.0 / delta_time, delta_time);
-
-                Update(delta_time);
-
-                Thread.Sleep(1);
-            }
+            base.OnLoad(e);
+            // Initialize OpenGL properties
+            // Subscribe to mouse events
         }
 
-        public void Update(double delta_time)
+        protected override void OnResize(EventArgs e)
         {
-            game.Update(delta_time);
-            Window_Draw(delta_time);
-        }
+            base.OnResize(e);
 
-        protected void Window_ClientSizeChanged(object sender, EventArgs e)
-        {
-            BackBuffer();
             game.ClientSize = ClientSize;
+
+            // Set up OpenGL viewport
+            int w = Width;
+            int h = Height;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, w, 0, h, -1, 1);
+            GL.Viewport(0, 0, w, h);
+
+            // Set up projection/modelview matrices
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
         }
 
-        protected void BackBuffer()
+        protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            if (back_buffer != null)
+            base.OnUpdateFrame(e);
+            if (Keyboard[Key.Escape])
             {
-                back_buffer.Dispose();
+                Exit();
             }
 
-            back_buffer = new Bitmap(ClientSize.Width, ClientSize.Height);
+            game.Update(e.Time);
+#if DEBUG
+            Accumulate(e.Time * 1000.0);
+#endif
         }
 
-        protected void Window_Paint(object sender, PaintEventArgs e)
+#if DEBUG
+        double accumulator = 0;
+
+        int idleCounter = 0;
+
+        protected void Accumulate(double milliseconds)
         {
-            lock (back_buffer)
+            idleCounter++;
+            accumulator += milliseconds;
+            if (accumulator > 1000)
             {
-                e.Graphics.DrawImageUnscaled(back_buffer, Point.Empty);
+                Console.WriteLine("FPS: {0:F}", idleCounter);
+                idleCounter = 0;
+                accumulator -= 1000;
             }
         }
+#endif
 
-        protected void Window_GotFocus(object sender, EventArgs e)
+        protected override void OnRenderFrame(FrameEventArgs e)
         {
-            game_loop.running = true;
-        }
+            base.OnRenderFrame(e);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-        protected void Window_LostFocus(object sender, EventArgs e)
-        {
-            game_loop.running = false;
-        }
-
-        protected void Window_Draw(double delta_time)
-        {
-            lock (back_buffer)
-            {
-                using (var g = Graphics.FromImage(back_buffer))
-                {
-                    g.SmoothingMode = SmoothingMode.AntiAlias;
-                    game.Draw(delta_time, g);
-                }
-            }
-
-            Invalidate();
+            game.Render(e.Time);
+            SwapBuffers();
         }
     }
 }

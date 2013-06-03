@@ -1,5 +1,5 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using OpenTK.Graphics;
+using System;
 using System.Windows.Forms;
 
 namespace MartinZottmann
@@ -9,9 +9,11 @@ namespace MartinZottmann
         [STAThread]
         static void Main(string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Window());
+            GraphicsMode mode = new GraphicsMode(new OpenTK.Graphics.ColorFormat(32), 24, 0, 2, new OpenTK.Graphics.ColorFormat(32));
+            using (Window game = new Window(mode))
+            {
+                game.Run();
+            }
         }
     }
 }

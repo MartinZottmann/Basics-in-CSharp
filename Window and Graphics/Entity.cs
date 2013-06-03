@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using OpenTK;
+using OpenTK.Graphics.OpenGL;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MartinZottmann
 {
     public class Entity
     {
-        public Vector2 Position { get; set; }
+        public Color color;
 
-        public Entity(Vector2 Position)
-        {
-            this.Position = Position;
-        }
+        protected static Random randomNumber = new Random();
 
-        public Entity(float X, float Y)
-            : this(new Vector2(X, Y))
+        public Vector2d Position = Vector2d.Zero;
+
+        public Entity()
         {
+            KnownColor[] names = (KnownColor[])Enum.GetValues(typeof(KnownColor));
+            KnownColor randomColorName = names[randomNumber.Next(names.Length)];
+            color = Color.FromKnownColor(randomColorName);
         }
 
         public virtual void Reposition(float max_x, float max_y)
@@ -47,9 +46,15 @@ namespace MartinZottmann
         {
         }
 
-        public virtual void Draw(double delta_time, Graphics g)
+        public virtual void Render(double delta_time)
         {
-            g.DrawEllipse(Pens.White, Position.X - 1, Position.Y - 1, 3, 3);
+            GL.PushMatrix();
+            GL.Color3(color);
+            GL.Translate(Position.X, Position.Y, 0);
+            GL.Begin(BeginMode.Points);
+            GL.Vertex2(0, 0);
+            GL.End();
+            GL.PopMatrix();
         }
     }
 }

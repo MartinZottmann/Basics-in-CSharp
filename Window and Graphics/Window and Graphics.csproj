@@ -40,30 +40,24 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameLoop.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Window.cs" />
+    <Compile Include="Polygon.cs" />
+    <Compile Include="Asteroid.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="SuperBall.cs" />
-    <Compile Include="Vector2.cs" />
-    <Compile Include="Window.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Window.Designer.cs">
-      <DependentUpon>Window.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Window.resx">
-      <DependentUpon>Window.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
