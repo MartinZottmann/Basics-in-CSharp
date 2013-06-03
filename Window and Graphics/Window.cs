@@ -3,6 +3,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using System;
+using System.Drawing;
 
 namespace MartinZottmann
 {
@@ -28,6 +29,8 @@ namespace MartinZottmann
             GL.Disable(EnableCap.CullFace);
             GL.Disable(EnableCap.DepthTest);
             GL.Disable(EnableCap.Lighting);
+
+            Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
             // Subscribe to mouse events
             game = new Game(ClientSize);
@@ -106,6 +109,27 @@ namespace MartinZottmann
 
             game.Render(e.Time);
             SwapBuffers();
+        }
+
+        protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
+        {
+            if (e.Key == Key.F12)
+            {
+                string filename = String.Format("screenshot-{0}.png", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fffffff"));
+                Console.WriteLine(filename);
+                GrabScreenshot().Save(filename);
+            }
+        }
+
+        protected Bitmap GrabScreenshot()
+        {
+            Bitmap bmp = new Bitmap(ClientSize.Width, ClientSize.Height);
+            System.Drawing.Imaging.BitmapData data = bmp.LockBits(ClientRectangle, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            GL.ReadPixels(0, 0, ClientSize.Width, ClientSize.Height, PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
+            bmp.UnlockBits(data);
+            bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+            return bmp;
         }
     }
 }
