@@ -3,7 +3,9 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Threading;
 
 namespace MartinZottmann
 {
@@ -12,6 +14,12 @@ namespace MartinZottmann
         public Game game;
 
         public Window(GraphicsMode mode) : base(800, 600, mode, "Test") { }
+
+        public Thread game_thread;
+
+        protected object update_lock = new object();
+
+        protected bool update_resize = false;
 
         protected override void OnLoad(EventArgs e)
         {
@@ -36,58 +44,99 @@ namespace MartinZottmann
             game = new Game(ClientSize);
             game.Mouse = Mouse;
             game.Keyboard = Keyboard;
+
+            Context.MakeCurrent(null);
+
+            game_thread = new Thread(Loop);
+            game_thread.IsBackground = true;
+            game_thread.Start();
         }
 
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            game.ClientSize = ClientSize;
-
-            // Set up OpenGL viewport
-            int w = Width;
-            int h = Height;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(0, 0, w, h);
-
-            // Set up projection/modelview matrices
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
+            lock (update_lock)
+            {
+                update_resize = true;
+            }
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            base.OnUpdateFrame(e);
+            // Do nothing
+        }
 
-            if (Keyboard[Key.Escape])
+        protected override void OnRenderFrame(FrameEventArgs e)
+        {
+            // Do nothing
+
+            Thread.Sleep(1);
+        }
+
+        protected override void OnUnload(EventArgs e)
+        {
+            game_thread.Join();
+
+            MakeCurrent();
+
+            base.OnUnload(e);
+        }
+
+        protected void Loop()
+        {
+            MakeCurrent();
+
+            Stopwatch update_time = new Stopwatch();
+            update_time.Start();
+            Stopwatch render_time = new Stopwatch();
+            render_time.Start();
+
+            while (!IsExiting)
             {
-                Exit();
+                Update(update_time.Elapsed.TotalSeconds);
+                update_time.Restart();
+                Render(render_time.Elapsed.TotalSeconds);
+                render_time.Restart();
             }
 
-            if (Keyboard[Key.F11])
+            Context.MakeCurrent(null);
+        }
+        
+        protected void Update(double delta_time)
+        {
+            lock (update_lock)
             {
-                if (WindowState != WindowState.Fullscreen)
+                if (update_resize)
                 {
-                    WindowState = WindowState.Fullscreen;
-                }
-                else
-                {
-                    WindowState = WindowState.Normal;
+                    game.ClientSize = ClientSize;
+
+                    // Set up OpenGL viewport
+                    int w = Width;
+                    int h = Height;
+                    GL.MatrixMode(MatrixMode.Projection);
+                    GL.LoadIdentity();
+                    GL.Ortho(0, w, 0, h, -1, 1);
+                    GL.Viewport(0, 0, w, h);
+
+                    // Set up projection/modelview matrices
+                    GL.MatrixMode(MatrixMode.Modelview);
+                    GL.LoadIdentity();
+
+                    update_resize = false;
                 }
             }
 
-            game.Update(e.Time);
+            game.Update(delta_time);
 #if DEBUG
-            Accumulate(e.Time * 1000.0);
+            Accumulate(delta_time * 1000.0);
 #endif
         }
 
 #if DEBUG
-        double accumulator = 0;
+        protected double accumulator = 0;
 
-        int idleCounter = 0;
+        protected int idleCounter = 0;
 
         protected void Accumulate(double milliseconds)
         {
@@ -102,17 +151,33 @@ namespace MartinZottmann
         }
 #endif
 
-        protected override void OnRenderFrame(FrameEventArgs e)
+        protected void Render(double delta_time)
         {
-            base.OnRenderFrame(e);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            game.Render(e.Time);
+            game.Render(delta_time);
             SwapBuffers();
         }
 
         protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
         {
+            if (e.Key == Key.Escape)
+            {
+                Exit();
+            }
+
+            if (e.Key == Key.F11)
+            {
+                if (WindowState != WindowState.Fullscreen)
+                {
+                    WindowState = WindowState.Fullscreen;
+                }
+                else
+                {
+                    WindowState = WindowState.Normal;
+                }
+            }
+
             if (e.Key == Key.F12)
             {
                 string filename = String.Format("screenshot-{0}.png", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fffffff"));
