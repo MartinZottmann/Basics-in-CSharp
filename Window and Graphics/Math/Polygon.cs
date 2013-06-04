@@ -7,9 +7,9 @@ namespace MartinZottmann.Math
     {
         public static Polygon Zero { get { return new Polygon(); } }
 
-        public Vector2d[] points;
+        public Vector3d[] points;
 
-        public Vector2d this[int i]
+        public Vector3d this[int i]
         {
             get
             {
@@ -23,7 +23,7 @@ namespace MartinZottmann.Math
 
         public Polygon() { }
 
-        public Polygon(Vector2d[] points)
+        public Polygon(Vector3d[] points)
         {
             this.points = points;
         }

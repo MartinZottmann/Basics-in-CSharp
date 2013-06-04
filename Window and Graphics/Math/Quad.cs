@@ -7,14 +7,14 @@ namespace MartinZottmann.Math
     {
         public static Quad Zero { get { return new Quad(); } }
 
-        public Vector2d[] points = new Vector2d[] {
-            Vector2d.Zero,
-            Vector2d.Zero,
-            Vector2d.Zero,
-            Vector2d.Zero
+        public Vector3d[] points = new Vector3d[] {
+            Vector3d.Zero,
+            Vector3d.Zero,
+            Vector3d.Zero,
+            Vector3d.Zero
         };
 
-        public Vector2d this[int i]
+        public Vector3d this[int i]
         {
             get
             {
@@ -28,7 +28,7 @@ namespace MartinZottmann.Math
 
         public Quad() { }
 
-        public Quad(Vector2d[] points)
+        public Quad(Vector3d[] points)
         {
             this.points = points;
         }

@@ -11,11 +11,13 @@ namespace MartinZottmann
         {
             var img = new Bitmap(1, 1);
             var g = System.Drawing.Graphics.FromImage(img);
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
             size = g.MeasureString(text, font);
             img.Dispose();
             g.Dispose();
             img = new Bitmap((int)size.Width, (int)size.Height);
             g = System.Drawing.Graphics.FromImage(img);
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
             g.Clear(backColor);
 
             Brush textBrush = new SolidBrush(textColor);
@@ -35,6 +37,7 @@ namespace MartinZottmann
         public static int LoadTexture(Bitmap bmp, bool mipmapped)
         {
             int id = GL.GenTexture();
+
             GL.BindTexture(TextureTarget.Texture2D, id);
 
             BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);

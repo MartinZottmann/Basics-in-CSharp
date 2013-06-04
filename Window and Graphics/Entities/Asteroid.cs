@@ -13,13 +13,12 @@ namespace MartinZottmann.Entities
         {
             GL.PushMatrix();
             GL.Color3(color);
-            GL.Translate(Position.X, Position.Y, 0);
-            GL.Rotate(Angle, Vector3d.UnitZ);
+            GL.Translate(Position.X, Position.Y, Position.Z);
+            GL.Rotate(Angle, Vector3d.UnitY);
             GL.Begin(BeginMode.Triangles);
-            foreach (var v in Polygon.points)
-            {
-                GL.Vertex2(v);
-            }
+            GL.Vertex3(Polygon[0]);
+            GL.Vertex3(Polygon[1]);
+            GL.Vertex3(Polygon[2]);
             GL.End();
             GL.PopMatrix();
 

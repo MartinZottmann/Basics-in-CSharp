@@ -55,6 +55,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Grid.cs" />
     <Compile Include="Entities\GUI\Entity.cs" />
     <Compile Include="Entities\GUI\FPSCounter.cs" />
     <Compile Include="Game.cs" />

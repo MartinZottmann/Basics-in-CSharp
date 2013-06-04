@@ -11,7 +11,7 @@ namespace MartinZottmann.Entities
 
         protected static Random randomNumber = new Random();
 
-        public Vector2d Position = Vector2d.Zero;
+        public Vector3d Position = Vector3d.Zero;
 
         public Entity()
         {
@@ -20,24 +20,33 @@ namespace MartinZottmann.Entities
             color = Color.FromKnownColor(randomColorName);
         }
 
-        public virtual void Reposition(float max_x, float max_y)
+        public virtual void Reposition(double max_x, double max_y, double max_z)
         {
-            if (Position.X < 0)
+            if (Position.X < -max_x)
             {
                 Position.X = max_x;
             }
             else if (Position.X > max_x)
             {
-                Position.X = 0;
+                Position.X = -max_x;
             }
 
-            if (Position.Y < 0)
+            if (Position.Y < -max_y)
             {
                 Position.Y = max_y;
             }
             else if (Position.Y > max_y)
             {
-                Position.Y = 0;
+                Position.Y = -max_y;
+            }
+
+            if (Position.Z < -max_z)
+            {
+                Position.Z = max_z;
+            }
+            else if (Position.Z > max_z)
+            {
+                Position.Z = -max_z;
             }
         }
 
@@ -46,11 +55,11 @@ namespace MartinZottmann.Entities
         public virtual void Render(double delta_time)
         {
             GL.PushMatrix();
-            GL.PointSize(2);
+            GL.PointSize(3);
             GL.Color3(color);
-            GL.Translate(Position.X, Position.Y, 0);
+            GL.Translate(Position.X, Position.Y, Position.Z);
             GL.Begin(BeginMode.Points);
-            GL.Vertex2(0, 0);
+            GL.Vertex3(0, 0, 0);
             GL.End();
             GL.PopMatrix();
         }
