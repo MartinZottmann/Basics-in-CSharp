@@ -24,6 +24,8 @@ namespace MartinZottmann
         {
             this.ClientSize = ClientSize;
 
+            entities.Add(new Entities.GUI.FPSCounter());
+
             var asteroid = new Asteroid();
             asteroid.Position.X = ClientSize.Width / 2.0f;
             asteroid.Position.Y = ClientSize.Height / 2.0f;

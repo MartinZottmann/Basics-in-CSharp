@@ -55,11 +55,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\GUI\Entity.cs" />
+    <Compile Include="Entities\GUI\FPSCounter.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Entities\Physical.cs" />
     <Compile Include="Entities\Textured.cs" />
+    <Compile Include="Graphics.cs" />
     <Compile Include="Math\Quad.cs" />
-    <Compile Include="ThreadedRendering.cs" />
     <Compile Include="Window.cs" />
     <Compile Include="Math\Polygon.cs" />
     <Compile Include="Entities\Asteroid.cs" />
