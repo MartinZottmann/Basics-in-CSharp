@@ -23,11 +23,10 @@ namespace MartinZottmann.Game.State
         public override void Load()
         {
             camera = new Camera(Window);
+            camera.MouseLook = true;
             camera.Position.X = 100;
             camera.Position.Y = 10;
             camera.Position.Z = 100;
-            camera.LookAt.X = -1;
-            camera.LookAt.Z = -1;
 
             entities.Add(new Entities.GUI.FPSCounter());
 
@@ -55,79 +54,53 @@ namespace MartinZottmann.Game.State
             {
                 entities.Add(new SuperBall());
             }
-
-            System.Windows.Forms.Cursor.Hide();
-
-            Window.Mouse.Move += new System.EventHandler<MouseMoveEventArgs>(UpdateCamera);
         }
 
         public override void Unload()
         {
-            System.Windows.Forms.Cursor.Show();
-
             entities.Clear();
-        }
-
-        int mouse_x_delta;
-
-        int mouse_y_delta;
-
-        private void UpdateCamera(object sender, MouseMoveEventArgs e)
-        {
-            mouse_x_delta = e.XDelta;
-            mouse_y_delta = e.YDelta;
-            System.Windows.Forms.Cursor.Position = Window.PointToScreen(
-                new System.Drawing.Point(
-                    (Window.ClientRectangle.Left + Window.ClientRectangle.Right) / 2,
-                    (Window.ClientRectangle.Top + Window.ClientRectangle.Bottom) / 2
-                )
-            );
         }
 
         public override void Update(double delta_time)
         {
             if (Window.Keyboard[Key.W])
             {
-                steerable.Velocity.Y += 100 * delta_time;
+                camera.Position -= camera.Direction * delta_time * 100;
+                //steerable.Velocity.Y += 100 * delta_time;
             }
             if (Window.Keyboard[Key.S])
             {
-                steerable.Velocity.Y -= 100 * delta_time;
+                camera.Position += camera.Direction * delta_time * 100;
+                //steerable.Velocity.Y -= 100 * delta_time;
             }
             if (Window.Keyboard[Key.A])
             {
-                steerable.Velocity.X -= 100 * delta_time;
+                camera.Position += camera.Right * delta_time * 100;
+                //steerable.Velocity.X -= 100 * delta_time;
             }
             if (Window.Keyboard[Key.D])
             {
-                steerable.Velocity.X += 100 * delta_time;
+                camera.Position -= camera.Right * delta_time * 100;
+                //steerable.Velocity.X += 100 * delta_time;
             }
             if (Window.Keyboard[Key.F])
             {
-                camera.RotateLookAtAroundUp(delta_time);
+                camera.RotateDirectionAroundUp(delta_time);
             }
             if (Window.Keyboard[Key.H])
             {
-                camera.RotateLookAtAroundUp(-delta_time);
+                camera.RotateDirectionAroundUp(-delta_time);
             }
             if (Window.Keyboard[Key.T])
             {
-                camera.RotateLookAtAroundRight(delta_time);
+                camera.RotateDirectionAroundRight(delta_time);
             }
             if (Window.Keyboard[Key.G])
             {
-                camera.RotateLookAtAroundRight(-delta_time);
+                camera.RotateDirectionAroundRight(-delta_time);
             }
-            if (mouse_x_delta != 0)
-            {
-                camera.RotateLookAtAroundUp(mouse_x_delta * delta_time * 0.1);
-                mouse_x_delta = 0;
-            }
-            if (mouse_y_delta != 0)
-            {
-                camera.RotateLookAtAroundRight(mouse_y_delta * delta_time * 0.1);
-                mouse_y_delta = 0;
-            }
+
+            camera.Update(delta_time);
 
             foreach (Entity entity in entities)
             {
