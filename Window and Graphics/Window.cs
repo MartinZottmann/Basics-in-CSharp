@@ -11,13 +11,11 @@ namespace MartinZottmann
 {
     class Window : GameWindow
     {
-        public Game game;
+        public MartinZottmann.Game.Game game;
 
         public Window(GraphicsMode mode) : base(800, 600, mode, "Test") { }
 
         public Thread game_thread;
-
-        protected Entities.GUI.FPSCounter fps_counter = new Entities.GUI.FPSCounter();
 
         protected override void OnLoad(EventArgs e)
         {
@@ -39,9 +37,7 @@ namespace MartinZottmann
             Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
             // Subscribe to mouse events
-            game = new Game();
-            game.Mouse = Mouse;
-            game.Keyboard = Keyboard;
+            game = new MartinZottmann.Game.Game(this);
 
             Context.MakeCurrent(null);
 
@@ -82,76 +78,16 @@ namespace MartinZottmann
 
             while (!IsExiting)
             {
-                Update(update_time.Elapsed.TotalSeconds);
+                game.Update(update_time.Elapsed.TotalSeconds);
                 update_time.Reset();
                 update_time.Start();
 
-                Render(render_time.Elapsed.TotalSeconds);
+                game.Render(render_time.Elapsed.TotalSeconds);
                 render_time.Reset();
                 render_time.Start();
             }
 
             Context.MakeCurrent(null);
-        }
-
-        protected static Random randomNumber = new Random();
-
-        protected Vector3d camera_position = new Vector3d(100, 100, 100);
-
-        protected Vector3d camera_velocity = Vector3d.Zero;
-        
-        protected void Update(double delta_time)
-        {
-            camera_position += camera_velocity * delta_time;
-            camera_velocity += new Vector3d(
-                (randomNumber.NextDouble() - 0.5) * 10.0 * delta_time,
-                (randomNumber.NextDouble() - 0.5) * 10.0 * delta_time,
-                (randomNumber.NextDouble() - 0.5) * 10.0 * delta_time
-            );
-            camera_velocity += (Vector3d.Zero - camera_position) * delta_time / 1000;
-
-            fps_counter.Update(delta_time);
-
-            game.Update(delta_time);
-        }
-
-        protected void Render(double delta_time)
-        {
-            #region 3D
-            GL.PushMatrix();
-            GL.MatrixMode(MatrixMode.Projection);
-            Matrix4 projection_matrix;
-            projection_matrix = OpenTK.Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, Width / (float)Height, 0.1f, 1000.0f);
-            GL.LoadMatrix(ref projection_matrix);
-
-            GL.PushMatrix();
-            GL.MatrixMode(MatrixMode.Modelview);
-            Matrix4 modelview_matrix = Matrix4.LookAt((Vector3)camera_position, Vector3.Zero, Vector3.UnitY);
-            GL.LoadMatrix(ref modelview_matrix);
-
-            game.Render(delta_time);
-
-            GL.PopMatrix();
-            GL.PopMatrix();
-            #endregion
-
-            #region 2D
-            GL.PushMatrix();
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, Width, 0, Height, -1, 1);
-            GL.Viewport(0, 0, Width, Height);
-            GL.PushMatrix();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-
-            fps_counter.Render(delta_time);
-
-            GL.PopMatrix();
-            GL.PopMatrix();
-            #endregion
-
-            SwapBuffers();
         }
 
         protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
