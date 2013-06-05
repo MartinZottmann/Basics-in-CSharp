@@ -28,19 +28,20 @@ namespace MartinZottmann.Entities
             GL.Translate(Position.X, Position.Y, Position.Z);
             GL.Rotate(Angle, Vector3d.UnitY);
             GL.Enable(EnableCap.Texture2D);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.BindTexture(TextureTarget.Texture2D, texture_id);
             GL.Begin(BeginMode.Quads);
 
-            GL.TexCoord2(0, 0);
+            GL.TexCoord2(0, 1);
             GL.Vertex3(quad[0]);
 
-            GL.TexCoord2(1, 0);
+            GL.TexCoord2(1, 1);
             GL.Vertex3(quad[1]);
 
-            GL.TexCoord2(1, 1);
+            GL.TexCoord2(1, 0);
             GL.Vertex3(quad[2]);
 
-            GL.TexCoord2(0, 1);
+            GL.TexCoord2(0, 0);
             GL.Vertex3(quad[3]);
 
             GL.End();

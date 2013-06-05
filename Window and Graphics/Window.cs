@@ -30,8 +30,8 @@ namespace MartinZottmann
             GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.PointSmooth);
-            //GL.Disable(EnableCap.CullFace);
-            //GL.Disable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
+            GL.Enable(EnableCap.DepthTest);
             GL.Disable(EnableCap.Lighting);
 
             Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);

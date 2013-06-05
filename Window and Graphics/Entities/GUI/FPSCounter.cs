@@ -45,20 +45,21 @@ namespace MartinZottmann.Entities.GUI
             GL.Color3(Color.Transparent);
             GL.Translate(Position.X, Position.Y, Position.Z);
             GL.Enable(EnableCap.Texture2D);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.BindTexture(TextureTarget.Texture2D, texture_id);
             GL.Begin(BeginMode.Quads);
 
-            GL.TexCoord2(0, 0);
-            GL.Vertex3(0, size.Height, 0);
-
-            GL.TexCoord2(1, 0);
-            GL.Vertex3(size.Width, size.Height, 0);
+            GL.TexCoord2(0, 1);
+            GL.Vertex3(0, 0, 0);
 
             GL.TexCoord2(1, 1);
             GL.Vertex3(size.Width, 0, 0);
 
-            GL.TexCoord2(0, 1);
-            GL.Vertex3(0, 0, 0);
+            GL.TexCoord2(1, 0);
+            GL.Vertex3(size.Width, size.Height, 0);
+
+            GL.TexCoord2(0, 0);
+            GL.Vertex3(0, size.Height, 0);
 
             GL.End();
             GL.Disable(EnableCap.Texture2D);

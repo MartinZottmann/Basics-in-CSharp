@@ -24,7 +24,7 @@ namespace MartinZottmann.Game.State
         {
             camera = new Camera(Window);
             camera.MouseLook = true;
-            camera.Position.X = 100;
+            camera.Position.X = 10;
             camera.Position.Y = 10;
             camera.Position.Z = 100;
 
