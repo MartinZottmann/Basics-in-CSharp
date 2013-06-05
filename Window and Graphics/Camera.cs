@@ -36,7 +36,7 @@ namespace MartinZottmann
 
         public float Near = 0.1f;
 
-        public float Far = 1000.0f;
+        public float Far = System.Single.MaxValue;
 
         GameWindow Window { get; set; }
 

@@ -59,6 +59,7 @@
     <Compile Include="Entities\Grid.cs" />
     <Compile Include="Entities\GUI\Entity.cs" />
     <Compile Include="Entities\GUI\FPSCounter.cs" />
+    <Compile Include="Entities\Starfield.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Entities\Physical.cs" />
     <Compile Include="Entities\Textured.cs" />

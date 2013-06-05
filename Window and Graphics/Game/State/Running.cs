@@ -32,6 +32,8 @@ namespace MartinZottmann.Game.State
 
             entities.Add(new Grid());
 
+            entities.Add(new Starfield());
+
             var asteroid = new Asteroid();
             asteroid.Polygon = new Polygon(
                 new Vector3d[] {

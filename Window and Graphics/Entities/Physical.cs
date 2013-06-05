@@ -38,38 +38,36 @@ namespace MartinZottmann.Entities
             RenderVelocity(delta_time);
         }
 
-        public virtual void RenderVelocity(double delta_time) {
+        public virtual void RenderVelocity(double delta_time)
+        {
             GL.PushMatrix();
-            GL.PointSize(1);
-            GL.Begin(BeginMode.Lines);
-            GL.Color4(color.R, color.G, color.B, (byte)127);
-            GL.Vertex3(Position);
-            GL.Vertex3(Position + Velocity);
-            GL.Color4(1, 1, 1, 0.2);
-            GL.Vertex3(Position);
-            GL.Vertex3(Position.X, 0, Position.Z);
+            {
+                GL.PointSize(1);
+                GL.Begin(BeginMode.Lines);
+                {
+                    #region Velocity
+                    GL.Color4(color.R, color.G, color.B, (byte)127);
+                    GL.Vertex3(Position);
+                    GL.Vertex3(Position + Velocity);
+                    #endregion
 
-            double R = 100;
-            Vector3d c = Vector3d.Zero;
-            Vector3d v = new Vector3d(Position.X, 0, Position.Z) - c;
-            Vector3d a = c + v / v.Length * R;
-            double cX = 0;
-            double cY = 0;
-            double cZ = 0;
-            double vX = Position.X - cX;
-            double vY = 0 - cY;
-            double vZ = Position.Z - cZ;
-            double magV = System.Math.Sqrt(vX * vX + vZ * vZ);
-            double aX = cX + vX / magV * R;
-            double aZ = cZ + vZ / magV * R;
+                    #region Contact to circle
+                    GL.Color4(1, 1, 1, 0.2);
+                    GL.Vertex3(Position);
+                    var position_on_y = new Vector3d(Position.X, 0, Position.Z);
+                    GL.Vertex3(position_on_y);
 
-            GL.Vertex3(Position.X, 0, Position.Z);
-            GL.Vertex3(aX, 0, aZ);
+                    double radius = 100;
+                    Vector3d center = Vector3d.Zero;
+                    Vector3d difference = position_on_y - center;
+                    Vector3d contact = center + difference / difference.Length * radius;
 
-            //GL.Vertex3(0, -Position.Y, 0);
-            //GL.Vertex3(a);
-
-            GL.End();
+                    GL.Vertex3(position_on_y);
+                    GL.Vertex3(contact);
+                    #endregion
+                }
+                GL.End();
+            }
             GL.PopMatrix();
         }
 #endif

@@ -24,15 +24,18 @@ namespace MartinZottmann
             VSync = VSyncMode.On;
 
             // Initialize OpenGL properties
-            GL.ClearColor(System.Drawing.Color.Black);
             GL.AlphaFunc(AlphaFunction.Greater, 0.1f);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.ClearColor(System.Drawing.Color.Black);
+            //GL.CullFace(CullFaceMode.Back);
             GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.PointSmooth);
-            GL.Enable(EnableCap.CullFace);
+            GL.Disable(EnableCap.CullFace);
             GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Less);
             GL.Disable(EnableCap.Lighting);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
@@ -86,6 +89,14 @@ namespace MartinZottmann
                 render_time.Reset();
                 render_time.Start();
             }
+
+#if DEBUG
+            var error = GL.GetError();
+            if (error != ErrorCode.NoError)
+            {
+                Console.WriteLine("OpenGL Error: {0}", error);
+            }
+#endif
 
             Context.MakeCurrent(null);
         }

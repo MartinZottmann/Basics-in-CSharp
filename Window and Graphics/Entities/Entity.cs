@@ -55,12 +55,17 @@ namespace MartinZottmann.Entities
         public virtual void Render(double delta_time)
         {
             GL.PushMatrix();
-            GL.PointSize(3);
-            GL.Color3(color);
-            GL.Translate(Position.X, Position.Y, Position.Z);
-            GL.Begin(BeginMode.Points);
-            GL.Vertex3(0, 0, 0);
-            GL.End();
+            {
+                GL.PointSize(3);
+                GL.Translate(Position.X, Position.Y, Position.Z);
+
+                GL.Begin(BeginMode.Points);
+                {
+                    GL.Color3(color);
+                    GL.Vertex3(0, 0, 0);
+                }
+                GL.End();
+            }
             GL.PopMatrix();
         }
     }
