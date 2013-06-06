@@ -31,7 +31,7 @@ namespace MartinZottmann.Entities.GUI
                         GL.DeleteTexture(texture_id);
                     }
                     //Console.WriteLine("FPS: {0:F}", counter);
-                    texture_id = MartinZottmann.Graphics.LoadTexture(String.Format("FPS: {0:F}", counter), new Font("Courier", 9f, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.White, Color.Transparent, false, out size);
+                    texture_id = MartinZottmann.Graphics.Graphics.LoadTexture(String.Format("FPS: {0:F}", counter), new Font("Courier", 9f, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.White, Color.Transparent, false, out size);
                 }
                 fps = counter;
                 counter = 0;

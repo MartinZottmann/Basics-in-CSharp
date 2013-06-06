@@ -18,7 +18,7 @@ namespace MartinZottmann.Entities
         public Textured()
             : base()
         {
-            texture_id = Graphics.LoadTexture(texture_filename, false);
+            texture_id = MartinZottmann.Graphics.Graphics.LoadTexture(texture_filename, false);
         }
 
         public override void Render(double delta_time)

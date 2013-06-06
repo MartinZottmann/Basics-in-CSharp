@@ -65,7 +65,9 @@
     <Compile Include="Entities\Textured.cs" />
     <Compile Include="Game\State\GameState.cs" />
     <Compile Include="Game\State\Running.cs" />
-    <Compile Include="Graphics.cs" />
+    <Compile Include="Graphics\Graphics.cs" />
+    <Compile Include="Graphics\Entity.cs" />
+    <Compile Include="Graphics\Vertex.cs" />
     <Compile Include="Math\Quad.cs" />
     <Compile Include="Window.cs" />
     <Compile Include="Math\Polygon.cs" />
