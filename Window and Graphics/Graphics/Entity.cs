@@ -11,27 +11,46 @@ namespace MartinZottmann.Graphics
 
         public Vertex3[] vertices;
 
-        public int[] colors;
+        public Color4[] colors;
+
+        // normals, texture_coordinates, lightmap
 
         public uint vertex_buffer_object_id;
 
         public uint vertex_array_object_id;
 
-        public int[] elements;
+        public uint[] elements;
 
         public uint element_buffer_object_id;
 
         public void Load()
         {
+#if DEBUG
+            //System.Diagnostics.Debug.Assert(vertices.Length == colors.Length);
+            int size;
+#endif
             #region Vertex Buffer Object
             GL.GenBuffers(1, out vertex_buffer_object_id);
             GL.BindBuffer(BufferTarget.ArrayBuffer, vertex_buffer_object_id);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertices.Length * BlittableValueType.StrideOf(vertices)), vertices, BufferUsageHint.StaticDraw);
+            var vertices_size = vertices == null ? 0 : vertices.Length * BlittableValueType.StrideOf(vertices);
+            var colors_size = colors == null ? 0 : colors.Length * BlittableValueType.StrideOf(colors);
+            var offset = 0;
+
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertices_size + colors_size), IntPtr.Zero, BufferUsageHint.StaticDraw);
 #if DEBUG
-            int size;
             GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out size);
-            System.Diagnostics.Debug.Assert(vertices.Length * BlittableValueType.StrideOf(vertices) == size);
+            System.Diagnostics.Debug.Assert(vertices_size + colors_size == size);
 #endif
+            if (vertices != null)
+            {
+                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)offset, (IntPtr)vertices_size, vertices);
+                offset += vertices_size;
+            }
+            if (colors != null)
+            {
+                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)offset, (IntPtr)colors_size, colors);
+                offset += colors_size;
+            }
             #endregion
 
             #region Element Buffer Object
@@ -46,10 +65,22 @@ namespace MartinZottmann.Graphics
             #region Vertex Array Object
             GL.GenVertexArrays(1, out vertex_array_object_id);
             GL.BindVertexArray(vertex_array_object_id);
-            GL.EnableVertexAttribArray(0);
-            //GL.EnableVertexAttribArray(1);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, BlittableValueType.StrideOf(vertices), 0);
-            //GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, BlittableValueType.StrideOf(vertices), sizeof(float) * 3);
+            var vertex_attribute = 0;
+            offset = 0;
+            if (vertices != null)
+            {
+                GL.EnableVertexAttribArray(vertex_attribute);
+                GL.VertexAttribPointer(vertex_attribute, 3, VertexAttribPointerType.Float, false, BlittableValueType.StrideOf(vertices), offset);
+                vertex_attribute++;
+                offset += vertices_size;
+            }
+            if (colors != null)
+            {
+                GL.EnableVertexAttribArray(vertex_attribute);
+                GL.VertexAttribPointer(vertex_attribute, 4, VertexAttribPointerType.Float, false, BlittableValueType.StrideOf(colors), offset);
+                vertex_attribute++;
+                offset += colors_size;
+            }
             GL.BindVertexArray(0);
             #endregion
         }
@@ -75,11 +106,14 @@ namespace MartinZottmann.Graphics
         {
             //GL.UseProgram(...);
             GL.BindVertexArray(vertex_array_object_id);
+            //GL.VertexPointer(3, VertexPointerType.Float, 0, 0);
 
             if (elements == null)
             {
-                //GL.EnableClientState(ArrayCap.VertexArray);
-                //GL.BindBuffer(BufferTarget.ArrayBuffer, vertex_buffer_object_id);
+                GL.EnableClientState(ArrayCap.VertexArray);
+                GL.EnableClientState(ArrayCap.ColorArray);
+                GL.VertexPointer(3, VertexPointerType.Float, BlittableValueType.StrideOf(vertices), 0);
+                GL.ColorPointer(4, ColorPointerType.Float, BlittableValueType.StrideOf(colors), vertices.Length);
                 GL.DrawArrays(mode, 0, vertices.Length);
             }
             else
