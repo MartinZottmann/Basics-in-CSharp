@@ -85,6 +85,14 @@ namespace MartinZottmann.Game.State
                 camera.Position -= camera.Right * delta_time * 100;
                 //steerable.Velocity.X += 100 * delta_time;
             }
+            if (Window.Keyboard[Key.Space])
+            {
+                camera.Position += camera.Up * delta_time * 100;
+            }
+            if (Window.Keyboard[Key.ShiftLeft])
+            {
+                camera.Position -= camera.Up * delta_time * 100;
+            }
             if (Window.Keyboard[Key.F])
             {
                 camera.RotateDirectionAroundUp(delta_time);

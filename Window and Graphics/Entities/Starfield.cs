@@ -16,8 +16,7 @@ namespace MartinZottmann.Entities
             : base()
         {
             graphic = new Graphics.Entity();
-            graphic.program = new Graphics.Program();
-            using (var shader = new Shader(ShaderType.VertexShader, @"
+            using (var vertex_shader = new Shader(ShaderType.VertexShader, @"
 #version 150
 precision highp float;
 
@@ -30,25 +29,32 @@ void main(void) {
     ex_Color = in_Color;
 }
             "))
-            {
-                graphic.program.AttachShader(shader);
-                graphic.program.BindAttribLocation(0, "in_Position");
-                graphic.program.BindAttribLocation(1, "in_Color");
-            }
-            using (var shader = new Shader(ShaderType.FragmentShader, @"
+            using (var fragment_shader = new Shader(ShaderType.FragmentShader, @"
 #version 150
 precision highp float;
 
 in  vec4 ex_Color;
 
+//uniform float delta_time;
+
 void main(void) {
+    //gl_FragColor = vec4(ex_Color.r, ex_Color.g, ex_Color.b, delta_time);
     gl_FragColor = ex_Color;
 }
             "))
-            {
-                graphic.program.AttachShader(shader);
-            }
-            graphic.program.Link();
+                graphic.program = new Graphics.Program(
+                    new Shader[] {
+                        vertex_shader,
+                        fragment_shader
+                    },
+                    new string[] {
+                        "in_Position",
+                        "in_Color"
+                    //},
+                    //new string[] {
+                    //    "delta_time"
+                    }
+                );
             graphic.mode = BeginMode.Points;
             graphic.vertices = new Graphics.Vertex3[num_stars];
             graphic.colors = new MartinZottmann.Graphics.Color4[num_stars];
@@ -64,6 +70,12 @@ void main(void) {
             }
             graphic.Load();
         }
+
+        //public override void Update(double delta_time)
+        //{
+        //    using (new Bind(graphic.program))
+        //        graphic.program.uniform_location[0].Set((float)randomNumber.NextDouble());
+        //}
 
         public override void Render(double delta_time)
         {

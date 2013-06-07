@@ -108,7 +108,7 @@ namespace MartinZottmann.Graphics
         {
             if (program != null)
             {
-                program.Push();
+                program.Bind();
             }
             GL.BindVertexArray(vertex_array_object_id);
 
@@ -124,7 +124,7 @@ namespace MartinZottmann.Graphics
             GL.BindVertexArray(0);
             if (program != null)
             {
-                program.Pop();
+                program.UnBind();
             }
         }
     }

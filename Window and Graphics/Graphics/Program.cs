@@ -3,48 +3,53 @@ using System;
 
 namespace MartinZottmann.Graphics
 {
-    public class Program : IDisposable
+    public class Program : IBindable, IDisposable
     {
         public int id;
 
-        public Program()
+        public UniformLocation[] uniform_location;
+
+        public Program(Shader[] shaders, string[] attribute_location_names = null, string[] uniform_location_names = null)
         {
             id = GL.CreateProgram();
-        }
 
-        public void AttachShader(int shader)
-        {
-            GL.AttachShader(id, shader);
-        }
+            foreach (var shader in shaders)
+            {
+                GL.AttachShader(id, shader.id);
+            }
 
-        public void AttachShader(Shader shader)
-        {
-            GL.AttachShader(id, shader.id);
-        }
+            if (attribute_location_names != null)
+            {
+                for (int i = 0; i < attribute_location_names.Length; i++)
+                {
+                    GL.BindAttribLocation(id, i, attribute_location_names[i]);
+                }
+            }
 
-        public void BindAttribLocation(int index, string name)
-        {
-            GL.BindAttribLocation(id, index, name);
-        }
-
-        public void Link()
-        {
             GL.LinkProgram(id);
+
+            if (uniform_location_names != null)
+            {
+                var n = uniform_location_names.Length;
+                uniform_location = new UniformLocation[n];
+                for (int i = 0; i < n; i++)
+                {
+                    uniform_location[i] = new UniformLocation(this, uniform_location_names[i]);
+                }
+            }
 #if DEBUG
             string info_log;
             GL.GetProgramInfoLog(id, out info_log);
             Console.Error.WriteLine(info_log);
 #endif
-
-            // we could delete the shaders here
         }
 
-        public void Push()
+        public void Bind()
         {
             GL.UseProgram(id);
         }
 
-        public void Pop()
+        public void UnBind()
         {
             GL.UseProgram(0);
         }

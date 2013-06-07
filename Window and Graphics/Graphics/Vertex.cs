@@ -1,6 +1,4 @@
-﻿using OpenTK;
-
-namespace MartinZottmann.Graphics
+﻿namespace MartinZottmann.Graphics
 {
     public struct Vertex3 
     {
