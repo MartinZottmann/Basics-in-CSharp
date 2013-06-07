@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using MartinZottmann.Graphics;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Drawing;
@@ -15,6 +16,38 @@ namespace MartinZottmann.Entities
             : base()
         {
             graphic = new Graphics.Entity();
+            graphic.program = new Graphics.Program();
+            using (var shader = new Shader(ShaderType.VertexShader, @"
+#version 150
+in  vec3 in_Position;
+in  vec4 in_Color;
+out vec4 ex_Color;
+
+void main(void) {
+    gl_Position = vec4(in_Position, 1.0);
+    ex_Color = in_Color;
+}
+            "))
+            {
+                graphic.program.AttachShader(shader);
+                graphic.program.BindAttribLocation(0, "in_Position");
+                graphic.program.BindAttribLocation(1, "in_Color");
+            }
+            using (var shader = new Shader(ShaderType.FragmentShader, @"
+#version 150
+precision highp float;
+
+in  vec4 ex_Color;
+out vec4 gl_FragColor;
+
+void main(void) {
+    gl_FragColor = ex_Color;
+}
+            "))
+            {
+                graphic.program.AttachShader(shader);
+            }
+            graphic.program.Link();
             graphic.mode = BeginMode.Points;
             graphic.vertices = new Graphics.Vertex3[num_stars];
             graphic.colors = new MartinZottmann.Graphics.Color4[num_stars];

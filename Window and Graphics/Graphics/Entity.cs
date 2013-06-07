@@ -9,6 +9,8 @@ namespace MartinZottmann.Graphics
     {
         public BeginMode mode = BeginMode.Triangles;
 
+        public Program program;
+
         public Vertex3[] vertices;
 
         public Color4[] colors;
@@ -104,26 +106,26 @@ namespace MartinZottmann.Graphics
 
         public void Draw()
         {
-            //GL.UseProgram(...);
+            if (program != null)
+            {
+                program.Use();
+            }
             GL.BindVertexArray(vertex_array_object_id);
-            //GL.VertexPointer(3, VertexPointerType.Float, 0, 0);
 
             if (elements == null)
             {
-                GL.EnableClientState(ArrayCap.VertexArray);
-                GL.EnableClientState(ArrayCap.ColorArray);
-                GL.VertexPointer(3, VertexPointerType.Float, BlittableValueType.StrideOf(vertices), 0);
-                GL.ColorPointer(4, ColorPointerType.Float, BlittableValueType.StrideOf(colors), vertices.Length);
                 GL.DrawArrays(mode, 0, vertices.Length);
             }
             else
             {
-                //GL.BindBuffer(BufferTarget.ElementArrayBuffer, element_buffer_object_id);
                 GL.DrawElements(mode, elements.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
             }
 
             GL.BindVertexArray(0);
-            //GL.UseProgram(0);
+            if (program != null)
+            {
+                program.Unuse();
+            }
         }
     }
 }

@@ -120,37 +120,43 @@ namespace MartinZottmann.Game.State
 
             #region 3D
             GL.PushMatrix();
-            GL.MatrixMode(MatrixMode.Projection);
-            var projection_matrix = camera.ProjectionMatrix();
-            GL.LoadMatrix(ref projection_matrix);
-
-            GL.PushMatrix();
-            GL.MatrixMode(MatrixMode.Modelview);
-            var modelview_matrix = camera.ModelviewMatrix();
-            GL.LoadMatrix(ref modelview_matrix);
-
-            foreach (Entity entity in entities)
             {
-                entity.Render(delta_time);
-            }
+                GL.MatrixMode(MatrixMode.Projection);
+                var projection_matrix = camera.ProjectionMatrix();
+                GL.LoadMatrix(ref projection_matrix);
 
-            GL.PopMatrix();
+                GL.PushMatrix();
+                {
+                    GL.MatrixMode(MatrixMode.Modelview);
+                    var modelview_matrix = camera.ModelviewMatrix();
+                    GL.LoadMatrix(ref modelview_matrix);
+
+                    foreach (Entity entity in entities)
+                    {
+                        entity.Render(delta_time);
+                    }
+                }
+                GL.PopMatrix();
+            }
             GL.PopMatrix();
             #endregion
 
             #region 2D
             GL.PushMatrix();
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, Window.Width, 0, Window.Height, -1, 1);
-            GL.Viewport(0, 0, Window.Width, Window.Height);
-            GL.PushMatrix();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
+            {
+                GL.MatrixMode(MatrixMode.Projection);
+                GL.LoadIdentity();
+                GL.Ortho(0, Window.Width, 0, Window.Height, -1, 1);
+                GL.Viewport(0, 0, Window.Width, Window.Height);
+                GL.PushMatrix();
+                {
+                    GL.MatrixMode(MatrixMode.Modelview);
+                    GL.LoadIdentity();
 
-            fps_counter.Render(delta_time);
-
-            GL.PopMatrix();
+                    fps_counter.Render(delta_time);
+                }
+                GL.PopMatrix();
+            }
             GL.PopMatrix();
             #endregion
 

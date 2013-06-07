@@ -90,14 +90,6 @@ namespace MartinZottmann
                 render_time.Start();
             }
 
-#if DEBUG
-            var error = GL.GetError();
-            if (error != ErrorCode.NoError)
-            {
-                Console.WriteLine("OpenGL Error: {0}", error);
-            }
-#endif
-
             Context.MakeCurrent(null);
         }
 
