@@ -39,12 +39,12 @@ namespace MartinZottmann.Graphics
             // we could delete the shaders here
         }
 
-        public void Use()
+        public void Push()
         {
             GL.UseProgram(id);
         }
 
-        public void Unuse()
+        public void Pop()
         {
             GL.UseProgram(0);
         }
