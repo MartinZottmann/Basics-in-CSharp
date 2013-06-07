@@ -19,12 +19,14 @@ namespace MartinZottmann.Entities
             graphic.program = new Graphics.Program();
             using (var shader = new Shader(ShaderType.VertexShader, @"
 #version 150
+precision highp float;
+
 in  vec3 in_Position;
 in  vec4 in_Color;
 out vec4 ex_Color;
 
 void main(void) {
-    gl_Position = vec4(in_Position, 1.0);
+    gl_Position = ftransform();
     ex_Color = in_Color;
 }
             "))
@@ -38,7 +40,6 @@ void main(void) {
 precision highp float;
 
 in  vec4 ex_Color;
-out vec4 gl_FragColor;
 
 void main(void) {
     gl_FragColor = ex_Color;

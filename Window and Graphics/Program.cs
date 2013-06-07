@@ -17,7 +17,7 @@ namespace MartinZottmann
                 game.Run();
             }
 #if DEBUG
-            Console.ReadLine();
+            Console.ReadKey();
 #endif
         }
 

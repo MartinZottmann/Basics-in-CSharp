@@ -88,6 +88,9 @@ namespace MartinZottmann
                 game.Render(render_time.Elapsed.TotalSeconds);
                 render_time.Reset();
                 render_time.Start();
+#if DEBUG
+                MartinZottmann.Program.OpenGLDebug();
+#endif
             }
 
             Context.MakeCurrent(null);

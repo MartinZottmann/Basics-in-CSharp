@@ -119,15 +119,15 @@ namespace MartinZottmann.Game.State
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             #region 3D
+            GL.MatrixMode(MatrixMode.Projection);
             GL.PushMatrix();
             {
-                GL.MatrixMode(MatrixMode.Projection);
                 var projection_matrix = camera.ProjectionMatrix();
                 GL.LoadMatrix(ref projection_matrix);
 
+                GL.MatrixMode(MatrixMode.Modelview);
                 GL.PushMatrix();
                 {
-                    GL.MatrixMode(MatrixMode.Modelview);
                     var modelview_matrix = camera.ModelviewMatrix();
                     GL.LoadMatrix(ref modelview_matrix);
 
@@ -136,27 +136,31 @@ namespace MartinZottmann.Game.State
                         entity.Render(delta_time);
                     }
                 }
+                GL.MatrixMode(MatrixMode.Modelview);
                 GL.PopMatrix();
             }
+            GL.MatrixMode(MatrixMode.Projection);
             GL.PopMatrix();
             #endregion
 
             #region 2D
+            GL.MatrixMode(MatrixMode.Projection);
             GL.PushMatrix();
             {
-                GL.MatrixMode(MatrixMode.Projection);
                 GL.LoadIdentity();
                 GL.Ortho(0, Window.Width, 0, Window.Height, -1, 1);
                 GL.Viewport(0, 0, Window.Width, Window.Height);
+                GL.MatrixMode(MatrixMode.Modelview);
                 GL.PushMatrix();
                 {
-                    GL.MatrixMode(MatrixMode.Modelview);
                     GL.LoadIdentity();
 
                     fps_counter.Render(delta_time);
                 }
+                GL.MatrixMode(MatrixMode.Modelview);
                 GL.PopMatrix();
             }
+            GL.MatrixMode(MatrixMode.Projection);
             GL.PopMatrix();
             #endregion
 

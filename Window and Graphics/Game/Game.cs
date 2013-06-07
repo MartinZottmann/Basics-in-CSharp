@@ -22,6 +22,9 @@ namespace MartinZottmann.Game
 
             state = new Running(window);
             state.Load();
+#if DEBUG
+            MartinZottmann.Program.OpenGLDebug();
+#endif
         }
 
         public void Update(double delta_time)
