@@ -4,19 +4,43 @@ using System;
 
 namespace MartinZottmann.Graphics
 {
-    class VertexBufferObject : IBindable, IDisposable
+    public struct VertexObject
+    {
+        public Vertex3[] vertices;
+
+        public Color4[] colors;
+    }
+
+    public struct VertexData
+    {
+        public Vertex3 position;
+
+        public Color4 color;
+    }
+
+    public class VertexBufferObject : IBindable, IDisposable
     {
         public uint id;
 
         public BufferTarget target;
 
-        public VertexBufferObject(BufferTarget target, dynamic[] data)
+        public VertexObject vertex_object;
+
+        public VertexBufferObject(BufferTarget target, VertexObject vertex_object, BufferUsageHint usage_hint = BufferUsageHint.StaticDraw)
         {
             this.target = target;
+            this.vertex_object = vertex_object;
+
             GL.GenBuffers(1, out id);
             using (new Bind(this))
             {
-                GL.BufferData(target, (IntPtr)(data.Length * BlittableValueType.StrideOf(data)), IntPtr.Zero, BufferUsageHint.StaticDraw);
+                var vertices_size = vertex_object.vertices.Length * BlittableValueType.StrideOf(vertex_object.vertices);
+                var colors_size = vertex_object.colors.Length * BlittableValueType.StrideOf(vertex_object.colors);
+                var size = vertices_size + colors_size;
+                GL.BufferData(target, (IntPtr)size, (IntPtr)null, BufferUsageHint.StaticDraw);
+                var offset = 0;
+                new SubBuffer<Vertex3>(target, ref offset, ref vertex_object.vertices);
+                new SubBuffer<Color4>(target, ref offset, ref vertex_object.colors);
             }
         }
 
