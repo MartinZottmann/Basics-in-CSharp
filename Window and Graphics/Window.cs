@@ -23,6 +23,14 @@ namespace MartinZottmann
 
             VSync = VSyncMode.On;
 
+            Console.WriteLine("Vendor: {0}", GL.GetString(StringName.Vendor));
+            Console.WriteLine("Renderer: {0}", GL.GetString(StringName.Renderer));
+            Console.WriteLine("Version: {0}", GL.GetString(StringName.Version));
+            Console.WriteLine("GLSL: {0}", GL.GetString(StringName.ShadingLanguageVersion));
+            int info;
+            GL.GetInteger(GetPName.NumExtensions, out info);
+            Console.WriteLine("Num. Extensions: {0}", info);
+
             // Initialize OpenGL properties
             GL.AlphaFunc(AlphaFunction.Greater, 0.1f);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
