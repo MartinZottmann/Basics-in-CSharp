@@ -17,8 +17,7 @@ namespace MartinZottmann.Entities
         {
             graphic = new Graphics.Entity();
             using (var vertex_shader = new Shader(ShaderType.VertexShader, @"
-#version 150
-precision highp float;
+#version 330 core
 
 in  vec3 in_Position;
 in  vec4 in_Color;
@@ -30,15 +29,11 @@ void main(void) {
 }
             "))
             using (var fragment_shader = new Shader(ShaderType.FragmentShader, @"
-#version 150
-precision highp float;
+#version 330 core
 
 in  vec4 ex_Color;
 
-//uniform float delta_time;
-
 void main(void) {
-    //gl_FragColor = vec4(ex_Color.r, ex_Color.g, ex_Color.b, delta_time);
     gl_FragColor = ex_Color;
 }
             "))
@@ -50,9 +45,6 @@ void main(void) {
                     new string[] {
                         "in_Position",
                         "in_Color"
-                    //},
-                    //new string[] {
-                    //    "delta_time"
                     }
                 );
             graphic.mode = BeginMode.Points;
@@ -70,12 +62,6 @@ void main(void) {
             }
             graphic.Load();
         }
-
-        //public override void Update(double delta_time)
-        //{
-        //    using (new Bind(graphic.program))
-        //        graphic.program.uniform_location[0].Set((float)randomNumber.NextDouble());
-        //}
 
         public override void Render(double delta_time)
         {
