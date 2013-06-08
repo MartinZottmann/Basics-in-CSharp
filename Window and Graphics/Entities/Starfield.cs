@@ -48,17 +48,16 @@ void main(void) {
                     }
                 );
             graphic.mode = BeginMode.Points;
-            graphic.vertices = new Graphics.Vertex3[num_stars];
-            graphic.colors = new MartinZottmann.Graphics.Color4[num_stars];
+            graphic.vertex_data = new VertexData[num_stars];
             for (int i = 0; i < num_stars; i++)
             {
-                graphic.vertices[i].x = randomNumber.Next(-1000, 1000);
-                graphic.vertices[i].y = randomNumber.Next(-1000, 1000);
-                graphic.vertices[i].z = randomNumber.Next(-1000, 1000);
-                graphic.colors[i].r = (float)randomNumber.NextDouble();
-                graphic.colors[i].g = (float)randomNumber.NextDouble();
-                graphic.colors[i].b = (float)randomNumber.NextDouble();
-                graphic.colors[i].a = (float)randomNumber.NextDouble();
+                graphic.vertex_data[i].position.x = randomNumber.Next(-1000, 1000);
+                graphic.vertex_data[i].position.y = randomNumber.Next(-1000, 1000);
+                graphic.vertex_data[i].position.z = randomNumber.Next(-1000, 1000);
+                graphic.vertex_data[i].color.r = (float)randomNumber.NextDouble();
+                graphic.vertex_data[i].color.g = (float)randomNumber.NextDouble();
+                graphic.vertex_data[i].color.b = (float)randomNumber.NextDouble();
+                graphic.vertex_data[i].color.a = (float)randomNumber.NextDouble();
             }
             graphic.Load();
         }

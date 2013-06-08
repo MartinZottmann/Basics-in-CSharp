@@ -10,14 +10,23 @@ namespace MartinZottmann.Graphics
 
         public BufferTarget target;
 
+        public T[] data;
+
+        public int stride;
+
+        public int size;
+
         public BufferObject(BufferTarget target, T[] data, BufferUsageHint usage_hint = BufferUsageHint.StaticDraw)
         {
             this.target = target;
+            this.data = data;
+            stride = BlittableValueType.StrideOf(data);
+            size = data.Length * stride;
 
             GL.GenBuffers(1, out id);
             using (new Bind(this))
             {
-                GL.BufferData(target, (IntPtr)(data.Length * BlittableValueType.StrideOf(data)), data, usage_hint);
+                GL.BufferData(target, (IntPtr)size, data, usage_hint);
             }
         }
 

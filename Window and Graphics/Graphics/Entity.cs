@@ -11,15 +11,11 @@ namespace MartinZottmann.Graphics
 
         public Program program;
 
-        public VertexObject vertex_object;
-
-        public Vertex3[] vertices;
-
-        public Color4[] colors;
+        public VertexData[] vertex_data;
 
         // normals, texture_coordinates, lightmap
 
-        public VertexBufferObject vbo;
+        public BufferObject<VertexData> vbo;
 
         public VertexArrayObject vao;
 
@@ -29,21 +25,18 @@ namespace MartinZottmann.Graphics
 
         public void Load()
         {
-            vertex_object = new VertexObject();
-            vertex_object.vertices = vertices;
-            vertex_object.colors = colors;
-            vbo = new VertexBufferObject(BufferTarget.ArrayBuffer, vertex_object);
+            vbo = new BufferObject<VertexData>(BufferTarget.ArrayBuffer, vertex_data);
+            //vbo = new VertexBufferObject(BufferTarget.ArrayBuffer, vertex_data);
 
             if (elements == null)
             {
-                vao = new VertexArrayObject(vbo);
+                vao = new VertexArrayObject<VertexData>(vbo);
             }
             else
             {
                 eao = new BufferObject<uint>(BufferTarget.ElementArrayBuffer, elements);
-                // @todo vao = new VertexArrayObject(eao);
+                vao = new VertexArrayObject<uint>(eao);
             }
-
         }
 
         public void Unload()
@@ -64,7 +57,7 @@ namespace MartinZottmann.Graphics
             using (new Bind(vao))
                 if (elements == null)
                 {
-                    GL.DrawArrays(mode, 0, vertices.Length);
+                    GL.DrawArrays(mode, 0, vertex_data.Length);
                 }
                 else
                 {

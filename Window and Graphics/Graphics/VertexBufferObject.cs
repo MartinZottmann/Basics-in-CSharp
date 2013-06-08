@@ -4,20 +4,6 @@ using System;
 
 namespace MartinZottmann.Graphics
 {
-    public struct VertexObject
-    {
-        public Vertex3[] vertices;
-
-        public Color4[] colors;
-    }
-
-    public struct VertexData
-    {
-        public Vertex3 position;
-
-        public Color4 color;
-    }
-
     public class VertexBufferObject : IBindable, IDisposable
     {
         public uint id;
