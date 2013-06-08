@@ -21,9 +21,6 @@ namespace MartinZottmann.Graphics
             Debug.Assert(id != -1, "GetUniformBlockIndex failed");
             int size;
             GL.GetActiveUniformBlock(program.id, id, ActiveUniformBlockParameter.UniformBlockDataSize, out size);
-#if DEBUG
-            MartinZottmann.Program.OpenGLDebug();
-#endif
         }
     }
 }

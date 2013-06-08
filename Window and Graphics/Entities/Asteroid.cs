@@ -1,4 +1,5 @@
 ﻿using MartinZottmann.Math;
+using MartinZottmann.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -7,7 +8,64 @@ namespace MartinZottmann.Entities
 {
     class Asteroid : Physical
     {
-        public Polygon Polygon = Polygon.Zero;
+        Graphics.Entity graphic;
+
+        public Asteroid()
+            : base()
+        {
+            graphic = new Graphics.Entity();
+            graphic.vertex_data = new VertexData[]
+            {
+                new VertexData(-1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
+                new VertexData( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 0.0f, 1.0f),
+                new VertexData( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f),
+                new VertexData(-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f),
+                new VertexData(-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f),
+                new VertexData( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f),
+                new VertexData( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f),
+                new VertexData(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f)
+            };
+            graphic.elements = new uint[] {
+                0, 1, 2, 2, 3, 0,
+                3, 2, 6, 6, 7, 3,
+                7, 6, 5, 5, 4, 7,
+                4, 0, 3, 3, 7, 4,
+                0, 1, 5, 5, 4, 0,
+                1, 5, 6, 6, 2, 1
+            };
+            using (var vertex_shader = new Shader(ShaderType.VertexShader, @"
+#version 330 core
+
+in  vec3 in_Position;
+in  vec4 in_Color;
+out vec4 ex_Color;
+
+void main(void) {
+    gl_Position = ftransform();
+    ex_Color = in_Color;
+}
+            "))
+            using (var fragment_shader = new Shader(ShaderType.FragmentShader, @"
+#version 330 core
+
+in  vec4 ex_Color;
+
+void main(void) {
+    gl_FragColor = ex_Color;
+}
+            "))
+                graphic.program = new Graphics.Program(
+                    new Shader[] {
+                        vertex_shader,
+                        fragment_shader
+                    },
+                    new string[] {
+                        "in_Position",
+                        "in_Color"
+                    }
+                );
+            graphic.Load();
+        }
 
         public override void Render(double delta_time)
         {
@@ -16,14 +74,7 @@ namespace MartinZottmann.Entities
                 GL.Rotate(Angle, Vector3d.UnitY);
                 GL.Translate(Position.X, Position.Y, Position.Z);
 
-                GL.Begin(BeginMode.Triangles);
-                {
-                    GL.Color3(color);
-                    GL.Vertex3(Polygon[0]);
-                    GL.Vertex3(Polygon[1]);
-                    GL.Vertex3(Polygon[2]);
-                }
-                GL.End();
+                graphic.Draw();
             }
             GL.PopMatrix();
 

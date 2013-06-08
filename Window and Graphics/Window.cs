@@ -29,7 +29,11 @@ namespace MartinZottmann
             Console.WriteLine("GLSL: {0}", GL.GetString(StringName.ShadingLanguageVersion));
             int info;
             GL.GetInteger(GetPName.NumExtensions, out info);
-            Console.WriteLine("Num. Extensions: {0}", info);
+            Console.WriteLine("{0}: {1}", GetPName.NumExtensions, info);
+            GL.GetInteger(GetPName.Multisample, out info);
+            Console.WriteLine("{0}: {1}", GetPName.Multisample, info);
+            GL.GetInteger(GetPName.Samples, out info);
+            Console.WriteLine("{0}: {1}", GetPName.Samples, info);
 
             // Initialize OpenGL properties
             GL.AlphaFunc(AlphaFunction.Greater, 0.1f);
@@ -96,9 +100,6 @@ namespace MartinZottmann
                 game.Render(render_time.Elapsed.TotalSeconds);
                 render_time.Reset();
                 render_time.Start();
-#if DEBUG
-                MartinZottmann.Program.OpenGLDebug();
-#endif
             }
 
             Context.MakeCurrent(null);

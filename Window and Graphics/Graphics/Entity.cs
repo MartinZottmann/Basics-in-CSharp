@@ -27,42 +27,31 @@ namespace MartinZottmann.Graphics
         {
             vbo = new BufferObject<VertexData>(BufferTarget.ArrayBuffer, vertex_data);
             //vbo = new VertexBufferObject(BufferTarget.ArrayBuffer, vertex_data);
+            vao = new VertexArrayObject<VertexData>(vbo);
 
-            if (elements == null)
-            {
-                vao = new VertexArrayObject<VertexData>(vbo);
-            }
-            else
-            {
+            if (elements != null)
                 eao = new BufferObject<uint>(BufferTarget.ElementArrayBuffer, elements);
-                vao = new VertexArrayObject<uint>(eao);
-            }
         }
 
         public void Unload()
         {
-            vao.Dispose();
-
             if (eao != null)
-            {
                 eao.Dispose();
-            }
+
+            vao.Dispose();
 
             vbo.Dispose();
         }
 
         public void Draw()
         {
-            using (new Bind(program))
+            using (program == null ? null : new Bind(program))
             using (new Bind(vao))
                 if (elements == null)
-                {
                     GL.DrawArrays(mode, 0, vertex_data.Length);
-                }
                 else
-                {
-                    GL.DrawElements(mode, elements.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
-                }
+                    using (new Bind(eao))
+                        GL.DrawElements(mode, elements.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
     }
 }

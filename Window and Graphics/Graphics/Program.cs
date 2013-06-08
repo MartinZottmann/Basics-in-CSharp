@@ -28,9 +28,21 @@ namespace MartinZottmann.Graphics
 
             GL.LinkProgram(id);
 #if DEBUG
-            string info_log;
-            GL.GetProgramInfoLog(id, out info_log);
-            Console.Error.WriteLine(info_log);
+            OpenGL.Info.ProgramParameters(id);
+
+            int info;
+            GL.GetProgram(id, ProgramParameter.InfoLogLength, out info);
+            if (info != 0)
+            {
+                string info_log;
+                GL.GetProgramInfoLog(id, out info_log);
+                throw new Exception(info_log);
+            }
+            GL.GetProgram(id, ProgramParameter.LinkStatus, out info);
+            if (info != 1)
+            {
+                throw new Exception("LinkProgram failed");
+            }
 #endif
         }
 
@@ -71,11 +83,7 @@ namespace MartinZottmann.Graphics
             }
             Console.WriteLine("Program Information for name {0}", id);
 
-            foreach (ProgramParameter parameter in (ProgramParameter[])Enum.GetValues(typeof(ProgramParameter)))
-            {
-                GL.GetProgram(id, parameter, out info);
-                Console.WriteLine("{0}: {1}", parameter, info);
-            }
+            OpenGL.Info.ProgramParameters(id);
 
             Console.WriteLine("ActiveUniforms {");
             GL.GetProgram(id, ProgramParameter.ActiveUniforms, out count);

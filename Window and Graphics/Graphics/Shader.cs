@@ -16,15 +16,21 @@ namespace MartinZottmann.Graphics
             GL.ShaderSource(id, source);
             GL.CompileShader(id);
 #if DEBUG
-            string info_log;
-            GL.GetShaderInfoLog(id, out info_log);
-            Console.WriteLine(info_log);
+            OpenGL.Info.Shader(id);
 
-            int compile_result;
-            GL.GetShader(id, ShaderParameter.CompileStatus, out compile_result);
-            if (compile_result != 1)
+            int info;
+            GL.GetShader(id, ShaderParameter.InfoLogLength, out info);
+            if (info != 0)
             {
-                Console.Error.WriteLine("Compile error: {0}", compile_result);
+                string info_log;
+                GL.GetShaderInfoLog(id, out info_log);
+                Console.WriteLine(info_log);
+            }
+
+            GL.GetShader(id, ShaderParameter.CompileStatus, out info);
+            if (info != 1)
+            {
+                throw new Exception("CompileShader failed");
             }
 #endif
         }
