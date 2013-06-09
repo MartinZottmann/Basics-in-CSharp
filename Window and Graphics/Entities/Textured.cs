@@ -1,4 +1,6 @@
-﻿using MartinZottmann.Math;
+﻿using MartinZottmann.Graphics;
+using MartinZottmann.Graphics.OpenGL;
+using MartinZottmann.Math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -13,19 +15,19 @@ namespace MartinZottmann.Entities
 
         protected string texture_filename = "res/textures/pointer.png";
 
-        protected int texture_id;
+        protected Texture texture;
 
         public Textured()
             : base()
         {
-            texture_id = MartinZottmann.Graphics.Graphics.LoadTexture(texture_filename, false);
+            texture = new Texture(texture_filename, false);
         }
 
         public override void Render(double delta_time)
         {
             GL.PushMatrix();
+            using (new Bind(texture))
             {
-                GL.BindTexture(TextureTarget.Texture2D, texture_id);
                 GL.Enable(EnableCap.Texture2D);
                 GL.Rotate(Angle, Vector3d.UnitY);
                 GL.Translate(Position.X, Position.Y, Position.Z);

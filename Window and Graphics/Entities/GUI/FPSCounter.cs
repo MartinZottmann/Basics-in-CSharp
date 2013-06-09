@@ -1,4 +1,6 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using MartinZottmann.Graphics;
+using MartinZottmann.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Drawing;
 
@@ -14,7 +16,7 @@ namespace MartinZottmann.Entities.GUI
 
         protected SizeF size;
 
-        protected int texture_id;
+        public Texture texture;
 
         public FPSCounter() : base() { }
 
@@ -26,12 +28,9 @@ namespace MartinZottmann.Entities.GUI
             {
                 if (fps != counter)
                 {
-                    if (texture_id != 0)
-                    {
-                        GL.DeleteTexture(texture_id);
-                    }
-                    //Console.WriteLine("FPS: {0:F}", counter);
-                    texture_id = MartinZottmann.Graphics.Graphics.LoadTexture(String.Format("FPS: {0:F}", counter), new Font("Courier", 9f, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.White, Color.Transparent, false, out size);
+                    if (texture != null)
+                        texture.Dispose();
+                    texture = new Texture(String.Format("FPS: {0:F}", counter), new Font("Courier", 9f, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.White, Color.Transparent, false, out size);
                 }
                 fps = counter;
                 counter = 0;
@@ -42,32 +41,33 @@ namespace MartinZottmann.Entities.GUI
         public override void Render(double delta_time)
         {
             GL.PushMatrix();
-            {
-                GL.BindTexture(TextureTarget.Texture2D, texture_id);
-                GL.Enable(EnableCap.Texture2D);
-                GL.Translate(Position.X, Position.Y, Position.Z);
-
-                GL.Begin(BeginMode.Quads);
+            if (texture != null)
+                using (new Bind(texture))
                 {
-                    GL.Color3(Color.Transparent);
+                    GL.Enable(EnableCap.Texture2D);
+                    GL.Translate(Position.X, Position.Y, Position.Z);
 
-                    GL.TexCoord2(0, 1);
-                    GL.Vertex3(0, 0, 0);
+                    GL.Begin(BeginMode.Quads);
+                    {
+                        GL.Color3(Color.Transparent);
 
-                    GL.TexCoord2(1, 1);
-                    GL.Vertex3(size.Width, 0, 0);
+                        GL.TexCoord2(0, 1);
+                        GL.Vertex3(0, 0, 0);
 
-                    GL.TexCoord2(1, 0);
-                    GL.Vertex3(size.Width, size.Height, 0);
+                        GL.TexCoord2(1, 1);
+                        GL.Vertex3(size.Width, 0, 0);
 
-                    GL.TexCoord2(0, 0);
-                    GL.Vertex3(0, size.Height, 0);
+                        GL.TexCoord2(1, 0);
+                        GL.Vertex3(size.Width, size.Height, 0);
 
+                        GL.TexCoord2(0, 0);
+                        GL.Vertex3(0, size.Height, 0);
+
+                    }
+                    GL.End();
+
+                    GL.Disable(EnableCap.Texture2D);
                 }
-                GL.End();
-
-                GL.Disable(EnableCap.Texture2D);
-            }
             GL.PopMatrix();
         }
     }

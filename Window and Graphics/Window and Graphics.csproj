@@ -67,12 +67,12 @@
     <Compile Include="Game\State\Running.cs" />
     <Compile Include="Graphics\Bind.cs" />
     <Compile Include="Graphics\Color.cs" />
-    <Compile Include="Graphics\Graphics.cs" />
     <Compile Include="Graphics\OpenGL\Entity.cs" />
     <Compile Include="Graphics\IBindable.cs" />
     <Compile Include="Graphics\OpenGL\Info.cs" />
     <Compile Include="Graphics\OpenGL\Program.cs" />
     <Compile Include="Graphics\OpenGL\Shader.cs" />
+    <Compile Include="Graphics\OpenGL\Texture.cs" />
     <Compile Include="Graphics\SubBuffer.cs" />
     <Compile Include="Graphics\OpenGL\UniformBlockIndex.cs" />
     <Compile Include="Graphics\OpenGL\UniformLocation.cs" />
