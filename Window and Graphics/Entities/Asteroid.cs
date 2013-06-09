@@ -1,5 +1,5 @@
-﻿using MartinZottmann.Math;
-using MartinZottmann.Graphics;
+﻿using MartinZottmann.Graphics;
+using MartinZottmann.Graphics.OpenGL;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -8,12 +8,12 @@ namespace MartinZottmann.Entities
 {
     class Asteroid : Physical
     {
-        Graphics.Entity graphic;
+        Graphics.OpenGL.Entity graphic;
 
         public Asteroid()
             : base()
         {
-            graphic = new Graphics.Entity();
+            graphic = new Graphics.OpenGL.Entity();
             graphic.vertex_data = new VertexData[]
             {
                 new VertexData(-1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
@@ -54,7 +54,7 @@ void main(void) {
     gl_FragColor = ex_Color;
 }
             "))
-                graphic.program = new Graphics.Program(
+                graphic.program = new Graphics.OpenGL.Program(
                     new Shader[] {
                         vertex_shader,
                         fragment_shader

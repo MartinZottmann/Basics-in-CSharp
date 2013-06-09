@@ -2,7 +2,7 @@
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MartinZottmann.Graphics
+namespace MartinZottmann.Graphics.OpenGL
 {
     public class BufferObject<T> : IBindable, IDisposable where T : struct
     {

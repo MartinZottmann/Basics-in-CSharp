@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics;
 
-namespace MartinZottmann.Graphics
+namespace MartinZottmann.Graphics.OpenGL
 {
     public class Program : IBindable, IDisposable
     {

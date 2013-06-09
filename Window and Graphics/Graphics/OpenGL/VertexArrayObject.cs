@@ -2,7 +2,7 @@
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MartinZottmann.Graphics
+namespace MartinZottmann.Graphics.OpenGL
 {
     public abstract class VertexArrayObject : IBindable, IDisposable
     {

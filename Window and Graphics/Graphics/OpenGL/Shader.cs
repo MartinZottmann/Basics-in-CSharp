@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MartinZottmann.Graphics
+namespace MartinZottmann.Graphics.OpenGL
 {
     public class Shader : IDisposable
     {

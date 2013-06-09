@@ -1,4 +1,5 @@
 ﻿using MartinZottmann.Graphics;
+using MartinZottmann.Graphics.OpenGL;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -10,12 +11,12 @@ namespace MartinZottmann.Entities
     {
         const int num_stars = 100000;
 
-        Graphics.Entity graphic;
+        Graphics.OpenGL.Entity graphic;
 
         public Starfield()
             : base()
         {
-            graphic = new Graphics.Entity();
+            graphic = new Graphics.OpenGL.Entity();
             using (var vertex_shader = new Shader(ShaderType.VertexShader, @"
 #version 330 core
 
@@ -37,7 +38,7 @@ void main(void) {
     gl_FragColor = ex_Color;
 }
             "))
-                graphic.program = new Graphics.Program(
+                graphic.program = new Graphics.OpenGL.Program(
                     new Shader[] {
                         vertex_shader,
                         fragment_shader
