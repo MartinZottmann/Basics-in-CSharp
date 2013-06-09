@@ -42,11 +42,17 @@ namespace MartinZottmann
             //GL.CullFace(CullFaceMode.Back);
             GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
-            GL.Enable(EnableCap.PointSmooth);
-            GL.Disable(EnableCap.CullFace);
             GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.LineSmooth);
+            GL.Enable(EnableCap.PointSmooth);
+            GL.Enable(EnableCap.PolygonSmooth);
             GL.DepthFunc(DepthFunction.Less);
+            GL.Disable(EnableCap.CullFace);
             GL.Disable(EnableCap.Lighting);
+            GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
+            GL.Hint(HintTarget.PointSmoothHint, HintMode.Nicest);
+            GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
+            GL.Hint(HintTarget.TextureCompressionHint, HintMode.Nicest);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
