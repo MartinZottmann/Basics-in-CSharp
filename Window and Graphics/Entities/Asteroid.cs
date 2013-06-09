@@ -33,25 +33,26 @@ namespace MartinZottmann.Entities
                 0, 1, 5, 5, 4, 0,
                 1, 5, 6, 6, 2, 1
             };
+            graphic.texture = new Texture("res/textures/debug-256.png", false, TextureTarget.Texture2D);
             using (var vertex_shader = new Shader(ShaderType.VertexShader, @"
 #version 330 core
 
-in  vec3 in_Position;
-in  vec4 in_Color;
-out vec4 ex_Color;
+//in vec3 in_Position;
+//in vec4 in_Color;
 
-void main(void) {
+void main(void)
+{
     gl_Position = ftransform();
-    ex_Color = in_Color;
 }
             "))
             using (var fragment_shader = new Shader(ShaderType.FragmentShader, @"
 #version 330 core
 
-in  vec4 ex_Color;
+uniform sampler2D in_Texture;
 
-void main(void) {
-    gl_FragColor = ex_Color;
+void main(void)
+{
+    gl_FragColor = texture(in_Texture, gl_TexCoord[0].st);
 }
             "))
                 graphic.program = new Graphics.OpenGL.Program(
@@ -64,6 +65,9 @@ void main(void) {
                         "in_Color"
                     }
                 );
+            var in_texture = graphic.program.AddUniformLocation("in_Texture");
+            in_texture.Set(0);
+            //in_texture.Set(graphic.texture.id);
             graphic.Load();
         }
 
@@ -71,6 +75,7 @@ void main(void) {
         {
             GL.PushMatrix();
             {
+                GL.Color3(color);
                 GL.Rotate(Angle, Vector3d.UnitY);
                 GL.Translate(Position.X, Position.Y, Position.Z);
 

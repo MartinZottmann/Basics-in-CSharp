@@ -28,7 +28,6 @@ namespace MartinZottmann.Entities
             GL.PushMatrix();
             using (new Bind(texture))
             {
-                GL.Enable(EnableCap.Texture2D);
                 GL.Rotate(Angle, Vector3d.UnitY);
                 GL.Translate(Position.X, Position.Y, Position.Z);
 
@@ -49,8 +48,6 @@ namespace MartinZottmann.Entities
                     GL.Vertex3(quad[3]);
                 }
                 GL.End();
-
-                GL.Disable(EnableCap.Texture2D);
             }
             GL.PopMatrix();
 

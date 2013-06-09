@@ -11,6 +11,8 @@ namespace MartinZottmann.Graphics.OpenGL
 
         public Program program;
 
+        public Texture texture;
+
         public VertexData[] vertex_data;
 
         // normals, texture_coordinates, lightmap
@@ -46,6 +48,7 @@ namespace MartinZottmann.Graphics.OpenGL
         public void Draw()
         {
             using (program == null ? null : new Bind(program))
+            using (texture == null ? null : new Bind(texture))
             using (new Bind(vao))
                 if (elements == null)
                     GL.DrawArrays(mode, 0, vertex_data.Length);

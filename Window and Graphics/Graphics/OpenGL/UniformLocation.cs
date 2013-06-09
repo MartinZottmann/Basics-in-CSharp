@@ -20,6 +20,12 @@ namespace MartinZottmann.Graphics.OpenGL
             Debug.Assert(id != -1, "GetUniformLocation failed");
         }
 
+        public void Set(int v0)
+        {
+            using (new Bind(program))
+                GL.Uniform1(id, v0);
+        }
+
         public void Set(float v0)
         {
             using (new Bind(program))

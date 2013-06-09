@@ -29,6 +29,7 @@ namespace MartinZottmann.Graphics.OpenGL
             GL.LinkProgram(id);
 #if DEBUG
             OpenGL.Info.ProgramParameters(id);
+            //Info();
 
             int info;
             GL.GetProgram(id, ProgramParameter.InfoLogLength, out info);
@@ -116,12 +117,19 @@ namespace MartinZottmann.Graphics.OpenGL
             }
             Console.WriteLine("}");
 
+            Console.WriteLine("ActiveAttributes {");
+            GL.GetProgram(id, ProgramParameter.ActiveAttributes, out count);
+            ActiveAttribType type;
+            for (int i = 0; i < count; i++)
+            {
+                GL.GetActiveAttrib(id, i, out info, out type);
+                Console.WriteLine("\t{0}: {1}: {2}", i, info, type);
+            }
+            Console.WriteLine("}");
+
             Console.WriteLine("Shaders {");
             GL.GetProgram(id, ProgramParameter.AttachedShaders, out count);
-            Console.WriteLine(count);
             GL.GetAttachedShaders(id, count, out count, out shaders);
-            Console.WriteLine(count);
-            Console.WriteLine(shaders);
             for (int i = 0; i < count; i++)
             {
                 GL.GetShader(shaders + i, ShaderParameter.ShaderType, out info);

@@ -14,7 +14,8 @@ namespace MartinZottmann.Graphics.OpenGL
             id = GL.CreateShader(type);
 
             GL.ShaderSource(id, source);
-            GL.CompileShader(id);
+            try { GL.CompileShader(id); }
+            catch (Exception) { }
 #if DEBUG
             OpenGL.Info.Shader(id);
 

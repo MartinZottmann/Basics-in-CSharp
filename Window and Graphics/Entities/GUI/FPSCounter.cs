@@ -44,7 +44,6 @@ namespace MartinZottmann.Entities.GUI
             if (texture != null)
                 using (new Bind(texture))
                 {
-                    GL.Enable(EnableCap.Texture2D);
                     GL.Translate(Position.X, Position.Y, Position.Z);
 
                     GL.Begin(BeginMode.Quads);
@@ -65,8 +64,6 @@ namespace MartinZottmann.Entities.GUI
 
                     }
                     GL.End();
-
-                    GL.Disable(EnableCap.Texture2D);
                 }
             GL.PopMatrix();
         }
