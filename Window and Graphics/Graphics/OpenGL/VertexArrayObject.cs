@@ -19,22 +19,22 @@ namespace MartinZottmann.Graphics.OpenGL
 
         public VertexArrayObject(BufferObject<T> vbo)
         {
-            using (new Bind(vbo))
+            GL.GenVertexArrays(1, out id);
+            using (new Bind(this))
             {
-                GL.GenVertexArrays(1, out id);
-                using (new Bind(this))
+                using (new Bind(vbo))
                 {
                     var vertex_attribute = 0;
                     var offset = 0;
                     var stride = BlittableValueType.StrideOf(vbo.data);
 
-                    GL.EnableVertexAttribArray(vertex_attribute);
                     GL.VertexAttribPointer(vertex_attribute, 3, VertexAttribPointerType.Float, false, stride, offset);
+                    GL.EnableVertexAttribArray(vertex_attribute);
                     vertex_attribute++;
                     offset += sizeof(float) * 3;
 
-                    GL.EnableVertexAttribArray(vertex_attribute);
                     GL.VertexAttribPointer(vertex_attribute, 4, VertexAttribPointerType.Float, false, stride, offset);
+                    GL.EnableVertexAttribArray(vertex_attribute);
                     vertex_attribute++;
                     offset += sizeof(float) * 4;
                 }

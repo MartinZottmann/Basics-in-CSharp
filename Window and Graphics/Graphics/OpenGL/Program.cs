@@ -33,7 +33,7 @@ namespace MartinZottmann.Graphics.OpenGL
 
             int info;
             GL.GetProgram(id, ProgramParameter.InfoLogLength, out info);
-            if (info != 0)
+            if (info > 1)
             {
                 string info_log;
                 GL.GetProgramInfoLog(id, out info_log);

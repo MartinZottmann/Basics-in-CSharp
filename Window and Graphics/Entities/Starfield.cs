@@ -18,10 +18,10 @@ namespace MartinZottmann.Entities
         {
             graphic = new Graphics.OpenGL.Entity();
             using (var vertex_shader = new Shader(ShaderType.VertexShader, @"
-#version 330 core
+#version 330 compatibility
 
-in  vec3 in_Position;
-in  vec4 in_Color;
+in vec3 in_Position;
+in vec4 in_Color;
 out vec4 ex_Color;
 
 void main(void) {
@@ -30,9 +30,9 @@ void main(void) {
 }
             "))
             using (var fragment_shader = new Shader(ShaderType.FragmentShader, @"
-#version 330 core
+#version 330 compatibility
 
-in  vec4 ex_Color;
+in vec4 ex_Color;
 
 void main(void) {
     gl_FragColor = ex_Color;

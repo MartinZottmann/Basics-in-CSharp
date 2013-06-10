@@ -35,13 +35,33 @@ namespace MartinZottmann.Graphics.OpenGL
                 {
                     tesslation_shader = true;
                 }
-                
             }
 
             Console.WriteLine("ProgramParameters {0} (", program);
             foreach (ProgramParameter parameter in (ProgramParameter[])Enum.GetValues(typeof(ProgramParameter)))
             {
-                if (!geometry_shader && (parameter == ProgramParameter.GeometryInputType || parameter == ProgramParameter.GeometryOutputType || parameter == ProgramParameter.GeometryShaderInvocations || parameter == ProgramParameter.GeometryVerticesOut))
+                if (
+                    !geometry_shader
+                    && (
+                        parameter == ProgramParameter.GeometryInputType
+                        || parameter == ProgramParameter.GeometryOutputType
+                        || parameter == ProgramParameter.GeometryShaderInvocations
+                        || parameter == ProgramParameter.GeometryVerticesOut
+                    )
+                )
+                {
+                    continue;
+                }
+                if (
+                    !tesslation_shader
+                    && (
+                        parameter == ProgramParameter.TessControlOutputVertices
+                        || parameter == ProgramParameter.TessGenMode
+                        || parameter == ProgramParameter.TessGenPointMode
+                        || parameter == ProgramParameter.TessGenSpacing
+                        || parameter == ProgramParameter.TessGenVertexOrder
+                    )
+                )
                 {
                     continue;
                 }

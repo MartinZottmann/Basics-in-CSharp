@@ -33,26 +33,29 @@ namespace MartinZottmann.Entities
                 0, 1, 5, 5, 4, 0,
                 1, 5, 6, 6, 2, 1
             };
-            graphic.texture = new Texture("res/textures/debug-256.png", false, TextureTarget.Texture2D);
             using (var vertex_shader = new Shader(ShaderType.VertexShader, @"
-#version 330 core
+#version 330 compatibility
 
-//in vec3 in_Position;
-//in vec4 in_Color;
+in vec3 in_Position;
+in vec4 in_Color;
+out vec4 ex_Color;
 
 void main(void)
 {
     gl_Position = ftransform();
+    ex_Color = in_Color;
 }
             "))
             using (var fragment_shader = new Shader(ShaderType.FragmentShader, @"
-#version 330 core
+#version 330 compatibility
 
-uniform sampler2D in_Texture;
+//uniform sampler2D in_Texture;
+in vec4 ex_Color;
 
 void main(void)
 {
-    gl_FragColor = texture(in_Texture, gl_TexCoord[0].st);
+    //gl_FragColor = texture(in_Texture, gl_TexCoord[0].st);
+    gl_FragColor = ex_Color;
 }
             "))
                 graphic.program = new Graphics.OpenGL.Program(
@@ -65,9 +68,10 @@ void main(void)
                         "in_Color"
                     }
                 );
-            var in_texture = graphic.program.AddUniformLocation("in_Texture");
-            in_texture.Set(0);
-            //in_texture.Set(graphic.texture.id);
+            //graphic.texture = new Texture("res/textures/debug-256.png", false, TextureTarget.Texture2D);
+            //var in_texture = graphic.program.AddUniformLocation("in_Texture");
+            //in_texture.Set(0);
+            ////in_texture.Set(graphic.texture.id);
             graphic.Load();
         }
 

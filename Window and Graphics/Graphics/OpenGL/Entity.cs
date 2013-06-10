@@ -47,8 +47,8 @@ namespace MartinZottmann.Graphics.OpenGL
 
         public void Draw()
         {
-            using (program == null ? null : new Bind(program))
             using (texture == null ? null : new Bind(texture))
+            using (program == null ? null : new Bind(program))
             using (new Bind(vao))
                 if (elements == null)
                     GL.DrawArrays(mode, 0, vertex_data.Length);
