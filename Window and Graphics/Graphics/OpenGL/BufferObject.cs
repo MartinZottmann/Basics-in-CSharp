@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.Diagnostics;
 
 namespace MartinZottmann.Graphics.OpenGL
 {
@@ -27,6 +28,11 @@ namespace MartinZottmann.Graphics.OpenGL
             using (new Bind(this))
             {
                 GL.BufferData(target, (IntPtr)size, data, usage_hint);
+#if DEBUG
+                int info;
+                GL.GetBufferParameter(target, BufferParameterName.BufferSize, out info);
+                Debug.Assert(size == info);
+#endif
             }
         }
 
