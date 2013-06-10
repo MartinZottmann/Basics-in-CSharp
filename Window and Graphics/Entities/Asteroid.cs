@@ -14,17 +14,28 @@ namespace MartinZottmann.Entities
             : base()
         {
             graphic = new Graphics.OpenGL.Entity();
-            graphic.vertex_data = new VertexData[]
-            {
-                new VertexData(-1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f),
-                new VertexData( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 0.0f, 1.0f),
-                new VertexData( 1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
-                new VertexData(-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f),
-                new VertexData(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f),
-                new VertexData( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f),
-                new VertexData( 1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f),
-                new VertexData(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f)
+            var vertex_data = new VertexP3N3T2[] {
+                new VertexP3N3T2(-1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, 0.0f, 1.0f),
+                new VertexP3N3T2( 1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, 0.0f, 1.0f),
+                new VertexP3N3T2( 1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f, 1.0f, 1.0f),
+                new VertexP3N3T2(-1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f, 1.0f, 1.0f),
+                new VertexP3N3T2(-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f),
+                new VertexP3N3T2( 1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, 0.0f, 0.0f),
+                new VertexP3N3T2( 1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f, 1.0f, 0.0f),
+                new VertexP3N3T2(-1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, 1.0f, 0.0f)
             };
+            graphic.Add(new BufferObject<VertexP3N3T2>(BufferTarget.ArrayBuffer, vertex_data));
+            //graphic.vertex_data = new VertexData[]
+            //{
+            //    new VertexData(-1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f),
+            //    new VertexData( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 0.0f, 1.0f),
+            //    new VertexData( 1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
+            //    new VertexData(-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f),
+            //    new VertexData(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f),
+            //    new VertexData( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f),
+            //    new VertexData( 1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f),
+            //    new VertexData(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f)
+            //}
             graphic.elements = new uint[] {
                 0, 1, 2, 2, 3, 0,
                 3, 2, 6, 6, 7, 3,
@@ -49,13 +60,12 @@ void main(void)
             using (var fragment_shader = new Shader(ShaderType.FragmentShader, @"
 #version 330 compatibility
 
-//uniform sampler2D in_Texture;
+uniform sampler2D in_Texture;
 in vec4 ex_Color;
 
 void main(void)
 {
-    //gl_FragColor = texture(in_Texture, gl_TexCoord[0].st);
-    gl_FragColor = ex_Color;
+    gl_FragColor = texture(in_Texture, gl_TexCoord[0].st);
 }
             "))
                 graphic.program = new Graphics.OpenGL.Program(
@@ -68,10 +78,10 @@ void main(void)
                         "in_Color"
                     }
                 );
-            //graphic.texture = new Texture("res/textures/debug-256.png", false, TextureTarget.Texture2D);
-            //var in_texture = graphic.program.AddUniformLocation("in_Texture");
-            //in_texture.Set(0);
-            ////in_texture.Set(graphic.texture.id);
+            graphic.texture = new Texture("res/textures/debug-256.png", false, TextureTarget.Texture2D);
+            var in_texture = graphic.program.AddUniformLocation("in_Texture");
+            in_texture.Set(0);
+            //in_texture.Set(graphic.texture.id);
             graphic.Load();
         }
 

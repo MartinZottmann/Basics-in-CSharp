@@ -5,17 +5,26 @@ using System.Diagnostics;
 
 namespace MartinZottmann.Graphics.OpenGL
 {
-    public class BufferObject<T> : IBindable, IDisposable where T : struct
+    public abstract class BufferObject : IBindable, IDisposable
     {
         public uint id;
 
         public BufferTarget target;
 
-        public T[] data;
-
         public int stride;
 
         public int size;
+
+        public abstract void Bind();
+
+        public abstract void UnBind();
+
+        public abstract void Dispose();
+    }
+
+    public class BufferObject<T> : BufferObject, IBindable, IDisposable where T : struct
+    {
+        public T[] data;
 
         public BufferObject(BufferTarget target, T[] data, BufferUsageHint usage_hint = BufferUsageHint.StaticDraw)
         {
@@ -36,17 +45,17 @@ namespace MartinZottmann.Graphics.OpenGL
             }
         }
 
-        public void Bind()
+        public override void Bind()
         {
             GL.BindBuffer(target, id);
         }
 
-        public void UnBind()
+        public override void UnBind()
         {
             GL.BindBuffer(target, 0);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             GL.DeleteBuffers(1, ref id);
         }
