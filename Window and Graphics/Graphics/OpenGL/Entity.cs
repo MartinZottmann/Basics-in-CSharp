@@ -65,7 +65,7 @@ namespace MartinZottmann.Graphics.OpenGL
             using (program == null ? null : new Bind(program))
             using (new Bind(vao))
                 if (elements == null)
-                    GL.DrawArrays(mode, 0, 10/*vertex_data.Length*/);
+                    GL.DrawArrays(mode, 0, 10000/*vertex_data.Length*/);
                 else
                     GL.DrawElements(mode, elements.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }

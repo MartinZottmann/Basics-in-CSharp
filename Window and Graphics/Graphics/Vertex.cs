@@ -2,13 +2,6 @@
 
 namespace MartinZottmann.Graphics
 {
-    public interface IStruct<T> where T : struct
-    {
-        T GetStruct();
-
-        string[] GetAttributeLayout();
-    }
-
     public struct VertexObject
     {
         public Vertex3[] vertices;
@@ -37,9 +30,11 @@ namespace MartinZottmann.Graphics
                 "in_Color"
             };
         }
+
+        //public static readonly int Stride = Marshal.SizeOf(default(VertexData));
     }
 
-    public struct VertexP3N3T2 : IStruct<VertexP3N3T2>
+    public struct VertexP3N3T2
     {
         public Vector3 position;
 
@@ -56,7 +51,30 @@ namespace MartinZottmann.Graphics
 
         public VertexP3N3T2(float px, float py, float pz, float nx, float ny, float nz, float s, float t) : this(new Vector3(px, py, pz), new Vector3(nx, ny, nz), new Vector2(s, t)) { }
 
-        public VertexP3N3T2 GetStruct() { return this; }
+        public string[] GetAttributeLayout()
+        {
+            return new string[] {
+                "in_Position",
+                "in_Normal",
+                "in_TexCoord"
+            };
+        }
+    }
+
+    public struct VertexP3N3T2SOA
+    {
+        public Vector3[] position;
+
+        public Vector3[] normal;
+
+        public Vector2[] texcoord;
+
+        public VertexP3N3T2SOA(Vector3[] position, Vector3[] normal, Vector2[] texcoord)
+        {
+            this.position = position;
+            this.normal = normal;
+            this.texcoord = texcoord;
+        }
 
         public string[] GetAttributeLayout()
         {

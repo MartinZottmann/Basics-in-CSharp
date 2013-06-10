@@ -125,6 +125,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="res\textures\rainbow-45deg-128.png" />
     <Content Include="res\textures\debug-256.png" />
     <Content Include="res\textures\debug-512.png" />
   </ItemGroup>

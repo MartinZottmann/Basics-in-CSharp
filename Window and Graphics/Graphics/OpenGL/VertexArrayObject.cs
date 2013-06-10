@@ -16,11 +16,11 @@ namespace MartinZottmann.Graphics.OpenGL
 
         public void Add<U>(BufferObject<U> bo) where U : struct
         {
-            FieldInfo[] fi = bo.data.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
-            foreach (FieldInfo info in fi)
-            {
-                Console.WriteLine(info.Name);
-            }
+            //FieldInfo[] fi = bo.data[0].GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+            //foreach (FieldInfo info in fi)
+            //{
+            //    Console.WriteLine(info);
+            //}
             using (new Bind(this))
             {
                 switch (bo.target)
