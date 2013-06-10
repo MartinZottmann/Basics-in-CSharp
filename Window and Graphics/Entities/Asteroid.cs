@@ -16,14 +16,14 @@ namespace MartinZottmann.Entities
             graphic = new Graphics.OpenGL.Entity();
             graphic.vertex_data = new VertexData[]
             {
-                new VertexData(-1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
+                new VertexData(-1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f),
                 new VertexData( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 0.0f, 1.0f),
-                new VertexData( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f),
-                new VertexData(-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f),
-                new VertexData(-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f),
-                new VertexData( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f),
-                new VertexData( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f),
-                new VertexData(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f)
+                new VertexData( 1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
+                new VertexData(-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f),
+                new VertexData(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f),
+                new VertexData( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f),
+                new VertexData( 1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f),
+                new VertexData(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f)
             };
             graphic.elements = new uint[] {
                 0, 1, 2, 2, 3, 0,

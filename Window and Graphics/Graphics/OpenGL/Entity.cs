@@ -27,12 +27,17 @@ namespace MartinZottmann.Graphics.OpenGL
 
         public void Load()
         {
+            vao = new VertexArrayObject();
             vbo = new BufferObject<VertexData>(BufferTarget.ArrayBuffer, vertex_data);
+            vao.Add(vbo);
             //vbo = new VertexBufferObject(BufferTarget.ArrayBuffer, vertex_data);
-            vao = new VertexArrayObject<VertexData>(vbo);
 
             if (elements != null)
+            {
                 eao = new BufferObject<uint>(BufferTarget.ElementArrayBuffer, elements);
+                vao.Add(eao);
+            }
+
         }
 
         public void Unload()
@@ -53,8 +58,7 @@ namespace MartinZottmann.Graphics.OpenGL
                 if (elements == null)
                     GL.DrawArrays(mode, 0, vertex_data.Length);
                 else
-                    using (new Bind(eao))
-                        GL.DrawElements(mode, elements.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+                    GL.DrawElements(mode, elements.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
     }
 }
