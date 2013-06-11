@@ -44,8 +44,6 @@ namespace MartinZottmann
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.CullFace);
             GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.Lighting);
-            GL.Enable(EnableCap.Light0);
             GL.Enable(EnableCap.LineSmooth);
             GL.Enable(EnableCap.PointSmooth);
             GL.Enable(EnableCap.PolygonSmooth);
@@ -53,10 +51,6 @@ namespace MartinZottmann
             GL.Hint(HintTarget.PointSmoothHint, HintMode.Nicest);
             GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
             GL.Hint(HintTarget.TextureCompressionHint, HintMode.Nicest);
-            GL.Light(LightName.Light0, LightParameter.Ambient, new Color4(0, 0, 0, 255));
-            GL.Light(LightName.Light0, LightParameter.Diffuse, new Color4(255, 255, 255, 255));
-            GL.Light(LightName.Light0, LightParameter.Position, new Vector4(10, 10, 10, 0));
-            GL.Light(LightName.Light0, LightParameter.Specular, new Color4(255, 255, 255, 255));
             GL.ShadeModel(ShadingModel.Smooth);
 
             Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);

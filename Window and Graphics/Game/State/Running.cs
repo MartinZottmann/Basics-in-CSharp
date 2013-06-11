@@ -131,11 +131,18 @@ namespace MartinZottmann.Game.State
                 GL.MatrixMode(MatrixMode.Modelview);
                 GL.PushMatrix();
                 {
-                    var modelview_matrix = camera.ModelviewMatrix();
-                    GL.LoadMatrix(ref modelview_matrix);
+                    var view_matrix = camera.ViewMatrix();
+                    GL.LoadMatrix(ref view_matrix);
 
                     foreach (Entity entity in entities)
                     {
+                        entity.Projection = projection_matrix;
+                        entity.Model = Matrix4d.Identity;
+                        entity.View = view_matrix;
+                        if (entity is Asteroid)
+                        {
+                            (entity as Asteroid).EyeDirection.Set(camera.Direction);
+                        }
                         entity.Render(delta_time);
                     }
                 }

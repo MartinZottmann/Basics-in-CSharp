@@ -108,7 +108,7 @@ namespace MartinZottmann
             return Matrix4d.CreatePerspectiveFieldOfView(Fov, Window.Width / (float)Window.Height, Near, Far);
         }
 
-        public Matrix4d ModelviewMatrix()
+        public Matrix4d ViewMatrix()
         {
             return Matrix4d.LookAt(Position, LookAt, Up);
         }

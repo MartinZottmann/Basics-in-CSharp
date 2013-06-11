@@ -82,5 +82,31 @@ namespace MartinZottmann.Graphics.OpenGL
             }
             Console.WriteLine(")");
         }
+
+        public static void Uniform(int program)
+        {
+            int count, info;
+            Console.WriteLine("Uniform {0} (", program);
+            GL.GetProgram(program, ProgramParameter.ActiveUniforms, out count);
+            for (int i = 0; i < count; i++)
+            {
+                foreach (ActiveUniformParameter parameter in (ActiveUniformParameter[])Enum.GetValues(typeof(ActiveUniformParameter)))
+                {
+                    GL.GetActiveUniforms(program, 1, ref i, parameter, out info);
+                    Console.WriteLine("\t{0}: {1}", parameter, info);
+                }
+            }
+            GL.GetProgram(program, ProgramParameter.ActiveUniformBlocks, out count);
+            for (int i = 0; i < count; i++)
+            {
+                Console.WriteLine("\t{0}", GL.GetActiveUniformBlockName(program, i));
+                foreach (ActiveUniformBlockParameter parameter in (ActiveUniformBlockParameter[])Enum.GetValues(typeof(ActiveUniformBlockParameter)))
+                {
+                    GL.GetActiveUniformBlock(program, i, parameter, out info);
+                    Console.WriteLine("\t{0}: {1}", parameter, info);
+                }
+            }
+            Console.WriteLine(")");
+        }
     }
 }

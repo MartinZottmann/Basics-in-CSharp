@@ -8,35 +8,35 @@ namespace MartinZottmann.Graphics.Shapes
         {
             Vertices = new VertexP3N3T2[] {
                 // Front face
-                new VertexP3N3T2(-1.0f, -1.0f,  1.0f,  0f,  0f,  1f, 0, 1),
-                new VertexP3N3T2( 1.0f, -1.0f,  1.0f,  0f,  0f,  1f, 1, 1),
-                new VertexP3N3T2( 1.0f,  1.0f,  1.0f,  0f,  0f,  1f, 1, 0),
-                new VertexP3N3T2(-1.0f,  1.0f,  1.0f,  0f,  0f,  1f, 0, 0),
+                new VertexP3N3T2(-1, -1,  1, -1, -1,  1, 0, 1),
+                new VertexP3N3T2( 1, -1,  1,  1, -1,  1, 1, 1),
+                new VertexP3N3T2( 1,  1,  1,  1,  1,  1, 1, 0),
+                new VertexP3N3T2(-1,  1,  1, -1,  1,  1, 0, 0),
                 // Right face
-                new VertexP3N3T2( 1.0f, -1.0f,  1.0f,  1f,  0f,  0f, 0, 1),
-                new VertexP3N3T2( 1.0f, -1.0f, -1.0f,  1f,  0f,  0f, 1, 1),
-                new VertexP3N3T2( 1.0f,  1.0f, -1.0f,  1f,  0f,  0f, 1, 0),
-                new VertexP3N3T2( 1.0f,  1.0f,  1.0f,  1f,  0f,  0f, 0, 0),
+                new VertexP3N3T2( 1, -1,  1,  1, -1,  1, 0, 1),
+                new VertexP3N3T2( 1, -1, -1,  1, -1, -1, 1, 1),
+                new VertexP3N3T2( 1,  1, -1,  1,  1, -1, 1, 0),
+                new VertexP3N3T2( 1,  1,  1,  1,  1,  1, 0, 0),
                 // Back face
-                new VertexP3N3T2( 1.0f, -1.0f, -1.0f,  0f,  0f, -1f, 0, 1),
-                new VertexP3N3T2(-1.0f, -1.0f, -1.0f,  0f,  0f, -1f, 1, 1),
-                new VertexP3N3T2(-1.0f,  1.0f, -1.0f,  0f,  0f, -1f, 1, 0),
-                new VertexP3N3T2( 1.0f,  1.0f, -1.0f,  0f,  0f, -1f, 0, 0),
+                new VertexP3N3T2( 1, -1, -1,  1, -1, -1, 0, 1),
+                new VertexP3N3T2(-1, -1, -1, -1, -1, -1, 1, 1),
+                new VertexP3N3T2(-1,  1, -1, -1,  1, -1, 1, 0),
+                new VertexP3N3T2( 1,  1, -1,  1,  1, -1, 0, 0),
                 // Left face
-                new VertexP3N3T2(-1.0f, -1.0f, -1.0f, -1f,  0f,  0f, 0, 1),
-                new VertexP3N3T2(-1.0f, -1.0f,  1.0f, -1f,  0f,  0f, 1, 1),
-                new VertexP3N3T2(-1.0f,  1.0f,  1.0f, -1f,  0f,  0f, 1, 0),
-                new VertexP3N3T2(-1.0f,  1.0f, -1.0f, -1f,  0f,  0f, 0, 0),
+                new VertexP3N3T2(-1, -1, -1, -1, -1, -1, 0, 1),
+                new VertexP3N3T2(-1, -1,  1, -1, -1,  1, 1, 1),
+                new VertexP3N3T2(-1,  1,  1, -1,  1,  1, 1, 0),
+                new VertexP3N3T2(-1,  1, -1, -1,  1, -1, 0, 0),
                 // Top face
-                new VertexP3N3T2(-1.0f,  1.0f,  1.0f,  0f,  1f,  0f, 0, 1),
-                new VertexP3N3T2( 1.0f,  1.0f,  1.0f,  0f,  1f,  0f, 1, 1),
-                new VertexP3N3T2( 1.0f,  1.0f, -1.0f,  0f,  1f,  0f, 1, 0),
-                new VertexP3N3T2(-1.0f,  1.0f, -1.0f,  0f,  1f,  0f, 0, 0),
+                new VertexP3N3T2(-1,  1,  1, -1,  1,  1, 0, 1),
+                new VertexP3N3T2( 1,  1,  1,  1,  1,  1, 1, 1),
+                new VertexP3N3T2( 1,  1, -1,  1,  1, -1, 1, 0),
+                new VertexP3N3T2(-1,  1, -1, -1,  1, -1, 0, 0),
                 // Bottom face
-                new VertexP3N3T2( 1.0f, -1.0f,  1.0f,  0f, -1f,  0f, 0, 1),
-                new VertexP3N3T2(-1.0f, -1.0f,  1.0f,  0f, -1f,  0f, 1, 1),
-                new VertexP3N3T2(-1.0f, -1.0f, -1.0f,  0f, -1f,  0f, 1, 0),
-                new VertexP3N3T2( 1.0f, -1.0f, -1.0f,  0f, -1f,  0f, 0, 0)
+                new VertexP3N3T2( 1, -1,  1,  1, -1,  1, 0, 1),
+                new VertexP3N3T2(-1, -1,  1, -1, -1,  1, 1, 1),
+                new VertexP3N3T2(-1, -1, -1, -1, -1, -1, 1, 0),
+                new VertexP3N3T2( 1, -1, -1,  1, -1, -1, 0, 0)
             };
 
             Indices = new uint[] {

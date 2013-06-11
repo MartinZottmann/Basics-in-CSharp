@@ -4,129 +4,33 @@ using MartinZottmann.Graphics.Shapes;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.IO;
 
 namespace MartinZottmann.Entities
 {
-    class Asteroid : Entity
+    class Asteroid : Physical
     {
         Graphics.OpenGL.Entity graphic;
+
+        UniformLocation ProjectionUniform;
+
+        UniformLocation ModelViewUniform;
+
+        UniformLocation ModelUniform;
+
+        UniformLocation ViewUniform;
+
+        UniformLocation ModelViewProjectionUniform;
+
+        UniformLocation NormalMatrix;
+
+        public UniformLocation EyeDirection;
 
         public Asteroid()
             : base()
         {
             graphic = new Graphics.OpenGL.Entity();
 
-            //var vertex_data = new VertexP3N3T2SOA(
-            //    // Vertex Data
-            //    new Vector3[] {
-            //        // Front face
-            //        new Vector3(-1.0f, -1.0f, 1.0f),
-            //        new Vector3(1.0f, -1.0f, 1.0f),
-            //        new Vector3(1.0f, 1.0f, 1.0f),
-            //        new Vector3(-1.0f, 1.0f, 1.0f),
-            //        // Right face
-            //        new Vector3(1.0f, -1.0f, 1.0f),
-            //        new Vector3(1.0f, -1.0f, -1.0f),
-            //        new Vector3(1.0f, 1.0f, -1.0f),
-            //        new Vector3(1.0f, 1.0f, 1.0f),
-            //        // Back face
-            //        new Vector3(1.0f, -1.0f, -1.0f),
-            //        new Vector3(-1.0f, -1.0f, -1.0f),
-            //        new Vector3(-1.0f, 1.0f, -1.0f),
-            //        new Vector3(1.0f, 1.0f, -1.0f),
-            //        // Left face
-            //        new Vector3(-1.0f, -1.0f, -1.0f),
-            //        new Vector3(-1.0f, -1.0f, 1.0f),
-            //        new Vector3(-1.0f, 1.0f, 1.0f),
-            //        new Vector3(-1.0f, 1.0f, -1.0f),
-            //        // Top Face
-            //        new Vector3(-1.0f, 1.0f, 1.0f),
-            //        new Vector3(1.0f, 1.0f, 1.0f),
-            //        new Vector3(1.0f, 1.0f, -1.0f),
-            //        new Vector3(-1.0f, 1.0f, -1.0f),
-            //        // Bottom Face
-            //        new Vector3(1.0f, -1.0f, 1.0f),
-            //        new Vector3(-1.0f, -1.0f, 1.0f),
-            //        new Vector3(-1.0f, -1.0f, -1.0f),
-            //        new Vector3(1.0f, -1.0f, -1.0f)
-            //    },
-            //    // Normal Data for the Cube Verticies
-            //    new Vector3[] {
-            //        // Front face
-            //        new Vector3(0f, 0f, 1f),
-            //        new Vector3(0f, 0f, 1f),
-            //        new Vector3(0f, 0f, 1f),
-            //        new Vector3(0f, 0f, 1f),
-            //        // Right face
-            //        new Vector3(1f, 0f, 0f),
-            //        new Vector3(1f, 0f, 0f),
-            //        new Vector3(1f, 0f, 0f),
-            //        new Vector3(1f, 0f, 0f),
-            //        // Back face
-            //        new Vector3(0f, 0f, -1f),
-            //        new Vector3(0f, 0f, -1f),
-            //        new Vector3(0f, 0f, -1f),
-            //        new Vector3(0f, 0f, -1f),
-            //        // Left face
-            //        new Vector3(-1f, 0f, 0f),
-            //        new Vector3(-1f, 0f, 0f),
-            //        new Vector3(-1f, 0f, 0f),
-            //        new Vector3(-1f, 0f, 0f),
-            //        // Top Face
-            //        new Vector3(0f, 1f, 0f),
-            //        new Vector3(0f, 1f, 0f),
-            //        new Vector3(0f, 1f, 0f),
-            //        new Vector3(0f, 1f, 0f),
-            //        // Bottom Face
-            //        new Vector3(0f, -1f, 0f),
-            //        new Vector3(0f, -1f, 0f),
-            //        new Vector3(0f, -1f, 0f),
-            //        new Vector3(0f, -1f, 0f)
-            //    },
-            //    // Texture Data for the Cube Verticies 
-            //    new Vector2[] {
-            //        // Font Face
-            //        new Vector2(0, 1),
-            //        new Vector2(1, 1),
-            //        new Vector2(1, 0),
-            //        new Vector2(0, 0),
-            //        // Right Face
-            //        new Vector2(0, 1),
-            //        new Vector2(1, 1),
-            //        new Vector2(1, 0),
-            //        new Vector2(0, 0),
-            //        // Back Face
-            //        new Vector2(0, 1),
-            //        new Vector2(1, 1),
-            //        new Vector2(1, 0),
-            //        new Vector2(0, 0),
-            //        // Left Face
-            //        new Vector2(0, 1),
-            //        new Vector2(1, 1),
-            //        new Vector2(1, 0),
-            //        new Vector2(0, 0),
-            //        // Top Face
-            //        new Vector2(0, 1),
-            //        new Vector2(1, 1),
-            //        new Vector2(1, 0),
-            //        new Vector2(0, 0),
-            //        // Bottom Face
-            //        new Vector2(0, 1),
-            //        new Vector2(1, 1),
-            //        new Vector2(1, 0),
-            //        new Vector2(0, 0)
-            //    }
-            //);
-            ////var vertex_data = new VertexP3N3T2[] {
-            ////    new VertexP3N3T2(-1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f),
-            ////    new VertexP3N3T2( 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f),
-            ////    new VertexP3N3T2( 1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
-            ////    new VertexP3N3T2(-1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f),
-            ////    new VertexP3N3T2(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f),
-            ////    new VertexP3N3T2( 1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f),
-            ////    new VertexP3N3T2( 1.0f,  1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f),
-            ////    new VertexP3N3T2(-1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f)
-            ////};
             //using (new Bind(graphic.vao))
             //{
             //    int p, n, t, size, vertex_attribute = 0;
@@ -181,45 +85,14 @@ namespace MartinZottmann.Entities
             Position.Y = (randomNumber.NextDouble() - 0.5) * 25;
             Position.Z = (randomNumber.NextDouble() - 0.5) * 25;
             graphic.Add(cube);
-            using (var vertex_shader = new Shader(ShaderType.VertexShader, @"
-#version 330 compatibility
-
-layout(location = 0) in vec3 in_Position;
-layout(location = 1) in vec3 in_Normal;
-layout(location = 2) in vec2 in_Texcoord;
-
-out vec2 uv;
-
-out vec3 N;
-out vec3 v;
-
-void main(void)
-{
-    v = vec3(gl_ModelViewMatrix * gl_Vertex);
-    N = normalize(gl_NormalMatrix * in_Normal);
-
-    gl_Position = ftransform();
-    uv = in_Texcoord;
-}
-            "))
-            using (var fragment_shader = new Shader(ShaderType.FragmentShader, @"
-#version 330 compatibility
-
-uniform sampler2D in_Texture;
-in vec2 uv;
-
-in vec3 N;
-in vec3 v;
-
-void main(void)
-{
-    vec3 L = normalize(gl_LightSource[0].position.xyz - v);
-    vec4 Idiff = gl_FrontLightProduct[0].diffuse * max(dot(N,L), 0.0);
-    Idiff = clamp(Idiff, 0.0, 1.0);
-
-    gl_FragColor = texture2D(in_Texture, uv) + Idiff;
-}
-            "))
+            var sr = new StreamReader("res/Shaders/point_light.vs.glsl");
+            var vs = sr.ReadToEnd();
+            sr.Close();
+            sr = new StreamReader("res/Shaders/point_light.fs.glsl");
+            var fs = sr.ReadToEnd();
+            sr.Close();
+            using (var vertex_shader = new Shader(ShaderType.VertexShader, vs))
+            using (var fragment_shader = new Shader(ShaderType.FragmentShader, fs))
                 graphic.program = new Graphics.OpenGL.Program(
                     new Shader[] {
                         vertex_shader,
@@ -235,6 +108,20 @@ void main(void)
             var in_texture = graphic.program.AddUniformLocation("in_Texture");
             in_texture.Set(0);
             //in_texture.Set(graphic.texture.id);
+
+            //ProjectionUniform = graphic.program.AddUniformLocation("in_Projection");
+            //ModelViewUniform = graphic.program.AddUniformLocation("in_ModelView");
+            ModelViewProjectionUniform = graphic.program.AddUniformLocation("in_ModelViewProjection");
+            graphic.program.AddUniformLocation("in_AmbientLight").Set(new OpenTK.Graphics.Color4(127, 0, 0, 255));
+            NormalMatrix = graphic.program.AddUniformLocation("in_NormalMatrix");
+            graphic.program.AddUniformLocation("in_LightColor").Set(new OpenTK.Graphics.Color4(127, 127, 0, 255));
+            graphic.program.AddUniformLocation("in_LightPosition").Set(new Vector3(1, 1, 1));
+            graphic.program.AddUniformLocation("in_Shininess").Set(0.1f);
+            graphic.program.AddUniformLocation("in_Strength").Set(0.1f);
+            EyeDirection = graphic.program.AddUniformLocation("in_EyeDirection");
+            graphic.program.AddUniformLocation("in_ConstantAttenuation").Set(0.1f);
+            graphic.program.AddUniformLocation("in_LinearAttenuation").Set(0.1f);
+            graphic.program.AddUniformLocation("in_QuadraticAttenuation").Set(0.1f);
         }
 
         public override void Render(double delta_time)
@@ -245,6 +132,12 @@ void main(void)
                 //GL.Rotate(Angle, Vector3d.UnitY);
                 GL.Translate(Position.X, Position.Y, Position.Z);
 
+                //ProjectionUniform.Set(Projection);
+                //ModelViewUniform.Set(ModelView);
+
+                Matrix4d.CreateTranslation(ref Position, out Model);
+                NormalMatrix.Set(Matrix4d.Transpose(Matrix4d.Invert(Model * View)));
+                ModelViewProjectionUniform.Set(ModelViewProjection);
                 graphic.Draw();
             }
             GL.PopMatrix();

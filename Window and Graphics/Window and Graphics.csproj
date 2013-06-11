@@ -105,6 +105,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\Shaders\point_light.fs.glsl" />
+    <None Include="res\Shaders\point_light.vs.glsl" />
+    <None Include="res\Shaders\directional_light.fs.glsl" />
+    <None Include="res\Shaders\directional_light.vs.glsl" />
+    <None Include="res\Shaders\phong.fs.glsl" />
+    <None Include="res\Shaders\phong.vs.glsl" />
     <None Include="res\textures\pointer.png" />
   </ItemGroup>
   <ItemGroup>

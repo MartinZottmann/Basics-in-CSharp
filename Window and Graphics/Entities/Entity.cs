@@ -13,6 +13,14 @@ namespace MartinZottmann.Entities
 
         public Vector3d Position = Vector3d.Zero;
 
+        public Matrix4d Projection;
+
+        public Matrix4d View;
+
+        public Matrix4d Model;
+
+        public Matrix4d ModelViewProjection { get { return Model * View * Projection; } }
+
         public Entity()
         {
             KnownColor[] names = (KnownColor[])Enum.GetValues(typeof(KnownColor));
