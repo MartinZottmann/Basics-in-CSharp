@@ -49,7 +49,7 @@ void main(void) {
                     }
                 );
             graphic.mode = BeginMode.Points;
-            var vertex_data = new VertexData[num_stars];
+            var vertex_data = new VertexP3C4[num_stars];
             for (int i = 0; i < num_stars; i++)
             {
                 vertex_data[i].position.x = randomNumber.Next(-1000, 1000);
@@ -60,8 +60,8 @@ void main(void) {
                 vertex_data[i].color.b = (float)randomNumber.NextDouble();
                 vertex_data[i].color.a = (float)randomNumber.NextDouble();
             }
-            graphic.Add(new BufferObject<VertexData>(BufferTarget.ArrayBuffer, vertex_data));
-            graphic.Load();
+            graphic.Add(new Mesh<VertexP3C4, uint>(vertex_data));
+            //graphic.Add(new BufferObject<VertexP3C4>(BufferTarget.ArrayBuffer, vertex_data));
         }
 
         public override void Render(double delta_time)

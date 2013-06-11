@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace MartinZottmann
 {
-    class Window : GameWindow
+    public class Window : GameWindow
     {
         public MartinZottmann.Game.Game game;
 

@@ -9,19 +9,19 @@ namespace MartinZottmann.Graphics
         public Color4[] colors;
     }
 
-    public struct VertexData
+    public struct VertexP3C4
     {
         public Vertex3 position;
 
         public Color4 color;
 
-        public VertexData(Vertex3 position, Color4 color)
+        public VertexP3C4(Vertex3 position, Color4 color)
         {
             this.position = position;
             this.color = color;
         }
 
-        public VertexData(float x, float y, float z, float r, float g, float b, float a) : this(new Vertex3(x, y, z), new Color4(r, g, b, a)) { }
+        public VertexP3C4(float x, float y, float z, float r, float g, float b, float a) : this(new Vertex3(x, y, z), new Color4(r, g, b, a)) { }
 
         public string[] GetAttributeLayout()
         {

@@ -13,50 +13,30 @@ namespace MartinZottmann.Graphics.OpenGL
 
         public Texture texture;
 
-        // public object[] vertex_data;
-
-        // normals, texture_coordinates, lightmap
-
-        //public BufferObject vbo;
-
         public VertexArrayObject vao = new VertexArrayObject();
 
-        public BufferObject<uint> eao;
+        public IMesh mesh;
 
-        public uint[] elements;
+        public Entity() : base() { }
 
-        public Entity()
-            : base()
+        public void Add<V, I>(Mesh<V, I> mesh)
+            where V : struct
+            where I : struct
         {
+            this.mesh = mesh;
+            vao.Add(new BufferObject<V>(BufferTarget.ArrayBuffer, mesh.Vertices));
+            vao.Add(new BufferObject<I>(BufferTarget.ElementArrayBuffer, mesh.Indices));
         }
 
+        [Obsolete("Use Add<V, I>(Mesh<V, I> mesh) instead", true)]
         public void Add<U>(BufferObject<U> bo) where U : struct
         {
             vao.Add(bo);
         }
 
-        public void Load()
-        {
-            //vbo = new BufferObject<VertexData>(BufferTarget.ArrayBuffer, vertex_data);
-            //vao.Add(vbo);
-            //vbo = new VertexBufferObject(BufferTarget.ArrayBuffer, vertex_data);
-
-            if (elements != null)
-            {
-                eao = new BufferObject<uint>(BufferTarget.ElementArrayBuffer, elements);
-                Add(eao);
-                vao.Add(eao);
-            }
-        }
-
         public void Unload()
         {
-            if (eao != null)
-                eao.Dispose();
-
             vao.Dispose();
-
-            //vbo.Dispose();
         }
 
         public void Draw()
@@ -64,10 +44,10 @@ namespace MartinZottmann.Graphics.OpenGL
             using (texture == null ? null : new Bind(texture))
             using (program == null ? null : new Bind(program))
             using (new Bind(vao))
-                if (elements == null)
-                    GL.DrawArrays(mode, 0, 10000/*vertex_data.Length*/);
+                if (mesh.IndicesLength == 0)
+                    GL.DrawArrays(mode, 0, mesh.VerticesLength);
                 else
-                    GL.DrawElements(mode, elements.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+                    GL.DrawElements(mode, mesh.IndicesLength, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
     }
 }

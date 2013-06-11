@@ -26,7 +26,7 @@ namespace MartinZottmann.Graphics.OpenGL
                 switch (bo.target)
                 {
                     case BufferTarget.ArrayBuffer:
-                        if (bo.data is VertexData[])
+                        if (bo.data is VertexP3C4[])
                         {
                             var vertex_attribute = 0;
                             var offset = 0;
