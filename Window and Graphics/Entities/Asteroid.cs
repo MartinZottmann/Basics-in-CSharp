@@ -112,11 +112,14 @@ namespace MartinZottmann.Entities
             //ProjectionUniform = graphic.program.AddUniformLocation("in_Projection");
             //ModelViewUniform = graphic.program.AddUniformLocation("in_ModelView");
             ModelViewProjectionUniform = graphic.program.AddUniformLocation("in_ModelViewProjection");
+            //graphic.program.AddUniformLocation("in_AmbientColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
+            //graphic.program.AddUniformLocation("in_DiffuseColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
+            //graphic.program.AddUniformLocation("in_SpecularColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
             graphic.program.AddUniformLocation("in_AmbientLight").Set(new OpenTK.Graphics.Color4(127, 0, 0, 255));
             NormalMatrix = graphic.program.AddUniformLocation("in_NormalMatrix");
             graphic.program.AddUniformLocation("in_LightColor").Set(new OpenTK.Graphics.Color4(127, 127, 0, 255));
             graphic.program.AddUniformLocation("in_LightPosition").Set(new Vector3(1, 1, 1));
-            graphic.program.AddUniformLocation("in_Shininess").Set(0.1f);
+            graphic.program.AddUniformLocation("in_Shininess").Set(1f);
             graphic.program.AddUniformLocation("in_Strength").Set(0.1f);
             EyeDirection = graphic.program.AddUniformLocation("in_EyeDirection");
             graphic.program.AddUniformLocation("in_ConstantAttenuation").Set(0.1f);
@@ -133,9 +136,8 @@ namespace MartinZottmann.Entities
                 GL.Translate(Position.X, Position.Y, Position.Z);
 
                 //ProjectionUniform.Set(Projection);
-                //ModelViewUniform.Set(ModelView);
-
                 Matrix4d.CreateTranslation(ref Position, out Model);
+                //ModelViewUniform.Set(Model * View);
                 NormalMatrix.Set(Matrix4d.Transpose(Matrix4d.Invert(Model * View)));
                 ModelViewProjectionUniform.Set(ModelViewProjection);
                 graphic.Draw();

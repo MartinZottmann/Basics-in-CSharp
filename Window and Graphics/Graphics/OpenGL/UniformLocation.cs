@@ -1,5 +1,6 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System;
 using System.Diagnostics;
 
 namespace MartinZottmann.Graphics.OpenGL
@@ -19,10 +20,9 @@ namespace MartinZottmann.Graphics.OpenGL
 
             id = GL.GetUniformLocation(program.id, name);
             if (id == -1)
-            {
-                OpenGL.Info.Uniform(id);
-                Debug.Assert(id != -1, "GetUniformLocation failed");
-            }
+                throw new Exception(String.Format("GetUniformLocation failed for {0} in program {1}", name, program.id));
+            //else
+            //    OpenGL.Info.Uniform(id);
         }
 
         public void Set(int v0)

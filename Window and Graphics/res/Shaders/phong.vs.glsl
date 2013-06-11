@@ -1,35 +1,21 @@
 ﻿#version 330 core
 
-layout(location = 0) in vec3 Position;
-layout(location = 1) in vec3 vertexColor;
-in   vec3 vNormal;
+uniform mat4 in_ModelViewProjection;
+uniform mat4 in_NormalMatrix;
+uniform vec3 in_LightPosition;
 
-out vec3 fragmentColor; // Output data ; will be interpolated for each fragment.
-uniform mat4 MVP;
-uniform mat4 transformMatrix;
-uniform vec4 LightPosition;
+layout(location = 0) in vec3 in_Position;
+layout(location = 1) in vec3 in_Normal;
+layout(location = 2) in vec2 in_Texcoord;
 
-// output values that will be interpretated per-fragment
-out  vec3 fN;
-out  vec3 fE;
-out  vec3 fL;
+out vec2 uv;
+out vec3 Normal;
+out vec3 LightDirection;
 
-void main()
+void main(void)
 {
-    fN = vNormal;
-    fE = Position.xyz;
-    fL = LightPosition.xyz;
-
-    if( LightPosition.w != 0.0 ) {
-        fL = LightPosition.xyz - Position.xyz;
-    }
-
-    // Output position of the vertex, in clip space : MVP * position
-    vec4 v = vec4(Position,1); // Transform in homoneneous 4D vector
-    gl_Position = MVP * v;
-    //gl_Position = MVP * v;
-
-    // The color of each vertex will be interpolated
-    // to produce the color of each fragment
-    //fragmentColor = vertexColor; // take out at some point
+    uv = in_Texcoord;
+    Normal = mat3(in_NormalMatrix) * in_Normal;
+    LightDirection = in_LightPosition - in_Position;
+    gl_Position = in_ModelViewProjection * vec4(in_Position, 1.0);
 }
