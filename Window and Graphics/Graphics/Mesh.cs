@@ -15,13 +15,13 @@
 
         public V[] Vertices { get { return vertices; } set { vertices = value; } }
 
-        public int VerticesLength { get { return Vertices.Length; } }
+        public int VerticesLength { get { return vertices == null ? 0 : vertices.Length; } }
 
         protected I[] indices;
 
         public I[] Indices { get { return indices; } set { indices = value; } }
 
-        public int IndicesLength { get { return Indices.Length; } }
+        public int IndicesLength { get { return indices == null ? 0 : indices.Length; } }
 
         public Mesh() { }
 

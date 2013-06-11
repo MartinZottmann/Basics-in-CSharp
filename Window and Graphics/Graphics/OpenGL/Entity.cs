@@ -25,7 +25,10 @@ namespace MartinZottmann.Graphics.OpenGL
         {
             this.mesh = mesh;
             vao.Add(new BufferObject<V>(BufferTarget.ArrayBuffer, mesh.Vertices));
-            vao.Add(new BufferObject<I>(BufferTarget.ElementArrayBuffer, mesh.Indices));
+            if (mesh.IndicesLength != 0)
+            {
+                vao.Add(new BufferObject<I>(BufferTarget.ElementArrayBuffer, mesh.Indices));
+            }
         }
 
         [Obsolete("Use Add<V, I>(Mesh<V, I> mesh) instead", true)]
