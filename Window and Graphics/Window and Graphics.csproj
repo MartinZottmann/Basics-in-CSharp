@@ -68,7 +68,7 @@
     <Compile Include="Graphics\Bind.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="Graphics\IIndices.cs" />
-    <Compile Include="Graphics\IVertex.cs" />
+    <Compile Include="Graphics\IVertices.cs" />
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\OpenGL\Entity.cs" />
     <Compile Include="Graphics\IBindable.cs" />
@@ -83,7 +83,6 @@
     <Compile Include="Graphics\Vertex.cs" />
     <Compile Include="Graphics\OpenGL\VertexArrayObject.cs" />
     <Compile Include="Graphics\OpenGL\BufferObject.cs" />
-    <Compile Include="Graphics\OpenGL\VertexBufferObject.cs" />
     <Compile Include="Math\Quad.cs" />
     <Compile Include="Window.cs" />
     <Compile Include="Math\Polygon.cs" />

@@ -31,12 +31,6 @@ namespace MartinZottmann.Graphics.OpenGL
             }
         }
 
-        [Obsolete("Use Add<V, I>(Mesh<V, I> mesh) instead", true)]
-        public void Add<U>(BufferObject<U> bo) where U : struct
-        {
-            vao.Add(bo);
-        }
-
         public void Unload()
         {
             vao.Dispose();

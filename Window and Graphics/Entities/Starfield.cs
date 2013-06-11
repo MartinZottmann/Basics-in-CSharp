@@ -52,9 +52,9 @@ void main(void) {
             var vertex_data = new VertexP3C4[num_stars];
             for (int i = 0; i < num_stars; i++)
             {
-                vertex_data[i].position.x = randomNumber.Next(-1000, 1000);
-                vertex_data[i].position.y = randomNumber.Next(-1000, 1000);
-                vertex_data[i].position.z = randomNumber.Next(-1000, 1000);
+                vertex_data[i].position.X = randomNumber.Next(-1000, 1000);
+                vertex_data[i].position.Y = randomNumber.Next(-1000, 1000);
+                vertex_data[i].position.Z = randomNumber.Next(-1000, 1000);
                 vertex_data[i].color.r = (float)randomNumber.NextDouble();
                 vertex_data[i].color.g = (float)randomNumber.NextDouble();
                 vertex_data[i].color.b = (float)randomNumber.NextDouble();
@@ -67,7 +67,7 @@ void main(void) {
         public override void Render(double delta_time)
         {
             GL.Color3(color);
-            GL.PointSize(3);
+            GL.PointSize(1);
             graphic.Draw();
         }
     }

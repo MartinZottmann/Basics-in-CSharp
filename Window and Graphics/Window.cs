@@ -39,21 +39,25 @@ namespace MartinZottmann
             GL.AlphaFunc(AlphaFunction.Greater, 0.1f);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
             GL.ClearColor(System.Drawing.Color.Black);
-            //GL.CullFace(CullFaceMode.Back);
+            GL.DepthFunc(DepthFunction.Less);
             GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.CullFace);
             GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Light0);
             GL.Enable(EnableCap.LineSmooth);
             GL.Enable(EnableCap.PointSmooth);
             GL.Enable(EnableCap.PolygonSmooth);
-            GL.DepthFunc(DepthFunction.Less);
-            GL.Disable(EnableCap.CullFace);
-            GL.Disable(EnableCap.Lighting);
             GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
             GL.Hint(HintTarget.PointSmoothHint, HintMode.Nicest);
             GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
             GL.Hint(HintTarget.TextureCompressionHint, HintMode.Nicest);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            GL.Light(LightName.Light0, LightParameter.Ambient, new Color4(0, 0, 0, 255));
+            GL.Light(LightName.Light0, LightParameter.Diffuse, new Color4(255, 255, 255, 255));
+            GL.Light(LightName.Light0, LightParameter.Position, new Vector4(10, 10, 10, 0));
+            GL.Light(LightName.Light0, LightParameter.Specular, new Color4(255, 255, 255, 255));
+            GL.ShadeModel(ShadingModel.Smooth);
 
             Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 

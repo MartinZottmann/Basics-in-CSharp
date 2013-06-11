@@ -4,24 +4,24 @@ namespace MartinZottmann.Graphics
 {
     public struct VertexObject
     {
-        public Vertex3[] vertices;
+        public Vector3[] vertices;
 
         public Color4[] colors;
     }
 
     public struct VertexP3C4
     {
-        public Vertex3 position;
+        public Vector3 position;
 
         public Color4 color;
 
-        public VertexP3C4(Vertex3 position, Color4 color)
+        public VertexP3C4(Vector3 position, Color4 color)
         {
             this.position = position;
             this.color = color;
         }
 
-        public VertexP3C4(float x, float y, float z, float r, float g, float b, float a) : this(new Vertex3(x, y, z), new Color4(r, g, b, a)) { }
+        public VertexP3C4(float x, float y, float z, float r, float g, float b, float a) : this(new Vector3(x, y, z), new Color4(r, g, b, a)) { }
 
         public string[] GetAttributeLayout()
         {
@@ -83,18 +83,6 @@ namespace MartinZottmann.Graphics
                 "in_Normal",
                 "in_TexCoord"
             };
-        }
-    }
-
-    public struct Vertex3
-    {
-        public float x, y, z;
-
-        public Vertex3(float x, float y, float z)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
         }
     }
 }

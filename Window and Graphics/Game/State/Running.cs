@@ -34,7 +34,10 @@ namespace MartinZottmann.Game.State
 
             entities.Add(new Starfield());
 
-            entities.Add(new Asteroid());
+            for (int i = 1; i <= 10; i++)
+            {
+                entities.Add(new Asteroid());
+            }
 
             var textured = new Textured();
             steerable = textured;

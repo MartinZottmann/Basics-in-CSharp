@@ -7,7 +7,7 @@ using System;
 
 namespace MartinZottmann.Entities
 {
-    class Asteroid : Physical
+    class Asteroid : Entity
     {
         Graphics.OpenGL.Entity graphic;
 
@@ -171,7 +171,16 @@ namespace MartinZottmann.Entities
             //    // Bottom Face
             //    23, 22, 21, 21, 20, 23,
             //};
-            graphic.Add(new Cube());
+            var cube = new Cube();
+            var scale = (float)(randomNumber.NextDouble() * 5 + 1);
+            for (int i = 0; i < cube.VerticesLength; i++)
+            {
+                cube.Vertices[i].position *= scale;
+            }
+            Position.X = (randomNumber.NextDouble() - 0.5) * 25;
+            Position.Y = (randomNumber.NextDouble() - 0.5) * 25;
+            Position.Z = (randomNumber.NextDouble() - 0.5) * 25;
+            graphic.Add(cube);
             using (var vertex_shader = new Shader(ShaderType.VertexShader, @"
 #version 330 compatibility
 
@@ -181,8 +190,14 @@ layout(location = 2) in vec2 in_Texcoord;
 
 out vec2 uv;
 
+out vec3 N;
+out vec3 v;
+
 void main(void)
 {
+    v = vec3(gl_ModelViewMatrix * gl_Vertex);
+    N = normalize(gl_NormalMatrix * in_Normal);
+
     gl_Position = ftransform();
     uv = in_Texcoord;
 }
@@ -193,9 +208,16 @@ void main(void)
 uniform sampler2D in_Texture;
 in vec2 uv;
 
+in vec3 N;
+in vec3 v;
+
 void main(void)
 {
-    gl_FragColor = texture2D(in_Texture, uv);
+    vec3 L = normalize(gl_LightSource[0].position.xyz - v);
+    vec4 Idiff = gl_FrontLightProduct[0].diffuse * max(dot(N,L), 0.0);
+    Idiff = clamp(Idiff, 0.0, 1.0);
+
+    gl_FragColor = texture2D(in_Texture, uv) + Idiff;
 }
             "))
                 graphic.program = new Graphics.OpenGL.Program(
@@ -220,17 +242,16 @@ void main(void)
             GL.PushMatrix();
             {
                 GL.Color3(System.Drawing.Color.White);
-                GL.Rotate(Angle, Vector3d.UnitY);
-                GL.Scale(10, 10, 10);
+                //GL.Rotate(Angle, Vector3d.UnitY);
                 GL.Translate(Position.X, Position.Y, Position.Z);
 
                 graphic.Draw();
             }
             GL.PopMatrix();
 
-#if DEBUG
-            RenderVelocity(delta_time);
-#endif
+            //#if DEBUG
+            //            RenderVelocity(delta_time);
+            //#endif
         }
     }
 }

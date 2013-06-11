@@ -7,7 +7,7 @@
         int IndicesLength { get; }
     }
 
-    public class Mesh<V, I> : IMesh, IVertex<V>, IIndices<I>
+    public class Mesh<V, I> : IMesh, IVertices<V>, IIndices<I>
         where V : struct
         where I : struct
     {
