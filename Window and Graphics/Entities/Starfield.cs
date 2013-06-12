@@ -1,9 +1,6 @@
 ﻿using MartinZottmann.Graphics;
 using MartinZottmann.Graphics.OpenGL;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using System;
-using System.Drawing;
 
 namespace MartinZottmann.Entities
 {

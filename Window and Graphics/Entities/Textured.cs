@@ -3,9 +3,7 @@ using MartinZottmann.Graphics.OpenGL;
 using MartinZottmann.Math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace MartinZottmann.Entities
 {

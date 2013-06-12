@@ -1,8 +1,5 @@
 ﻿using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 using System;
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
 
 namespace MartinZottmann
 {

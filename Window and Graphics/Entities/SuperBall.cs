@@ -1,6 +1,4 @@
-﻿using OpenTK;
-
-namespace MartinZottmann.Entities
+﻿namespace MartinZottmann.Entities
 {
     class SuperBall : Physical
     {

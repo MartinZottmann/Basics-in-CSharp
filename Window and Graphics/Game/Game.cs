@@ -1,12 +1,5 @@
-﻿using MartinZottmann.Entities;
-using MartinZottmann.Game.State;
-using MartinZottmann.Math;
+﻿using MartinZottmann.Game.State;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace MartinZottmann.Game
 {

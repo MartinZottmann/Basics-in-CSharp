@@ -1,10 +1,8 @@
 ﻿using MartinZottmann.Entities;
-using MartinZottmann.Math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace MartinZottmann.Game.State
 {

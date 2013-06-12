@@ -1,10 +1,7 @@
-﻿using MartinZottmann.Graphics;
-using MartinZottmann.Graphics.OpenGL;
+﻿using MartinZottmann.Graphics.OpenGL;
 using MartinZottmann.Graphics.Shapes;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using System;
-using System.IO;
 
 namespace MartinZottmann.Entities
 {
@@ -85,14 +82,8 @@ namespace MartinZottmann.Entities
             Position.Y = (randomNumber.NextDouble() - 0.5) * 25;
             Position.Z = (randomNumber.NextDouble() - 0.5) * 25;
             graphic.Add(cube);
-            var sr = new StreamReader("res/Shaders/point_light.vs.glsl");
-            var vs = sr.ReadToEnd();
-            sr.Close();
-            sr = new StreamReader("res/Shaders/point_light.fs.glsl");
-            var fs = sr.ReadToEnd();
-            sr.Close();
-            using (var vertex_shader = new Shader(ShaderType.VertexShader, vs))
-            using (var fragment_shader = new Shader(ShaderType.FragmentShader, fs))
+            using (var vertex_shader = new Shader(ShaderType.VertexShader, "res/Shaders/point_light.vs.glsl"))
+            using (var fragment_shader = new Shader(ShaderType.FragmentShader, "res/Shaders/point_light.fs.glsl"))
                 graphic.program = new Graphics.OpenGL.Program(
                     new Shader[] {
                         vertex_shader,

@@ -1,6 +1,4 @@
-﻿using OpenTK;
-
-namespace MartinZottmann.Graphics.Shapes
+﻿namespace MartinZottmann.Graphics.Shapes
 {
     public class Cube : Mesh<VertexP3N3T2, uint>
     {

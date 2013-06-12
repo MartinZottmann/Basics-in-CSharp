@@ -1,5 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
+using System.IO;
 
 namespace MartinZottmann.Graphics.OpenGL
 {
@@ -9,8 +10,12 @@ namespace MartinZottmann.Graphics.OpenGL
 
         public ShaderType type;
 
-        public Shader(ShaderType type, string source)
+        public Shader(ShaderType type, string filename)
         {
+            var sr = new StreamReader(filename);
+            var source = sr.ReadToEnd();
+            sr.Close();
+
             id = GL.CreateShader(type);
 
             GL.ShaderSource(id, source);

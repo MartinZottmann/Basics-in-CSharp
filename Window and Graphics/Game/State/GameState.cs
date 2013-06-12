@@ -1,6 +1,4 @@
 ﻿using OpenTK;
-using OpenTK.Input;
-using System.Drawing;
 
 namespace MartinZottmann.Game.State
 {
