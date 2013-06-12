@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Graphics;
+﻿using MartinZottmann.Engine;
+using MartinZottmann.Graphics;
 using MartinZottmann.Graphics.OpenGL;
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -18,7 +19,7 @@ namespace MartinZottmann.Entities.GUI
 
         public Texture texture;
 
-        public FPSCounter() : base() { }
+        public FPSCounter(Resources resources) : base(resources) { }
 
         public override void Update(double delta_time)
         {

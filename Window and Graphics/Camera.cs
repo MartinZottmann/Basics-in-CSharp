@@ -58,13 +58,9 @@ namespace MartinZottmann
             {
                 mouse_look = value;
                 if (value)
-                {
                     Cursor.Hide();
-                }
                 else
-                {
                     Cursor.Show();
-                }
             }
         }
 
@@ -82,22 +78,14 @@ namespace MartinZottmann
                 var mouse_y_delta = Window.Mouse.Y - window_center.Y;
 
                 if (mouse_x_delta != 0)
-                {
                     RotateDirectionAroundUp(-mouse_x_delta * delta_time * 0.1);
-                }
                 if (mouse_y_delta != 0)
-                {
                     RotateDirectionAroundRight(mouse_y_delta * delta_time * 0.1);
-                }
 
                 if (Window.WindowState == WindowState.Fullscreen)
-                {
                     Cursor.Position = window_center;
-                }
                 else
-                {
                     Cursor.Position = Window.PointToScreen(window_center);
-                }
             }
         }
 

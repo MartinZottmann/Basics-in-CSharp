@@ -3,7 +3,7 @@ using System;
 
 namespace MartinZottmann.Graphics.OpenGL
 {
-    public class Entity
+    public class Entity : IDisposable
     {
         public BeginMode mode = BeginMode.Triangles;
 
@@ -24,12 +24,10 @@ namespace MartinZottmann.Graphics.OpenGL
             this.mesh = mesh;
             vao.Add(new BufferObject<V>(BufferTarget.ArrayBuffer, mesh.Vertices));
             if (mesh.IndicesLength != 0)
-            {
                 vao.Add(new BufferObject<I>(BufferTarget.ElementArrayBuffer, mesh.Indices));
-            }
         }
 
-        public void Unload()
+        public void Dispose()
         {
             vao.Dispose();
         }

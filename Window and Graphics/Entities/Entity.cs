@@ -1,13 +1,16 @@
-﻿using OpenTK;
+﻿using MartinZottmann.Engine;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Drawing;
 
 namespace MartinZottmann.Entities
 {
-    public class Entity
+    public abstract class Entity
     {
         public Color color;
+
+        public Resources Resources { get; protected set; }
 
         protected static Random randomNumber = new Random();
 
@@ -21,8 +24,9 @@ namespace MartinZottmann.Entities
 
         public Matrix4d ModelViewProjection { get { return Model * View * Projection; } }
 
-        public Entity()
+        public Entity(Resources resources)
         {
+            Resources = resources;
             KnownColor[] names = (KnownColor[])Enum.GetValues(typeof(KnownColor));
             KnownColor randomColorName = names[randomNumber.Next(names.Length)];
             color = Color.FromKnownColor(randomColorName);
@@ -31,31 +35,19 @@ namespace MartinZottmann.Entities
         public virtual void Reposition(double max_x, double max_y, double max_z)
         {
             if (Position.X < -max_x)
-            {
                 Position.X = max_x;
-            }
             else if (Position.X > max_x)
-            {
                 Position.X = -max_x;
-            }
 
             if (Position.Y < -max_y)
-            {
                 Position.Y = max_y;
-            }
             else if (Position.Y > max_y)
-            {
                 Position.Y = -max_y;
-            }
 
             if (Position.Z < -max_z)
-            {
                 Position.Z = max_z;
-            }
             else if (Position.Z > max_z)
-            {
                 Position.Z = -max_z;
-            }
         }
 
         public virtual void Update(double delta_time) { }

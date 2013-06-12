@@ -1,6 +1,9 @@
-﻿namespace MartinZottmann.Entities
+﻿using MartinZottmann.Engine;
+
+namespace MartinZottmann.Entities
 {
-    class SuperBall : Physical
+    public class SuperBall : Physical
     {
+        public SuperBall(Resources resources) : base(resources) { }
     }
 }

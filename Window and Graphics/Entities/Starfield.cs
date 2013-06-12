@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Graphics;
+﻿using MartinZottmann.Engine;
+using MartinZottmann.Graphics;
 using MartinZottmann.Graphics.OpenGL;
 using OpenTK.Graphics.OpenGL;
 
@@ -10,31 +11,11 @@ namespace MartinZottmann.Entities
 
         Graphics.OpenGL.Entity graphic;
 
-        public Starfield()
-            : base()
+        public Starfield(Resources resources) : base(resources)
         {
             graphic = new Graphics.OpenGL.Entity();
-            using (var vertex_shader = new Shader(ShaderType.VertexShader, @"
-#version 330 compatibility
-
-in vec3 in_Position;
-in vec4 in_Color;
-out vec4 ex_Color;
-
-void main(void) {
-    gl_Position = ftransform();
-    ex_Color = in_Color;
-}
-            "))
-            using (var fragment_shader = new Shader(ShaderType.FragmentShader, @"
-#version 330 compatibility
-
-in vec4 ex_Color;
-
-void main(void) {
-    gl_FragColor = ex_Color;
-}
-            "))
+            using (var vertex_shader = new Shader(ShaderType.VertexShader, "res/Shaders/normal.vs.glsl"))
+            using (var fragment_shader = new Shader(ShaderType.FragmentShader, "res/Shaders/normal.fs.glsl"))
                 graphic.program = new Graphics.OpenGL.Program(
                     new Shader[] {
                         vertex_shader,

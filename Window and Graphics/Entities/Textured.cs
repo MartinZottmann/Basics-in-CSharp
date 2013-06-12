@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Graphics;
+﻿using MartinZottmann.Engine;
+using MartinZottmann.Graphics;
 using MartinZottmann.Graphics.OpenGL;
 using MartinZottmann.Math;
 using OpenTK;
@@ -15,8 +16,8 @@ namespace MartinZottmann.Entities
 
         protected Texture texture;
 
-        public Textured()
-            : base()
+        public Textured(Resources resources)
+            : base(resources)
         {
             texture = new Texture(texture_filename, false);
         }

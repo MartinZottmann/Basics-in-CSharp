@@ -112,21 +112,13 @@ namespace MartinZottmann
         protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
         {
             if (e.Key == Key.Escape)
-            {
                 Exit();
-            }
 
             if (e.Key == Key.F11)
-            {
                 if (WindowState != WindowState.Fullscreen)
-                {
                     WindowState = WindowState.Fullscreen;
-                }
                 else
-                {
                     WindowState = WindowState.Normal;
-                }
-            }
 
             if (e.Key == Key.F12)
             {

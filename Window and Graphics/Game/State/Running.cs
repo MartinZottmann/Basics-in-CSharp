@@ -1,7 +1,9 @@
-﻿using MartinZottmann.Entities;
+﻿using MartinZottmann.Engine;
+using MartinZottmann.Entities;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using System;
 using System.Collections.Generic;
 
 namespace MartinZottmann.Game.State
@@ -10,50 +12,95 @@ namespace MartinZottmann.Game.State
     {
         protected List<Entity> entities = new List<Entity>();
 
-        protected Entities.GUI.FPSCounter fps_counter = new Entities.GUI.FPSCounter();
-
         protected Physical steerable;
 
         protected Camera camera;
+
+        protected Resources resources;
 
         public Running(GameWindow window) : base(window) { }
 
         public override void Load()
         {
+            resources = new Resources();
+            var vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/point_light.vs.glsl");
+            var fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/point_light.fs.glsl");
+            resources.Programs.Load(
+                "surface",
+                new MartinZottmann.Graphics.OpenGL.Shader[] {
+                    vertex_shader,
+                    fragment_shader
+                },
+                new string[] {
+                    "in_Position",
+                    "in_Normal",
+                    "in_Texcoord"
+                }
+            );
+            vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/phong.vs.glsl");
+            fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/phong.fs.glsl");
+            resources.Programs.Load(
+                "phong",
+                new MartinZottmann.Graphics.OpenGL.Shader[] {
+                    vertex_shader,
+                    fragment_shader
+                },
+                new string[] {
+                    "in_Position",
+                    "in_Normal",
+                    "in_Texcoord"
+                }
+            );
+
             camera = new Camera(Window);
             camera.MouseLook = true;
             camera.Position.X = 10;
             camera.Position.Y = 10;
             camera.Position.Z = 100;
 
-            entities.Add(new Entities.GUI.FPSCounter());
+            Window.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
-            entities.Add(new Grid());
+            Add(new Entities.GUI.FPSCounter(resources));
 
-            entities.Add(new Starfield());
+            Add(new Grid(resources));
+
+            Add(new Starfield(resources));
 
             for (int i = 1; i <= 10; i++)
             {
-                entities.Add(new Asteroid());
+                Add(new Asteroid(resources));
             }
 
-            var textured = new Textured();
+            var textured = new Textured(resources);
             steerable = textured;
             textured.quad[0] = new Vector3d(-10, 0, -10);
             textured.quad[1] = new Vector3d(-10, 0, 10);
             textured.quad[2] = new Vector3d(10, 0, 10);
             textured.quad[3] = new Vector3d(10, 0, -10);
-            entities.Add(textured);
+            Add(textured);
 
             for (int i = 1; i <= 10; i++)
             {
-                entities.Add(new SuperBall());
+                Add(new SuperBall(resources));
             }
         }
 
-        public override void Unload()
+        public override void Dispose()
         {
             entities.Clear();
+
+            resources.Dispose();
+        }
+
+        protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
+        {
+            if (e.Key == Key.F10)
+                camera.MouseLook = !camera.MouseLook;
+        }
+
+        protected void Add(Entity entity)
+        {
+            entities.Add(entity);
         }
 
         public override void Update(double delta_time)
@@ -111,15 +158,13 @@ namespace MartinZottmann.Game.State
 
                 entity.Reposition(100, 100, 100);
             }
-
-            fps_counter.Update(delta_time);
         }
 
         public override void Render(double delta_time)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.Viewport(0, 0, Window.Width, Window.Height);
 
-            #region 3D
             GL.MatrixMode(MatrixMode.Projection);
             GL.PushMatrix();
             {
@@ -134,13 +179,13 @@ namespace MartinZottmann.Game.State
 
                     foreach (Entity entity in entities)
                     {
-                        entity.Projection = projection_matrix;
                         entity.Model = Matrix4d.Identity;
                         entity.View = view_matrix;
-                        if (entity is Asteroid)
-                        {
-                            (entity as Asteroid).EyeDirection.Set(camera.Direction);
-                        }
+                        entity.Projection = projection_matrix;
+                        //if (entity is Asteroid)
+                        //{
+                        //    (entity as Asteroid).EyeDirection.Set(camera.Direction);
+                        //}
                         entity.Render(delta_time);
                     }
                 }
@@ -149,28 +194,6 @@ namespace MartinZottmann.Game.State
             }
             GL.MatrixMode(MatrixMode.Projection);
             GL.PopMatrix();
-            #endregion
-
-            #region 2D
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.PushMatrix();
-            {
-                GL.LoadIdentity();
-                GL.Ortho(0, Window.Width, 0, Window.Height, -1, 1);
-                GL.Viewport(0, 0, Window.Width, Window.Height);
-                GL.MatrixMode(MatrixMode.Modelview);
-                GL.PushMatrix();
-                {
-                    GL.LoadIdentity();
-
-                    fps_counter.Render(delta_time);
-                }
-                GL.MatrixMode(MatrixMode.Modelview);
-                GL.PopMatrix();
-            }
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.PopMatrix();
-            #endregion
 
             Window.SwapBuffers();
         }

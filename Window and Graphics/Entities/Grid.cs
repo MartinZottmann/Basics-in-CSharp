@@ -1,12 +1,13 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using MartinZottmann.Engine;
+using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 
 namespace MartinZottmann.Entities
 {
     class Grid : Entity
     {
-        public Grid()
-            : base()
+        public Grid(Resources resources)
+            : base(resources)
         {
             color = Color.LightGray;
         }

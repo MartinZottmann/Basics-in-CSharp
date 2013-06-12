@@ -1,6 +1,9 @@
-﻿namespace MartinZottmann.Entities.GUI
+﻿using MartinZottmann.Engine;
+
+namespace MartinZottmann.Entities.GUI
 {
-    class Entity : MartinZottmann.Entities.Entity
+    public abstract class Entity : MartinZottmann.Entities.Entity
     {
+        public Entity(Resources resources) : base(resources) { }
     }
 }

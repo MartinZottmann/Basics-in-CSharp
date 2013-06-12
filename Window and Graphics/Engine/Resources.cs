@@ -1,10 +1,11 @@
 ﻿using MartinZottmann.Graphics.OpenGL;
+using System;
 
 namespace MartinZottmann.Engine
 {
-    public class Resources
+    public class Resources : IDisposable
     {
-        public Programs Programms { get; protected set; }
+        public Programs Programs { get; protected set; }
 
         public Shaders Shaders { get; protected set; }
 
@@ -12,9 +13,16 @@ namespace MartinZottmann.Engine
 
         public Resources()
         {
-            Programms = new Programs(this);
+            Programs = new Programs(this);
             Shaders = new Shaders(this);
             Textures = new Textures(this);
+        }
+
+        public void Dispose()
+        {
+            Programs.Dispose();
+            Shaders.Dispose();
+            Textures.Dispose();
         }
     }
 
@@ -22,32 +30,40 @@ namespace MartinZottmann.Engine
     {
         public Programs(Resources resources) : base(resources) { }
 
-        public void Load(string name, string[] shader_files, string[] attribute_location_names)
+        public MartinZottmann.Graphics.OpenGL.Program Load(string name, string[] shader_files, string[] attribute_location_names)
         {
-            if (resources.ContainsKey(name))
-                return;
-
-            var n = shader_files.Length;
-            var shaders = new Shader[n];
-            for (int i = 0; i < n; i++)
+            if (!resources.ContainsKey(name))
             {
-                shaders[i] = Resources.Shaders[shader_files[i]];
+                var n = shader_files.Length;
+                var shaders = new Shader[n];
+                for (int i = 0; i < n; i++)
+                    shaders[i] = Resources.Shaders[shader_files[i]];
+
+                this[name] = new MartinZottmann.Graphics.OpenGL.Program(shaders, attribute_location_names);
             }
 
-            this[name] = new MartinZottmann.Graphics.OpenGL.Program(shaders, attribute_location_names);
+            return this[name];
+        }
+
+        public MartinZottmann.Graphics.OpenGL.Program Load(string name, Shader[] shaders, string[] attribute_location_names)
+        {
+            if (!resources.ContainsKey(name))
+                this[name] = new MartinZottmann.Graphics.OpenGL.Program(shaders, attribute_location_names);
+
+            return this[name];
         }
     }
 
-    public class Shaders : ResourceManager<MartinZottmann.Graphics.OpenGL.Shader>
+    public class Shaders : ResourceManager<Shader>
     {
         public Shaders(Resources resources) : base(resources) { }
 
-        public void Load(OpenTK.Graphics.OpenGL.ShaderType type, string filename)
+        public Shader Load(OpenTK.Graphics.OpenGL.ShaderType type, string filename)
         {
-            if (resources.ContainsKey(filename))
-                return;
+            if (!resources.ContainsKey(filename))
+                this[filename] = new Shader(type, filename);
 
-            this[filename] = new Shader(type, filename);
+            return this[filename];
         }
     }
 
@@ -60,12 +76,12 @@ namespace MartinZottmann.Engine
         //    Load(filename);
         //}
 
-        public void Load(string filename, bool mipmapped = false, OpenTK.Graphics.OpenGL.TextureTarget target = OpenTK.Graphics.OpenGL.TextureTarget.Texture2D)
+        public Texture Load(string filename, bool mipmapped = false, OpenTK.Graphics.OpenGL.TextureTarget target = OpenTK.Graphics.OpenGL.TextureTarget.Texture2D)
         {
-            if (resources.ContainsKey(filename))
-                return;
+            if (!resources.ContainsKey(filename))
+                this[filename] = new Texture(filename, mipmapped, target);
 
-            this[filename] = new Texture(filename, mipmapped, target);
+            return this[filename];
         }
     }
 }

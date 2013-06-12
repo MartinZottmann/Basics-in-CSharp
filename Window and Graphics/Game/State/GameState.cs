@@ -1,8 +1,9 @@
 ﻿using OpenTK;
+using System;
 
 namespace MartinZottmann.Game.State
 {
-    abstract class GameState
+    abstract class GameState : IDisposable
     {
         protected GameWindow Window { get; set; }
 
@@ -11,9 +12,9 @@ namespace MartinZottmann.Game.State
             Window = window;
         }
 
-        public abstract void Load();
+        public abstract void Dispose();
 
-        public abstract void Unload();
+        public abstract void Load();
 
         public abstract void Update(double delta_time);
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MartinZottmann.Engine
 {
-    public abstract class ResourceManager<T> where T : IDisposable
+    public abstract class ResourceManager<T> : IDisposable where T : IDisposable
     {
         public Resources Resources { get; protected set; }
 
@@ -30,6 +30,11 @@ namespace MartinZottmann.Engine
         {
             // @todo IDisposeable?
             resources.Clear();
+        }
+
+        public void Dispose()
+        {
+            Clear();
         }
 
         //public abstract void LoadFromFile(string filename);

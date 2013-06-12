@@ -107,6 +107,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\Shaders\normal.fs.glsl" />
+    <None Include="res\Shaders\normal.vs.glsl" />
     <None Include="res\Shaders\point_light.fs.glsl" />
     <None Include="res\Shaders\point_light.vs.glsl" />
     <None Include="res\Shaders\point_light_2.fs.glsl" />

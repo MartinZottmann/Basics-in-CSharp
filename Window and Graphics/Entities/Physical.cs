@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using MartinZottmann.Engine;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Entities
@@ -10,6 +11,8 @@ namespace MartinZottmann.Entities
         public double Angle = 0;
 
         public double AngleVelocity = 10;
+
+        public Physical(Resources resources) : base(resources) { }
 
         public override void Update(double delta_time)
         {
