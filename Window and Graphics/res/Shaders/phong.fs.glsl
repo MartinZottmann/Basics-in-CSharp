@@ -15,10 +15,10 @@ void main(void)
 {
     float diff = max(0.0, dot(normalize(Normal), normalize(LightDirection)));
     FragColor = texture2D(in_Texture, uv) * diff * in_DiffuseColor + in_AmbientColor;
-    vec3 reflection = normalize(reflect(-normalize(LightDirection), normalize(Normal)));
-    float spec = max(0.0, dot(normalize(Normal), reflection));
     if (diff != 0)
     {
-        FragColor.rgb += vec3(pow(spec, 128.0));
+    vec3 reflection = normalize(reflect(-normalize(LightDirection), normalize(Normal)));
+    float spec = max(0.0, dot(normalize(Normal), reflection));
+        FragColor.rgb += vec3(pow(spec, 32.0));
     }
 }

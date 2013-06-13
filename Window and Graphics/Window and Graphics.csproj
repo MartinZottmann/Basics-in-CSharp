@@ -79,7 +79,8 @@
     <Compile Include="Graphics\OpenGL\Shader.cs" />
     <Compile Include="Graphics\OpenGL\Texture.cs" />
     <Compile Include="Engine\ResourceManager.cs" />
-    <Compile Include="Graphics\Shapes\Cube.cs" />
+    <Compile Include="Graphics\Shapes\CubeHardNormals.cs" />
+    <Compile Include="Graphics\Shapes\CubeSoftNormals.cs" />
     <Compile Include="Graphics\SubBuffer.cs" />
     <Compile Include="Graphics\OpenGL\UniformBlockIndex.cs" />
     <Compile Include="Graphics\OpenGL\UniformLocation.cs" />

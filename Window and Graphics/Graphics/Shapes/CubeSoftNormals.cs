@@ -1,8 +1,8 @@
 ﻿namespace MartinZottmann.Graphics.Shapes
 {
-    public class Cube : Mesh<VertexP3N3T2, uint>
+    public class CubeSoftNormals : Mesh<VertexP3N3T2, uint>
     {
-        public Cube()
+        public CubeSoftNormals()
         {
             Vertices = new VertexP3N3T2[] {
                 // Front face
