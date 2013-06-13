@@ -23,10 +23,10 @@ namespace MartinZottmann.Game.State
         public override void Load()
         {
             resources = new Resources();
-            var vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/point_light.vs.glsl");
-            var fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/point_light.fs.glsl");
+            var vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/point_light_2.vs.glsl");
+            var fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/point_light_2.fs.glsl");
             resources.Programs.Load(
-                "surface",
+                "point_light_2",
                 new MartinZottmann.Graphics.OpenGL.Shader[] {
                     vertex_shader,
                     fragment_shader

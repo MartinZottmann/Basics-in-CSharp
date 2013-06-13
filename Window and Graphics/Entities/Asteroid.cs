@@ -65,7 +65,7 @@ namespace MartinZottmann.Entities
             Position.Y = (randomNumber.NextDouble() - 0.5) * 25;
             Position.Z = (randomNumber.NextDouble() - 0.5) * 25;
             graphic.Add(cube);
-            graphic.program = Resources.Programs["phong"];
+            graphic.program = Resources.Programs["point_light_2"];
             graphic.texture = new Texture("res/textures/debug-256.png", false, TextureTarget.Texture2D);
             var in_texture = graphic.program.AddUniformLocation("in_Texture");
             in_texture.Set(0);
@@ -74,28 +74,28 @@ namespace MartinZottmann.Entities
             //ModelUniform = graphic.program.AddUniformLocation("in_Model");
             //ViewUniform = graphic.program.AddUniformLocation("in_View");
             //ProjectionUniform = graphic.program.AddUniformLocation("in_Projection");
-            ModelViewUniform = graphic.program.AddUniformLocation("in_ModelView");
+            //ModelViewUniform = graphic.program.AddUniformLocation("in_ModelView");
             //ViewProjectionUniform = graphic.program.AddUniformLocation("in_ViewProjection");
             ModelViewProjectionUniform = graphic.program.AddUniformLocation("in_ModelViewProjection");
-            graphic.program.AddUniformLocation("in_AmbientColor").Set(new OpenTK.Graphics.Color4(63, 63, 63, 255));
-            graphic.program.AddUniformLocation("in_DiffuseColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
+            //graphic.program.AddUniformLocation("in_AmbientColor").Set(new OpenTK.Graphics.Color4(63, 63, 63, 255));
+            //graphic.program.AddUniformLocation("in_DiffuseColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
             //graphic.program.AddUniformLocation("in_SpecularColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
-            //graphic.program.AddUniformLocation("in_AmbientLight").Set(new OpenTK.Graphics.Color4(127, 0, 0, 255));
+            graphic.program.AddUniformLocation("in_AmbientLight").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
             NormalMatrixUniform = graphic.program.AddUniformLocation("in_NormalMatrix");
-            //graphic.program.AddUniformLocation("in_LightColor").Set(new OpenTK.Graphics.Color4(127, 127, 0, 255));
+            graphic.program.AddUniformLocation("in_LightColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
             graphic.program.AddUniformLocation("in_LightPosition").Set(new Vector3(10, 10, 10));
-            //graphic.program.AddUniformLocation("in_Shininess").Set(100f);
-            //graphic.program.AddUniformLocation("in_Strength").Set(0.1f);
-            //EyeDirection = graphic.program.AddUniformLocation("in_EyeDirection");
-            //graphic.program.AddUniformLocation("in_ConstantAttenuation").Set(0.1f);
-            //graphic.program.AddUniformLocation("in_LinearAttenuation").Set(0.1f);
-            //graphic.program.AddUniformLocation("in_QuadraticAttenuation").Set(0.1f);
+            graphic.program.AddUniformLocation("in_Shininess").Set(100f);
+            graphic.program.AddUniformLocation("in_Strength").Set(0.1f);
+            EyeDirection = graphic.program.AddUniformLocation("in_EyeDirection");
+            graphic.program.AddUniformLocation("in_ConstantAttenuation").Set(0.1f);
+            graphic.program.AddUniformLocation("in_LinearAttenuation").Set(0.1f);
+            graphic.program.AddUniformLocation("in_QuadraticAttenuation").Set(0.1f);
         }
 
         public override void Render(double delta_time)
         {
             Matrix4d.CreateTranslation(ref Position, out Model);
-            ModelViewUniform.Set(Model * View);
+            //ModelViewUniform.Set(Model * View);
             NormalMatrixUniform.Set(Matrix4d.Transpose(Matrix4d.Invert(Model)));
             ModelViewProjectionUniform.Set(ModelViewProjection);
             graphic.Draw();
