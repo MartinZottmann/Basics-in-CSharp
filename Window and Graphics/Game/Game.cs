@@ -1,30 +1,42 @@
 ﻿using MartinZottmann.Game.State;
-using OpenTK;
+using System;
 
 namespace MartinZottmann.Game
 {
-    public class Game
+    public class Game : IDisposable
     {
-        GameState state;
+        protected GameState state;
 
-        GameWindow Window { get; set; }
-
-        public Game(GameWindow window)
+        public GameState State
         {
-            Window = window;
+            get { return state; }
+            set
+            {
+                if (state != null)
+                    state.Dispose();
 
-            state = new Running(window);
-            state.Load();
+                state = value;
+            }
+        }
+
+        public Game(GameState state)
+        {
+            State = state;
+        }
+
+        public void Dispose()
+        {
+            State.Dispose();
         }
 
         public void Update(double delta_time)
         {
-            state.Update(delta_time);
+            State.Update(delta_time);
         }
 
         public void Render(double delta_time)
         {
-            state.Render(delta_time);
+            State.Render(delta_time);
         }
     }
 }

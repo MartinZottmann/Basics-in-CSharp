@@ -20,9 +20,8 @@ namespace MartinZottmann.Game.State
 
         protected Resources resources;
 
-        public Running(GameWindow window) : base(window) { }
-
-        public override void Load()
+        public Running(GameWindow window)
+            : base(window)
         {
             resources = new Resources();
             var vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/standard.vs.glsl");

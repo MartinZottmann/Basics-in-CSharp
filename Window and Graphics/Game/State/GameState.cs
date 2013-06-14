@@ -3,7 +3,7 @@ using System;
 
 namespace MartinZottmann.Game.State
 {
-    abstract class GameState : IDisposable
+    public abstract class GameState : IDisposable
     {
         protected GameWindow Window { get; set; }
 
@@ -13,8 +13,6 @@ namespace MartinZottmann.Game.State
         }
 
         public abstract void Dispose();
-
-        public abstract void Load();
 
         public abstract void Update(double delta_time);
 

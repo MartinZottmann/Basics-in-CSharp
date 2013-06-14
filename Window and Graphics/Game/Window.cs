@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using MartinZottmann.Game.State;
+using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
@@ -56,7 +57,7 @@ namespace MartinZottmann.Game
             Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
             // Subscribe to mouse events
-            game = new MartinZottmann.Game.Game(this);
+            game = new Game(new Running(this));
 
             Context.MakeCurrent(null);
 

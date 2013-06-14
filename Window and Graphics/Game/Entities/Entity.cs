@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace MartinZottmann.Game.Entities
 {
-    public abstract class Entity
+    public abstract class Entity : IDisposable
     {
         public Color color;
 
@@ -30,6 +30,11 @@ namespace MartinZottmann.Game.Entities
             KnownColor[] names = (KnownColor[])Enum.GetValues(typeof(KnownColor));
             KnownColor randomColorName = names[randomNumber.Next(names.Length)];
             color = Color.FromKnownColor(randomColorName);
+        }
+
+        public virtual void Dispose()
+        {
+            // @todo
         }
 
         public virtual void Reposition(double max_x, double max_y, double max_z)
