@@ -1,10 +1,13 @@
-﻿#version 330 compatibility
+﻿#version 330 core
+
+uniform mat4 PVM;
 
 in vec3 in_Position;
 in vec4 in_Color;
-out vec4 ex_Color;
+
+out vec4 Color;
 
 void main(void) {
-    gl_Position = ftransform();
-    ex_Color = in_Color;
+    gl_Position = PVM * vec4(in_Position, 1);
+    Color = in_Color;
 }

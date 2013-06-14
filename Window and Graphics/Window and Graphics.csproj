@@ -113,6 +113,8 @@
   <ItemGroup>
     <None Include="res\Shaders\normal.fs.glsl" />
     <None Include="res\Shaders\normal.vs.glsl" />
+    <None Include="res\Shaders\plain_texture.fs.glsl" />
+    <None Include="res\Shaders\plain_texture.vs.glsl" />
     <None Include="res\Shaders\point_light.fs.glsl" />
     <None Include="res\Shaders\point_light.vs.glsl" />
     <None Include="res\Shaders\point_light_2.fs.glsl" />

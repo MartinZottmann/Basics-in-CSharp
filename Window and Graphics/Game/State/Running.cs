@@ -66,6 +66,24 @@ namespace MartinZottmann.Game.State
                     "in_Color"
                 }
             );
+            resources.Programs["normal"].AddUniformLocation("PVM");
+            vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/plain_texture.vs.glsl");
+            fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/plain_texture.fs.glsl");
+            resources.Programs.Load(
+                "plain_texture",
+                new Shader[] {
+                    vertex_shader,
+                    fragment_shader
+                },
+                new string[] {
+                    "in_Position",
+                    "in_Normal",
+                    "in_Texcoord"
+                }
+            );
+            resources.Programs["plain_texture"].AddUniformLocation("PVM");
+            resources.Programs["plain_texture"].AddUniformLocation("Texture");
+
             foreach (var filename in Directory.GetFiles("res/textures/", "*.png"))
             {
                 resources.Textures.Load(filename, true, TextureTarget.Texture2D);
@@ -164,13 +182,13 @@ namespace MartinZottmann.Game.State
             GL.PushMatrix();
             {
                 var projection_matrix = camera.ProjectionMatrix();
-                GL.LoadMatrix(ref projection_matrix);
+                //GL.LoadMatrix(ref projection_matrix);
 
                 GL.MatrixMode(MatrixMode.Modelview);
                 GL.PushMatrix();
                 {
                     var view_matrix = camera.ViewMatrix();
-                    GL.LoadMatrix(ref view_matrix);
+                    //GL.LoadMatrix(ref view_matrix);
 
                     var render_context = new RenderContext()
                     {

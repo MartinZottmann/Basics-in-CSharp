@@ -1,5 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace MartinZottmann.Engine.Graphics.OpenGL
@@ -7,6 +8,10 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
     public class Program : IBindable, IDisposable
     {
         public int id;
+
+        public IDictionary<string, UniformBlockIndex> UniformBlockIndices = new Dictionary<string, UniformBlockIndex>();
+
+        public IDictionary<string, UniformLocation> UniformLocations = new Dictionary<string, UniformLocation>();
 
         public Program(Shader[] shaders, string[] attribute_location_names = null)
         {
@@ -42,13 +47,13 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         public UniformBlockIndex AddUniformBlockIndex(string name)
         {
             using (new Bind(this))
-                return new UniformBlockIndex(this, name);
+                return UniformBlockIndices[name] = new UniformBlockIndex(this, name);
         }
 
         public UniformLocation AddUniformLocation(string name)
         {
             using (new Bind(this))
-                return new UniformLocation(this, name);
+                return UniformLocations[name] = new UniformLocation(this, name);
         }
 
         public void Bind()

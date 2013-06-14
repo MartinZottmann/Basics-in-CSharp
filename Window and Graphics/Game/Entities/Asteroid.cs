@@ -2,7 +2,6 @@
 using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Entities
 {
@@ -41,26 +40,26 @@ namespace MartinZottmann.Game.Entities
 
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Add(cube);
-            graphic.program = Resources.Programs["standard"];
-            graphic.texture = Resources.Textures["res/textures/debug-256.png"];
+            graphic.Program = Resources.Programs["standard"];
+            graphic.Texture = Resources.Textures["res/textures/debug-256.png"];
 
-            graphic.program.AddUniformLocation("in_Texture").Set(0);
+            graphic.Program.AddUniformLocation("in_Texture").Set(0);
             //in_texture.Set(graphic.texture.id);
 
-            ModelUniform = graphic.program.AddUniformLocation("in_Model");
-            ViewUniform = graphic.program.AddUniformLocation("in_View");
+            ModelUniform = graphic.Program.AddUniformLocation("in_Model");
+            ViewUniform = graphic.Program.AddUniformLocation("in_View");
             //ProjectionUniform = graphic.program.AddUniformLocation("in_Projection");
-            ModelViewUniform = graphic.program.AddUniformLocation("in_ModelView");
+            ModelViewUniform = graphic.Program.AddUniformLocation("in_ModelView");
             //ViewProjectionUniform = graphic.program.AddUniformLocation("in_ViewProjection");
-            ModelViewProjectionUniform = graphic.program.AddUniformLocation("in_ModelViewProjection");
+            ModelViewProjectionUniform = graphic.Program.AddUniformLocation("in_ModelViewProjection");
             //graphic.program.AddUniformLocation("in_AmbientColor").Set(new OpenTK.Graphics.Color4(0, 0, 0, 255));
             //graphic.program.AddUniformLocation("in_DiffuseColor").Set(new OpenTK.Graphics.Color4(255, 255, 255, 255));
             //graphic.program.AddUniformLocation("in_SpecularColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
             //graphic.program.AddUniformLocation("in_AmbientLight").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
             //NormalMatrixUniform = graphic.program.AddUniformLocation("in_NormalMatrix");
-            NormalViewUniform = graphic.program.AddUniformLocation("in_NormalView");
+            NormalViewUniform = graphic.Program.AddUniformLocation("in_NormalView");
             //graphic.program.AddUniformLocation("in_LightColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
-            graphic.program.AddUniformLocation("in_LightPosition").Set(new Vector3(10, 10, 10));
+            graphic.Program.AddUniformLocation("in_LightPosition").Set(new Vector3(10, 10, 10));
             //graphic.program.AddUniformLocation("in_Shininess").Set(100f);
             //graphic.program.AddUniformLocation("in_Strength").Set(0.1f);
             //EyeDirection = graphic.program.AddUniformLocation("in_EyeDirection");

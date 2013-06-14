@@ -7,13 +7,13 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
     {
         public BeginMode mode = BeginMode.Triangles;
 
-        public Program program;
+        public Program Program;
 
-        public Texture texture;
+        public Texture Texture;
 
-        public VertexArrayObject vao = new VertexArrayObject();
+        protected VertexArrayObject vao = new VertexArrayObject();
 
-        public IMesh mesh;
+        protected IMesh mesh;
 
         public Entity() : base() { }
 
@@ -34,8 +34,8 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public void Draw()
         {
-            using (texture == null ? null : new Bind(texture))
-            using (program == null ? null : new Bind(program))
+            using (Texture == null ? null : new Bind(Texture))
+            using (Program == null ? null : new Bind(Program))
             using (new Bind(vao))
                 if (mesh.IndicesLength == 0)
                     GL.DrawArrays(mode, 0, mesh.VerticesLength);

@@ -12,6 +12,22 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public TextureTarget target;
 
+        public Texture(String text, Font font, Color textColor, Color backColor, bool mipmapped, SizeF size)
+        {
+            using (var img = new Bitmap((int)size.Width, (int)size.Height))
+            using (var g = System.Drawing.Graphics.FromImage(img))
+            {
+                g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                g.Clear(backColor);
+                using (var textBrush = new SolidBrush(textColor))
+                {
+                    g.DrawString(text, font, textBrush, 0, 0);
+                    g.Save();
+                }
+                Init(img, mipmapped, TextureTarget.Texture2D);
+            }
+        }
+
         public Texture(String text, Font font, Color textColor, Color backColor, bool mipmapped, out SizeF size)
         {
             using (var img = new Bitmap(1, 1))

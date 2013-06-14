@@ -28,7 +28,7 @@ namespace MartinZottmann.Game.Entities
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Add(new Mesh<VertexP3C4, uint>(vertex_data));
             graphic.mode = BeginMode.Points;
-            graphic.program = Resources.Programs["normal"];
+            graphic.Program = Resources.Programs["normal"];
         }
 
         public override void Render(double delta_time)

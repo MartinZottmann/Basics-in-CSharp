@@ -1,7 +1,9 @@
-﻿#version 330 compatibility
+﻿#version 330 core
 
-in vec4 ex_Color;
+in vec4 Color;
+
+out vec4 FragColor;
 
 void main(void) {
-    gl_FragColor = ex_Color;
+    FragColor = Color;
 }
