@@ -55,45 +55,45 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs" />
+    <Compile Include="Engine\Graphics\Camera.cs" />
     <Compile Include="Engine\IResource.cs" />
     <Compile Include="Engine\Resources.cs" />
-    <Compile Include="Entities\Grid.cs" />
-    <Compile Include="Entities\GUI\Entity.cs" />
-    <Compile Include="Entities\GUI\FPSCounter.cs" />
-    <Compile Include="Entities\Starfield.cs" />
+    <Compile Include="Game\Entities\Grid.cs" />
+    <Compile Include="Game\Entities\GUI\Entity.cs" />
+    <Compile Include="Game\Entities\GUI\FPSCounter.cs" />
+    <Compile Include="Game\Entities\Starfield.cs" />
     <Compile Include="Game\Game.cs" />
-    <Compile Include="Entities\Physical.cs" />
-    <Compile Include="Entities\Textured.cs" />
+    <Compile Include="Game\Entities\Physical.cs" />
+    <Compile Include="Game\Entities\Textured.cs" />
     <Compile Include="Game\State\GameState.cs" />
     <Compile Include="Game\State\Running.cs" />
-    <Compile Include="Graphics\Bind.cs" />
-    <Compile Include="Graphics\Color.cs" />
-    <Compile Include="Graphics\IIndices.cs" />
-    <Compile Include="Graphics\IVertices.cs" />
-    <Compile Include="Graphics\Mesh.cs" />
-    <Compile Include="Graphics\OpenGL\Entity.cs" />
-    <Compile Include="Graphics\IBindable.cs" />
-    <Compile Include="Graphics\OpenGL\Info.cs" />
-    <Compile Include="Graphics\OpenGL\Program.cs" />
-    <Compile Include="Graphics\OpenGL\Shader.cs" />
-    <Compile Include="Graphics\OpenGL\Texture.cs" />
+    <Compile Include="Engine\Bind.cs" />
+    <Compile Include="Engine\Graphics\Color.cs" />
+    <Compile Include="Engine\Graphics\IIndices.cs" />
+    <Compile Include="Engine\Graphics\IVertices.cs" />
+    <Compile Include="Engine\Graphics\Mesh.cs" />
+    <Compile Include="Engine\Graphics\OpenGL\Entity.cs" />
+    <Compile Include="Engine\IBindable.cs" />
+    <Compile Include="Engine\Graphics\OpenGL\Info.cs" />
+    <Compile Include="Engine\Graphics\OpenGL\Program.cs" />
+    <Compile Include="Engine\Graphics\OpenGL\Shader.cs" />
+    <Compile Include="Engine\Graphics\OpenGL\Texture.cs" />
     <Compile Include="Engine\ResourceManager.cs" />
-    <Compile Include="Graphics\Shapes\CubeHardNormals.cs" />
-    <Compile Include="Graphics\Shapes\CubeSoftNormals.cs" />
-    <Compile Include="Graphics\SubBuffer.cs" />
-    <Compile Include="Graphics\OpenGL\UniformBlockIndex.cs" />
-    <Compile Include="Graphics\OpenGL\UniformLocation.cs" />
-    <Compile Include="Graphics\Vertex.cs" />
-    <Compile Include="Graphics\OpenGL\VertexArrayObject.cs" />
-    <Compile Include="Graphics\OpenGL\BufferObject.cs" />
-    <Compile Include="Math\Quad.cs" />
-    <Compile Include="Window.cs" />
+    <Compile Include="Engine\Graphics\Shapes\CubeHardNormals.cs" />
+    <Compile Include="Engine\Graphics\Shapes\CubeSoftNormals.cs" />
+    <Compile Include="Engine\Graphics\SubBuffer.cs" />
+    <Compile Include="Engine\Graphics\OpenGL\UniformBlockIndex.cs" />
+    <Compile Include="Engine\Graphics\OpenGL\UniformLocation.cs" />
+    <Compile Include="Engine\Graphics\Vertex.cs" />
+    <Compile Include="Engine\Graphics\OpenGL\VertexArrayObject.cs" />
+    <Compile Include="Engine\Graphics\OpenGL\BufferObject.cs" />
+    <Compile Include="Game\Window.cs" />
+    <Compile Include="Game\Entities\Asteroid.cs" />
     <Compile Include="Math\Polygon.cs" />
-    <Compile Include="Entities\Asteroid.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\SuperBall.cs" />
+    <Compile Include="Game\Entities\Entity.cs" />
+    <Compile Include="Game\Entities\SuperBall.cs" />
+    <Compile Include="Math\Quad.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
@@ -118,6 +118,8 @@
     <None Include="res\Shaders\directional_light.vs.glsl" />
     <None Include="res\Shaders\phong.fs.glsl" />
     <None Include="res\Shaders\phong.vs.glsl" />
+    <None Include="res\Shaders\standard.fs.glsl" />
+    <None Include="res\Shaders\standard.vs.glsl" />
     <None Include="res\textures\pointer.png" />
   </ItemGroup>
   <ItemGroup>

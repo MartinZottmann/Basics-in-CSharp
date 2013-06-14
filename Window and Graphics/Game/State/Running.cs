@@ -1,5 +1,7 @@
 ﻿using MartinZottmann.Engine;
-using MartinZottmann.Entities;
+using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Graphics.OpenGL;
+using MartinZottmann.Game.Entities;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
@@ -10,7 +12,7 @@ namespace MartinZottmann.Game.State
 {
     class Running : GameState
     {
-        protected List<Entity> entities = new List<Entity>();
+        protected List<Entities.Entity> entities = new List<Entities.Entity>();
 
         protected Physical steerable;
 
@@ -27,7 +29,7 @@ namespace MartinZottmann.Game.State
             var fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/standard.fs.glsl");
             resources.Programs.Load(
                 "standard",
-                new MartinZottmann.Graphics.OpenGL.Shader[] {
+                new Shader[] {
                     vertex_shader,
                     fragment_shader
                 },
@@ -41,7 +43,7 @@ namespace MartinZottmann.Game.State
             fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/phong.fs.glsl");
             resources.Programs.Load(
                 "phong",
-                new MartinZottmann.Graphics.OpenGL.Shader[] {
+                new Shader[] {
                     vertex_shader,
                     fragment_shader
                 },
@@ -49,6 +51,19 @@ namespace MartinZottmann.Game.State
                     "in_Position",
                     "in_Normal",
                     "in_Texcoord"
+                }
+            );
+            vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/normal.vs.glsl");
+            fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/normal.fs.glsl");
+            resources.Programs.Load(
+                "normal",
+                new Shader[] {
+                    vertex_shader,
+                    fragment_shader
+                },
+                new string[] {
+                    "in_Position",
+                    "in_Color"
                 }
             );
 
@@ -67,9 +82,7 @@ namespace MartinZottmann.Game.State
             Add(new Starfield(resources));
 
             for (int i = 1; i <= 10; i++)
-            {
                 Add(new Asteroid(resources));
-            }
 
             var textured = new Textured(resources);
             steerable = textured;
@@ -80,9 +93,7 @@ namespace MartinZottmann.Game.State
             Add(textured);
 
             for (int i = 1; i <= 10; i++)
-            {
                 Add(new SuperBall(resources));
-            }
         }
 
         public override void Dispose()
@@ -98,7 +109,7 @@ namespace MartinZottmann.Game.State
                 camera.MouseLook = !camera.MouseLook;
         }
 
-        protected void Add(Entity entity)
+        protected void Add(Entities.Entity entity)
         {
             entities.Add(entity);
         }
@@ -106,53 +117,33 @@ namespace MartinZottmann.Game.State
         public override void Update(double delta_time)
         {
             if (Window.Keyboard[Key.W])
-            {
                 camera.Position -= camera.Direction * delta_time * 100;
-                //steerable.Velocity.Y += 100 * delta_time;
-            }
+            //steerable.Velocity.Y += 100 * delta_time;
             if (Window.Keyboard[Key.S])
-            {
                 camera.Position += camera.Direction * delta_time * 100;
-                //steerable.Velocity.Y -= 100 * delta_time;
-            }
+            //steerable.Velocity.Y -= 100 * delta_time;
             if (Window.Keyboard[Key.A])
-            {
                 camera.Position += camera.Right * delta_time * 100;
-                //steerable.Velocity.X -= 100 * delta_time;
-            }
+            //steerable.Velocity.X -= 100 * delta_time;
             if (Window.Keyboard[Key.D])
-            {
                 camera.Position -= camera.Right * delta_time * 100;
-                //steerable.Velocity.X += 100 * delta_time;
-            }
+            //steerable.Velocity.X += 100 * delta_time;
             if (Window.Keyboard[Key.Space])
-            {
                 camera.Position += camera.Up * delta_time * 100;
-            }
             if (Window.Keyboard[Key.ShiftLeft])
-            {
                 camera.Position -= camera.Up * delta_time * 100;
-            }
             if (Window.Keyboard[Key.F])
-            {
                 camera.RotateDirectionAroundUp(delta_time);
-            }
             if (Window.Keyboard[Key.H])
-            {
                 camera.RotateDirectionAroundUp(-delta_time);
-            }
             if (Window.Keyboard[Key.T])
-            {
                 camera.RotateDirectionAroundRight(delta_time);
-            }
             if (Window.Keyboard[Key.G])
-            {
                 camera.RotateDirectionAroundRight(-delta_time);
-            }
 
             camera.Update(delta_time);
 
-            foreach (Entity entity in entities)
+            foreach (Entities.Entity entity in entities)
             {
                 entity.Update(delta_time);
 
@@ -177,15 +168,13 @@ namespace MartinZottmann.Game.State
                     var view_matrix = camera.ViewMatrix();
                     GL.LoadMatrix(ref view_matrix);
 
-                    foreach (Entity entity in entities)
+                    foreach (Entities.Entity entity in entities)
                     {
                         entity.Model = Matrix4d.Identity;
                         entity.View = view_matrix;
                         entity.Projection = projection_matrix;
                         //if (entity is Asteroid)
-                        //{
                         //    (entity as Asteroid).EyeDirection.Set(camera.Direction);
-                        //}
                         entity.Render(delta_time);
                     }
                 }

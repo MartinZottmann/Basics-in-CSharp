@@ -18,18 +18,17 @@ out vec3 EyeDirection_cameraspace;
 out vec3 LightDirection_cameraspace;
 
 void main() {
-	gl_Position = in_ModelViewProjection * vec4(in_Position, 1);
+    gl_Position = in_ModelViewProjection * vec4(in_Position, 1);
 
-	Position_worldspace = (in_Model * vec4(in_Position, 1)).xyz;
+    Position_worldspace = (in_Model * vec4(in_Position, 1)).xyz;
 
-	vec3 vertexPosition_cameraspace = (in_ModelView * vec4(in_Position, 1)).xyz;
-	EyeDirection_cameraspace = vec3(0, 0, 0) - vertexPosition_cameraspace;
+    vec3 vertexPosition_cameraspace = (in_ModelView * vec4(in_Position, 1)).xyz;
+    EyeDirection_cameraspace = vec3(0, 0, 0) - vertexPosition_cameraspace;
 
-	vec3 LightPosition_cameraspace = (in_View * vec4(in_LightPosition, 1)).xyz;
-	LightDirection_cameraspace = LightPosition_cameraspace + EyeDirection_cameraspace;
+    vec3 LightPosition_cameraspace = (in_View * vec4(in_LightPosition, 1)).xyz;
+    LightDirection_cameraspace = LightPosition_cameraspace + EyeDirection_cameraspace;
 
-	Normal_cameraspace = (in_NormalView * vec4(in_Normal, 0)).xyz; // Only correct if ModelMatrix does not scale the model ! Use its inverse transpose if not.
+    Normal_cameraspace = (in_NormalView * vec4(in_Normal, 0)).xyz;
 
-	UV = in_Texcoord;
+    UV = in_Texcoord;
 }
-

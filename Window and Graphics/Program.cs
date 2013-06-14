@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics;
+﻿using MartinZottmann.Game;
+using OpenTK.Graphics;
 using System;
 
 namespace MartinZottmann

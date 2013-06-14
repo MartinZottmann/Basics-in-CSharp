@@ -1,4 +1,4 @@
-﻿using MartinZottmann.Graphics.OpenGL;
+﻿using MartinZottmann.Engine.Graphics.OpenGL;
 using System;
 
 namespace MartinZottmann.Engine
@@ -26,11 +26,11 @@ namespace MartinZottmann.Engine
         }
     }
 
-    public class Programs : ResourceManager<MartinZottmann.Graphics.OpenGL.Program>
+    public class Programs : ResourceManager<Engine.Graphics.OpenGL.Program>
     {
         public Programs(Resources resources) : base(resources) { }
 
-        public MartinZottmann.Graphics.OpenGL.Program Load(string name, string[] shader_files, string[] attribute_location_names)
+        public Engine.Graphics.OpenGL.Program Load(string name, string[] shader_files, string[] attribute_location_names)
         {
             if (!resources.ContainsKey(name))
             {
@@ -39,16 +39,16 @@ namespace MartinZottmann.Engine
                 for (int i = 0; i < n; i++)
                     shaders[i] = Resources.Shaders[shader_files[i]];
 
-                this[name] = new MartinZottmann.Graphics.OpenGL.Program(shaders, attribute_location_names);
+                this[name] = new Engine.Graphics.OpenGL.Program(shaders, attribute_location_names);
             }
 
             return this[name];
         }
 
-        public MartinZottmann.Graphics.OpenGL.Program Load(string name, Shader[] shaders, string[] attribute_location_names)
+        public Engine.Graphics.OpenGL.Program Load(string name, Shader[] shaders, string[] attribute_location_names)
         {
             if (!resources.ContainsKey(name))
-                this[name] = new MartinZottmann.Graphics.OpenGL.Program(shaders, attribute_location_names);
+                this[name] = new Engine.Graphics.OpenGL.Program(shaders, attribute_location_names);
 
             return this[name];
         }
