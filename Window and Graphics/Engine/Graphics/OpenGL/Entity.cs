@@ -34,8 +34,8 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public void Draw()
         {
-            using (Texture == null ? null : new Bind(Texture))
-            using (Program == null ? null : new Bind(Program))
+            using (new Bind(Texture))
+            using (new Bind(Program))
             using (new Bind(vao))
                 if (mesh.IndicesLength == 0)
                     GL.DrawArrays(mode, 0, mesh.VerticesLength);
