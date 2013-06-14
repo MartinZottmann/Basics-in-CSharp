@@ -9,20 +9,20 @@ in vec3 Normal_cameraspace;
 in vec3 EyeDirection_cameraspace;
 in vec3 LightDirection_cameraspace;
 
-out vec3 color;
+out vec4 color;
 
 void main() {
-    vec3 LightColor = vec3(1, 1, 1);
+    vec4 LightColor = vec4(1, 1, 1, 1);
     float LightPower = 50.0f;
 
-    vec3 MaterialDiffuseColor = texture2D(in_Texture, UV).rgb;
-    vec3 MaterialAmbientColor = vec3(0, 0, 0) * MaterialDiffuseColor;
-    vec3 MaterialSpecularColor = vec3(0.5, 0.5, 0.5);
+    vec4 MaterialDiffuseColor = texture2D(in_Texture, UV);
+    vec4 MaterialAmbientColor = vec4(0, 0, 0, 1) * MaterialDiffuseColor;
+    vec4 MaterialSpecularColor = vec4(0.5, 0.5, 0.5, 1);
 
     float distance = length(in_LightPosition - Position_worldspace);
 
-    vec3 n = normalize( Normal_cameraspace );
-    vec3 l = normalize( LightDirection_cameraspace );
+    vec3 n = normalize(Normal_cameraspace);
+    vec3 l = normalize(LightDirection_cameraspace);
     float cosTheta = clamp(dot(n, l), 0, 1);
 
     vec3 E = normalize(EyeDirection_cameraspace);
