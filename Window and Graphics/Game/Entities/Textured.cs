@@ -1,5 +1,6 @@
 ﻿using MartinZottmann.Engine;
 using MartinZottmann.Engine.Graphics.OpenGL;
+using MartinZottmann.Engine.Resources;
 using MartinZottmann.Math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;

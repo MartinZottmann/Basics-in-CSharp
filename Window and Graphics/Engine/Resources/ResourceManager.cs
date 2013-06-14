@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MartinZottmann.Engine
+namespace MartinZottmann.Engine.Resources
 {
     public abstract class ResourceManager<T> : IDisposable where T : IDisposable
     {
@@ -28,7 +28,9 @@ namespace MartinZottmann.Engine
 
         public void Clear()
         {
-            // @todo IDisposeable?
+            foreach (var x in resources.Values)
+                x.Dispose();
+
             resources.Clear();
         }
 

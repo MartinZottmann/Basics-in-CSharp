@@ -1,5 +1,5 @@
-﻿using MartinZottmann.Engine;
-using MartinZottmann.Engine.Graphics;
+﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Resources;
 using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Entities

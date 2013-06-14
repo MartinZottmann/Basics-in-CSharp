@@ -1,6 +1,6 @@
-﻿using MartinZottmann.Engine;
-using MartinZottmann.Engine.Graphics.OpenGL;
+﻿using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Graphics.Shapes;
+using MartinZottmann.Engine.Resources;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -31,30 +31,6 @@ namespace MartinZottmann.Game.Entities
         public Asteroid(Resources resources)
             : base(resources)
         {
-            //    GL.GenBuffers(1, out p);
-            //    GL.BindBuffer(BufferTarget.ArrayBuffer, p);
-            //    size = vertex_data.position.Length * BlittableValueType.StrideOf(vertex_data.position);
-            //    GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)size, vertex_data.position, BufferUsageHint.StaticDraw);
-            //    GL.VertexAttribPointer(vertex_attribute, 3, VertexAttribPointerType.Float, false, BlittableValueType.StrideOf(vertex_data.position), 0);
-            //    GL.EnableVertexAttribArray(vertex_attribute);
-            //    vertex_attribute++;
-
-            //    GL.GenBuffers(1, out n);
-            //    GL.BindBuffer(BufferTarget.ArrayBuffer, n);
-            //    size = vertex_data.normal.Length * BlittableValueType.StrideOf(vertex_data.normal);
-            //    GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)size, vertex_data.normal, BufferUsageHint.StaticDraw);
-            //    GL.VertexAttribPointer(vertex_attribute, 3, VertexAttribPointerType.Float, false, BlittableValueType.StrideOf(vertex_data.normal), 0);
-            //    GL.EnableVertexAttribArray(vertex_attribute);
-            //    vertex_attribute++;
-
-            //    GL.GenBuffers(1, out t);
-            //    GL.BindBuffer(BufferTarget.ArrayBuffer, t);
-            //    size = vertex_data.texcoord.Length * BlittableValueType.StrideOf(vertex_data.texcoord);
-            //    GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)size, vertex_data.texcoord, BufferUsageHint.StaticDraw);
-            //    GL.VertexAttribPointer(vertex_attribute, 2, VertexAttribPointerType.Float, false, BlittableValueType.StrideOf(vertex_data.texcoord), 0);
-            //    GL.EnableVertexAttribArray(vertex_attribute);
-            //    vertex_attribute++;
-
             var cube = new CubeHardNormals();
             var scale = (float)(randomNumber.NextDouble() * 5 + 1);
             for (int i = 0; i < cube.VerticesLength; i++)
@@ -66,7 +42,7 @@ namespace MartinZottmann.Game.Entities
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Add(cube);
             graphic.program = Resources.Programs["standard"];
-            graphic.texture = new Texture("res/textures/debug-256.png", false, TextureTarget.Texture2D);
+            graphic.texture = Resources.Textures["res/textures/debug-256.png"];
 
             graphic.program.AddUniformLocation("in_Texture").Set(0);
             //in_texture.Set(graphic.texture.id);
@@ -95,13 +71,15 @@ namespace MartinZottmann.Game.Entities
 
         public override void Render(double delta_time)
         {
-            Matrix4d.CreateTranslation(ref Position, out Model);
-            ModelUniform.Set(Model);
-            ViewUniform.Set(View);
-            ModelViewUniform.Set(Model * View);
+            var model = RenderContext.Model;
+            Matrix4d.CreateTranslation(ref Position, out model);
+            RenderContext.Model = model;
+            ModelUniform.Set(RenderContext.Model);
+            ViewUniform.Set(RenderContext.View);
+            ModelViewUniform.Set(RenderContext.ViewModel);
             //NormalMatrixUniform.Set(Matrix4d.Transpose(Matrix4d.Invert(Model)));
-            NormalViewUniform.Set(Matrix4d.Transpose(Matrix4d.Invert(Model * View)));
-            ModelViewProjectionUniform.Set(ModelViewProjection);
+            NormalViewUniform.Set(RenderContext.Normal);
+            ModelViewProjectionUniform.Set(RenderContext.ProjectionViewModel);
             graphic.Draw();
         }
     }

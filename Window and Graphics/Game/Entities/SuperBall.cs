@@ -1,4 +1,4 @@
-﻿using MartinZottmann.Engine;
+﻿using MartinZottmann.Engine.Resources;
 
 namespace MartinZottmann.Game.Entities
 {

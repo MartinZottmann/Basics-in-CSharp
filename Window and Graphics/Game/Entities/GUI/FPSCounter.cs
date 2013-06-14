@@ -1,5 +1,5 @@
-﻿using MartinZottmann.Engine;
-using MartinZottmann.Engine.Graphics.OpenGL;
+﻿using MartinZottmann.Engine.Graphics.OpenGL;
+using MartinZottmann.Engine.Resources;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Drawing;

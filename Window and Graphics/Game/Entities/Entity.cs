@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Engine;
+﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Resources;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -8,25 +9,20 @@ namespace MartinZottmann.Game.Entities
 {
     public abstract class Entity : IDisposable
     {
-        public Color color;
-
-        public Resources Resources { get; protected set; }
-
         protected static Random randomNumber = new Random();
+
+        public Color color;
 
         public Vector3d Position = Vector3d.Zero;
 
-        public Matrix4d Projection;
+        public Resources Resources { get; protected set; }
 
-        public Matrix4d View;
-
-        public Matrix4d Model;
-
-        public Matrix4d ModelViewProjection { get { return Model * View * Projection; } }
+        public RenderContext RenderContext { get; set; }
 
         public Entity(Resources resources)
         {
             Resources = resources;
+
             KnownColor[] names = (KnownColor[])Enum.GetValues(typeof(KnownColor));
             KnownColor randomColorName = names[randomNumber.Next(names.Length)];
             color = Color.FromKnownColor(randomColorName);

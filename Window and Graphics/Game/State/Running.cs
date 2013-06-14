@@ -1,12 +1,13 @@
-﻿using MartinZottmann.Engine;
-using MartinZottmann.Engine.Graphics;
+﻿using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.OpenGL;
+using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MartinZottmann.Game.State
 {
@@ -65,6 +66,10 @@ namespace MartinZottmann.Game.State
                     "in_Color"
                 }
             );
+            foreach (var filename in Directory.GetFiles("res/textures/", "*.png"))
+            {
+                resources.Textures.Load(filename, true, TextureTarget.Texture2D);
+            }
 
             camera = new Camera(Window);
             camera.MouseLook = true;
@@ -167,13 +172,16 @@ namespace MartinZottmann.Game.State
                     var view_matrix = camera.ViewMatrix();
                     GL.LoadMatrix(ref view_matrix);
 
+                    var render_context = new RenderContext()
+                    {
+                        Camera = camera,
+                        Projection = projection_matrix,
+                        View = view_matrix
+                    };
+
                     foreach (Entities.Entity entity in entities)
                     {
-                        entity.Model = Matrix4d.Identity;
-                        entity.View = view_matrix;
-                        entity.Projection = projection_matrix;
-                        //if (entity is Asteroid)
-                        //    (entity as Asteroid).EyeDirection.Set(camera.Direction);
+                        entity.RenderContext = render_context;
                         entity.Render(delta_time);
                     }
                 }

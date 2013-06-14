@@ -56,8 +56,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\Graphics\Camera.cs" />
-    <Compile Include="Engine\IResource.cs" />
-    <Compile Include="Engine\Resources.cs" />
+    <Compile Include="Engine\Graphics\RenderContext.cs" />
+    <Compile Include="Engine\Resources\Resources.cs" />
+    <Compile Include="Engine\Resources\Programs.cs" />
+    <Compile Include="Engine\Resources\Shaders.cs" />
+    <Compile Include="Engine\Resources\Textures.cs" />
     <Compile Include="Game\Entities\Grid.cs" />
     <Compile Include="Game\Entities\GUI\Entity.cs" />
     <Compile Include="Game\Entities\GUI\FPSCounter.cs" />
@@ -78,7 +81,7 @@
     <Compile Include="Engine\Graphics\OpenGL\Program.cs" />
     <Compile Include="Engine\Graphics\OpenGL\Shader.cs" />
     <Compile Include="Engine\Graphics\OpenGL\Texture.cs" />
-    <Compile Include="Engine\ResourceManager.cs" />
+    <Compile Include="Engine\Resources\ResourceManager.cs" />
     <Compile Include="Engine\Graphics\Shapes\CubeHardNormals.cs" />
     <Compile Include="Engine\Graphics\Shapes\CubeSoftNormals.cs" />
     <Compile Include="Engine\Graphics\SubBuffer.cs" />

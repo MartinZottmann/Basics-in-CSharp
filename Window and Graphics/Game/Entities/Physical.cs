@@ -1,4 +1,4 @@
-﻿using MartinZottmann.Engine;
+﻿using MartinZottmann.Engine.Resources;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
