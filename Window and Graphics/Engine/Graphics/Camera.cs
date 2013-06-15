@@ -36,6 +36,12 @@ namespace MartinZottmann.Engine.Graphics
 
         public float Far = System.Single.MaxValue;
 
+        public double Aspect { get { return Window.Width / (double)Window.Height; } }
+
+        public double Width { get { return Window.Width; } }
+
+        public double Height { get { return Window.Height; } }
+
         GameWindow Window { get; set; }
 
         protected Point WindowCenter
@@ -91,7 +97,7 @@ namespace MartinZottmann.Engine.Graphics
 
         public Matrix4d ProjectionMatrix()
         {
-            return Matrix4d.CreatePerspectiveFieldOfView(Fov, Window.Width / (float)Window.Height, Near, Far);
+            return Matrix4d.CreatePerspectiveFieldOfView(Fov, Aspect, Near, Far);
         }
 
         public Matrix4d ViewMatrix()

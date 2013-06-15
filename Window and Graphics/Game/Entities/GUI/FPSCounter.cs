@@ -39,10 +39,6 @@ namespace MartinZottmann.Game.Entities.GUI
             );
             graphic.mode = BeginMode.Triangles;
             graphic.Program = Resources.Programs["plain_texture"];
-
-            Model = Matrix4d.Scale(1 / (double)size.Width);
-            Model *= Matrix4d.RotateY(MathHelper.PiOver6);
-            Model *= Matrix4d.CreateTranslation(-1, 0.5, -2);
         }
 
         public override void Update(double delta_time)
@@ -65,6 +61,16 @@ namespace MartinZottmann.Game.Entities.GUI
 
         public override void Render(double delta_time)
         {
+            double yMax = RenderContext.Camera.Near * System.Math.Tan(0.5 * RenderContext.Camera.Fov);
+            double yMin = -yMax;
+            double xMin = yMin * RenderContext.Camera.Aspect;
+            double xMax = yMax * RenderContext.Camera.Aspect;
+            Model = Matrix4d.CreateTranslation(0, -size.Height, 0); // Move model top/left to 0, 0
+            Model *= Matrix4d.Scale(50 / (double)size.Width);
+            Model *= Matrix4d.Scale(1 / (double)RenderContext.Camera.Width);
+            Model *= Matrix4d.RotateY(MathHelper.PiOver6);
+            Model *= Matrix4d.CreateTranslation(xMin, yMax, -RenderContext.Camera.Near); // Move model top/left to window top/left
+
             RenderContext.Model = Model;
             Resources.Programs["plain_texture"].UniformLocations["PVM"].Set(RenderContext.Model * RenderContext.Projection);
             Resources.Programs["plain_texture"].UniformLocations["Texture"].Set(0);
