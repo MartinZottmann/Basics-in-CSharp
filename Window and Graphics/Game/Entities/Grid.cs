@@ -1,5 +1,4 @@
 ﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -28,7 +27,7 @@ namespace MartinZottmann.Game.Entities
             for (var i = 0; i <= amount; i++)
             {
                 double angle = 2 * System.Math.PI * i / amount;
-                vertices[i] = new VertexP3C4(radius * (float)System.Math.Cos(angle), 0, radius * (float)System.Math.Sin(angle), 255, 255, 255, 127);
+                vertices[i] = new VertexP3C4(radius * (float)System.Math.Cos(angle), 0, radius * (float)System.Math.Sin(angle), 1, 1, 1, 0.5f);
             }
             circle = new Engine.Graphics.OpenGL.Entity();
             circle.Add(new Mesh<VertexP3C4, uint>(vertices));
@@ -39,10 +38,10 @@ namespace MartinZottmann.Game.Entities
             line_y.Add(
                 new Mesh<VertexP3C4, uint>(
                     new VertexP3C4[] {
-                        new VertexP3C4(0, 1000, 0, 255, 255, 255, 127),
-                        new VertexP3C4(0, 0, 0, 255, 255, 255, 127),
-                        new VertexP3C4(0, 0, 0, 255, 255, 255, 127),
-                        new VertexP3C4(0, -1000, 0, 255, 255, 255, 127)
+                        new VertexP3C4(0, 1000, 0, 1, 0, 0, 0.5f),
+                        new VertexP3C4(0, 0, 0, 1, 1, 1, 0.5f),
+                        new VertexP3C4(0, 0, 0, 1, 1, 1, 0.5f),
+                        new VertexP3C4(0, -1000, 0, 1, 0, 0, 0.5f)
                     }
                 )
             );
@@ -54,10 +53,10 @@ namespace MartinZottmann.Game.Entities
             vertices = new VertexP3C4[4 * (2 * amount + 1)];
             for (var i = -amount; i <= amount; i++)
             {
-                vertices[4 * (i + amount) + 0] = new VertexP3C4(amount * space, 0, i * space, 255, 255, 255, 127);
-                vertices[4 * (i + amount) + 1] = new VertexP3C4(-amount * space, 0, i * space, 255, 255, 255, 127);
-                vertices[4 * (i + amount) + 2] = new VertexP3C4(i * space, 0, amount * space, 255, 255, 255, 127);
-                vertices[4 * (i + amount) + 3] = new VertexP3C4(i * space, 0, -amount * space, 255, 255, 255, 127);
+                vertices[4 * (i + amount) + 0] = new VertexP3C4(amount * space, 0, i * space, 1, 1, 1, 0.5f);
+                vertices[4 * (i + amount) + 1] = new VertexP3C4(-amount * space, 0, i * space, 1, 1, 1, 0.5f);
+                vertices[4 * (i + amount) + 2] = new VertexP3C4(i * space, 0, amount * space, 1, 1, 1, 0.5f);
+                vertices[4 * (i + amount) + 3] = new VertexP3C4(i * space, 0, -amount * space, 1, 1, 1, 0.5f);
             }
             grid_xz = new Engine.Graphics.OpenGL.Entity();
             grid_xz.Add(new Mesh<VertexP3C4, uint>(vertices));
@@ -70,6 +69,7 @@ namespace MartinZottmann.Game.Entities
             RenderContext.Model = Matrix4d.Identity;
             Resources.Programs["normal"].UniformLocations["PVM"].Set(RenderContext.ProjectionViewModel);
 
+            GL.LineWidth(1);
             circle.Draw();
             line_y.Draw();
             grid_xz.Draw();

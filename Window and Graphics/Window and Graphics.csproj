@@ -61,6 +61,9 @@
     <Compile Include="Engine\Resources\Programs.cs" />
     <Compile Include="Engine\Resources\Shaders.cs" />
     <Compile Include="Engine\Resources\Textures.cs" />
+    <Compile Include="Game\Entities\Cursor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Game\Entities\Grid.cs" />
     <Compile Include="Game\Entities\GUI\Entity.cs" />
     <Compile Include="Game\Entities\GUI\FPSCounter.cs" />

@@ -103,6 +103,8 @@ namespace MartinZottmann.Game.State
 
             Add(new Entities.GUI.FPSCounter(resources));
 
+            Add(new Cursor(resources));
+
             Add(new Grid(resources));
 
             Add(new Starfield(resources));
@@ -196,36 +198,19 @@ namespace MartinZottmann.Game.State
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Viewport(0, 0, Window.Width, Window.Height);
 
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.PushMatrix();
+            var render_context = new RenderContext()
             {
-                var projection_matrix = camera.ProjectionMatrix();
-                //GL.LoadMatrix(ref projection_matrix);
+                Window = Window,
+                Camera = camera,
+                Projection = camera.ProjectionMatrix(),
+                View = camera.ViewMatrix()
+            };
 
-                GL.MatrixMode(MatrixMode.Modelview);
-                GL.PushMatrix();
-                {
-                    var view_matrix = camera.ViewMatrix();
-                    //GL.LoadMatrix(ref view_matrix);
-
-                    var render_context = new RenderContext()
-                    {
-                        Camera = camera,
-                        Projection = projection_matrix,
-                        View = view_matrix
-                    };
-
-                    foreach (Entities.Entity entity in entities)
-                    {
-                        entity.RenderContext = render_context;
-                        entity.Render(delta_time);
-                    }
-                }
-                GL.MatrixMode(MatrixMode.Modelview);
-                GL.PopMatrix();
+            foreach (Entities.Entity entity in entities)
+            {
+                entity.RenderContext = render_context;
+                entity.Render(delta_time);
             }
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.PopMatrix();
 
             Window.SwapBuffers();
         }

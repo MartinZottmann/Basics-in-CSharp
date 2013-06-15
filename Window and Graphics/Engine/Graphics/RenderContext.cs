@@ -4,6 +4,8 @@ namespace MartinZottmann.Engine.Graphics
 {
     public class RenderContext
     {
+        public GameWindow Window { get; set; }
+
         public Camera Camera { get; set; }
 
         /// <summary>
