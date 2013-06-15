@@ -8,13 +8,13 @@ namespace MartinZottmann.Engine.Graphics
     {
         public Vector3d Position = Vector3d.Zero;
 
-        public Vector3d Direction = Vector3d.UnitZ;
+        public Vector3d Direction = -Vector3d.UnitZ;
 
         public Vector3d LookAt
         {
             get
             {
-                return Position - Direction;
+                return Position + Direction;
             }
         }
 
@@ -86,7 +86,7 @@ namespace MartinZottmann.Engine.Graphics
                 if (mouse_x_delta != 0)
                     RotateDirectionAroundUp(-mouse_x_delta * delta_time * 0.1 * Fov);
                 if (mouse_y_delta != 0)
-                    RotateDirectionAroundRight(mouse_y_delta * delta_time * 0.1 * Fov);
+                    RotateDirectionAroundRight(-mouse_y_delta * delta_time * 0.1 * Fov);
 
                 if (Window.WindowState == WindowState.Fullscreen)
                     Cursor.Position = window_center;

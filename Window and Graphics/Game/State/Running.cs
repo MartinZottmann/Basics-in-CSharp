@@ -91,9 +91,13 @@ namespace MartinZottmann.Game.State
 
             camera = new Camera(Window);
             camera.MouseLook = true;
-            camera.Position.X = 10;
-            camera.Position.Y = 10;
+            camera.Position.X = 100;
+            camera.Position.Y = 100;
             camera.Position.Z = 100;
+            camera.Direction.X = -1;
+            camera.Direction.Y = -1;
+            camera.Direction.Z = -1;
+            camera.Direction.NormalizeFast();
 
             Window.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
@@ -139,16 +143,16 @@ namespace MartinZottmann.Game.State
         public override void Update(double delta_time)
         {
             if (Window.Keyboard[Key.W])
-                camera.Position -= camera.Direction * delta_time * 100;
+                camera.Position += camera.Direction * delta_time * 100;
             //steerable.Velocity.Y += 100 * delta_time;
             if (Window.Keyboard[Key.S])
-                camera.Position += camera.Direction * delta_time * 100;
+                camera.Position -= camera.Direction * delta_time * 100;
             //steerable.Velocity.Y -= 100 * delta_time;
             if (Window.Keyboard[Key.A])
-                camera.Position += camera.Right * delta_time * 100;
+                camera.Position -= camera.Right * delta_time * 100;
             //steerable.Velocity.X -= 100 * delta_time;
             if (Window.Keyboard[Key.D])
-                camera.Position -= camera.Right * delta_time * 100;
+                camera.Position += camera.Right * delta_time * 100;
             //steerable.Velocity.X += 100 * delta_time;
             if (Window.Keyboard[Key.Space])
                 camera.Position += camera.Up * delta_time * 100;
