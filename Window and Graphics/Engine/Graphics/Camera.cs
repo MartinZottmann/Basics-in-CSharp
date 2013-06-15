@@ -30,7 +30,7 @@ namespace MartinZottmann.Engine.Graphics
             }
         }
 
-        public float Fov = MathHelper.PiOver4;
+        public double Fov = MathHelper.PiOver4;
 
         public float Near = 0.1f;
 
@@ -84,9 +84,9 @@ namespace MartinZottmann.Engine.Graphics
                 var mouse_y_delta = Window.Mouse.Y - window_center.Y;
 
                 if (mouse_x_delta != 0)
-                    RotateDirectionAroundUp(-mouse_x_delta * delta_time * 0.1);
+                    RotateDirectionAroundUp(-mouse_x_delta * delta_time * 0.1 * Fov);
                 if (mouse_y_delta != 0)
-                    RotateDirectionAroundRight(mouse_y_delta * delta_time * 0.1);
+                    RotateDirectionAroundRight(mouse_y_delta * delta_time * 0.1 * Fov);
 
                 if (Window.WindowState == WindowState.Fullscreen)
                     Cursor.Position = window_center;

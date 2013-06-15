@@ -66,7 +66,7 @@ namespace MartinZottmann.Game.Entities.GUI
             double xMin = yMin * RenderContext.Camera.Aspect;
             double xMax = yMax * RenderContext.Camera.Aspect;
             Model = Matrix4d.CreateTranslation(0, -size.Height, 0); // Move model top/left to 0, 0
-            Model *= Matrix4d.Scale(50 / (double)size.Width);
+            Model *= Matrix4d.Scale(0.5 * RenderContext.Camera.Fov);
             Model *= Matrix4d.Scale(1 / (double)RenderContext.Camera.Width);
             Model *= Matrix4d.RotateY(MathHelper.PiOver6);
             Model *= Matrix4d.CreateTranslation(xMin, yMax, -RenderContext.Camera.Near); // Move model top/left to window top/left

@@ -162,6 +162,14 @@ namespace MartinZottmann.Game.State
                 camera.RotateDirectionAroundRight(delta_time);
             if (Window.Keyboard[Key.G])
                 camera.RotateDirectionAroundRight(-delta_time);
+            if (Window.Keyboard[Key.KeypadPlus])
+                camera.Fov += MathHelper.PiOver6 * delta_time;
+            if (Window.Keyboard[Key.KeypadSubtract])
+                camera.Fov -= MathHelper.PiOver6 * delta_time;
+            if (camera.Fov <= 0)
+                camera.Fov = delta_time;
+            if (camera.Fov > System.Math.PI)
+                camera.Fov = System.Math.PI;
 
             camera.Update(delta_time);
 
