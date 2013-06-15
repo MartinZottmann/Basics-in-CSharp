@@ -20,6 +20,17 @@ namespace MartinZottmann.Engine.Graphics
 
         public Vector3d Up = Vector3d.UnitY;
 
+        public Vector3d Forward
+        {
+            get
+            {
+                var right = Vector3d.Cross(Direction, Up);
+                var forward = Vector3d.Cross(Up, right);
+                forward.NormalizeFast();
+                return forward;
+            }
+        }
+
         public Vector3d Right
         {
             get
