@@ -20,7 +20,9 @@ namespace MartinZottmann.Game.Entities.GUI
 
         protected int fps = 0;
 
-        protected SizeF size = new SizeF(100, 25);
+        protected SizeF size = new SizeF(60, 15);
+
+        protected const double scale = 2;
 
         public FPSCounter(Resources resources)
             : base(resources)
@@ -66,8 +68,7 @@ namespace MartinZottmann.Game.Entities.GUI
             double xMin = yMin * RenderContext.Camera.Aspect;
             double xMax = yMax * RenderContext.Camera.Aspect;
             Model = Matrix4d.CreateTranslation(0, -size.Height, 0); // Move model top/left to 0, 0
-            Model *= Matrix4d.Scale(0.5 * RenderContext.Camera.Fov);
-            Model *= Matrix4d.Scale(1 / (double)RenderContext.Camera.Width);
+            Model *= Matrix4d.Scale(scale * RenderContext.Camera.Aspect * MathHelper.TwoPi / RenderContext.Camera.Fov / (double)RenderContext.Camera.Width / (double)size.Width);
             Model *= Matrix4d.RotateY(MathHelper.PiOver6);
             Model *= Matrix4d.CreateTranslation(xMin, yMax, -RenderContext.Camera.Near); // Move model top/left to window top/left
 
@@ -75,35 +76,7 @@ namespace MartinZottmann.Game.Entities.GUI
             Resources.Programs["plain_texture"].UniformLocations["PVM"].Set(RenderContext.Model * RenderContext.Projection);
             Resources.Programs["plain_texture"].UniformLocations["Texture"].Set(0);
 
-            if (graphic.Texture != null)
-                graphic.Draw();
-
-            //GL.PushMatrix();
-            //if (graphic.Texture != null)
-            //    using (new Engine.Bind(graphic.Texture))
-            //    {
-            //        GL.Translate(Position.X, Position.Y, Position.Z);
-
-            //        GL.Begin(BeginMode.Quads);
-            //        {
-            //            GL.Color3(Color.Transparent);
-
-            //            GL.TexCoord2(0, 1);
-            //            GL.Vertex3(0, 0, 0);
-
-            //            GL.TexCoord2(1, 1);
-            //            GL.Vertex3(size.Width, 0, 0);
-
-            //            GL.TexCoord2(1, 0);
-            //            GL.Vertex3(size.Width, size.Height, 0);
-
-            //            GL.TexCoord2(0, 0);
-            //            GL.Vertex3(0, size.Height, 0);
-
-            //        }
-            //        GL.End();
-            //    }
-            //GL.PopMatrix();
+            graphic.Draw();
         }
     }
 }
