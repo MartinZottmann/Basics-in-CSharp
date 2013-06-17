@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Engine.Resources;
+﻿using MartinZottmann.Engine.Physics;
+using MartinZottmann.Engine.Resources;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -6,6 +7,10 @@ namespace MartinZottmann.Game.Entities
 {
     public class Physical : Entity
     {
+        public bool Mark { get; set; }
+
+        public AABB3d BoundingBox;
+
         public Vector3d Velocity = Vector3d.Zero;
 
         public double Angle = 0;
@@ -18,13 +23,9 @@ namespace MartinZottmann.Game.Entities
         {
             Angle += AngleVelocity * delta_time;
             if (Angle > 359)
-            {
                 Angle -= 360;
-            }
             else if (Angle < 0)
-            {
                 Angle += 360;
-            }
 
             Position += Velocity * delta_time;
             Velocity += new Vector3d(
@@ -72,6 +73,56 @@ namespace MartinZottmann.Game.Entities
                 GL.End();
             }
             GL.PopMatrix();
+        }
+
+        public void RenderBoundingBox()
+        {
+            var P = RenderContext.Projection;
+            var V = RenderContext.View;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref P);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref V);
+
+            GL.Translate(Position);
+            GL.LineWidth(3);
+            GL.Begin(BeginMode.Lines);
+            if (Mark)
+                GL.Color3(1f, 1f, 0f);
+            else
+                GL.Color3(1f, 1f, 1f);
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+            GL.End();
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
         }
 #endif
     }

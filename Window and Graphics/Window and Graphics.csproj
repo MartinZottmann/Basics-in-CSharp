@@ -57,6 +57,8 @@
   <ItemGroup>
     <Compile Include="Engine\Graphics\Camera.cs" />
     <Compile Include="Engine\Graphics\RenderContext.cs" />
+    <Compile Include="Engine\Physics\AABB3d.cs" />
+    <Compile Include="Engine\Physics\Ray3d.cs" />
     <Compile Include="Engine\Resources\Resources.cs" />
     <Compile Include="Engine\Resources\Programs.cs" />
     <Compile Include="Engine\Resources\Shaders.cs" />

@@ -66,6 +66,9 @@ namespace MartinZottmann.Game.Entities
             //graphic.program.AddUniformLocation("in_ConstantAttenuation").Set(0.1f);
             //graphic.program.AddUniformLocation("in_LinearAttenuation").Set(0.1f);
             //graphic.program.AddUniformLocation("in_QuadraticAttenuation").Set(0.1f);
+
+            BoundingBox.Max = new Vector3d(1, 1, 1) * scale;
+            BoundingBox.Min = new Vector3d(-1, -1, -1) * scale;
         }
 
         public override void Render(double delta_time)
@@ -80,6 +83,8 @@ namespace MartinZottmann.Game.Entities
             NormalViewUniform.Set(RenderContext.Normal);
             ModelViewProjectionUniform.Set(RenderContext.ProjectionViewModel);
             graphic.Draw();
+
+            RenderBoundingBox();
         }
     }
 }

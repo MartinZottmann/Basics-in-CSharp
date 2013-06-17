@@ -43,9 +43,9 @@ namespace MartinZottmann.Engine.Graphics
 
         public double Fov = MathHelper.PiOver4;
 
-        public float Near = 0.1f;
+        public double Near = 0.1;
 
-        public float Far = System.Single.MaxValue;
+        public double Far = 10000;
 
         public double Aspect { get { return Window.Width / (double)Window.Height; } }
 

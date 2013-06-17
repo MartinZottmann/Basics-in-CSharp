@@ -1,4 +1,5 @@
 ﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -10,6 +11,8 @@ namespace MartinZottmann.Game.Entities
         Engine.Graphics.OpenGL.Entity graphic;
 
         Matrix4d Model = Matrix4d.Identity;
+
+        public Ray3d ray;
 
         public Cursor(Resources resources)
             : base(resources)
@@ -30,13 +33,8 @@ namespace MartinZottmann.Game.Entities
             graphic.Program = Resources.Programs["normal"];
         }
 
-        public override void Render(double delta_time)
+        public void Set()
         {
-            RenderContext.Model = Model;
-            Resources.Programs["normal"].UniformLocations["PVM"].Set(RenderContext.ProjectionViewModel);
-
-            //graphic.Draw();
-
             var start = new Vector4d(
                 (RenderContext.Window.Mouse.X / (double)RenderContext.Window.Width - 0.5) * 2.0,
                 ((RenderContext.Window.Height - RenderContext.Window.Mouse.Y) / (double)RenderContext.Window.Height - 0.5) * 2.0,
@@ -49,40 +47,15 @@ namespace MartinZottmann.Game.Entities
                 0,
                 1.0
             );
-            GL.LineWidth(3);
 
             var P = RenderContext.Projection;
             var V = RenderContext.View;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref P);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref V);
-
-            GL.Begin(BeginMode.Lines);
-            GL.Color3(1f, 1f, 0f);
-            GL.Vertex4(0, 0, 0, 1);
-            GL.Vertex4(start);
-            GL.Vertex4(0, 0, 0, 1);
-            GL.Vertex4(end);
-            GL.Vertex4(start);
-            GL.Vertex4(end);
-            GL.End();
 
             var IP = Matrix4d.Invert(P);
             start = Vector4d.Transform(start, IP);
             start /= start.W;
             end = Vector4d.Transform(end, IP);
             end /= end.W;
-
-            GL.Begin(BeginMode.Lines);
-            GL.Color3(1f, 0f, 1f);
-            GL.Vertex4(0, 0, 0, 1);
-            GL.Vertex4(start);
-            GL.Vertex4(0, 0, 0, 1);
-            GL.Vertex4(end);
-            GL.Vertex4(start);
-            GL.Vertex4(end);
-            GL.End();
 
             var IV = Matrix4d.Invert(V);
             start = Vector4d.Transform(start, IV);
@@ -92,31 +65,59 @@ namespace MartinZottmann.Game.Entities
 
             end = end - start;
             end.W = 1;
-            var scale = new Vector4d(RenderContext.Camera.Far, RenderContext.Camera.Far, RenderContext.Camera.Far, 1);
-            Vector4d.Multiply(ref end, ref scale, out end);
+
+            ray = new Ray3d(
+                new Vector3d(start.X, start.Y, start.Z),
+                Vector3d.Normalize(new Vector3d(end.X, end.Y, end.Z))
+            );
+
+            //var scale = new Vector4d(RenderContext.Camera.Far, RenderContext.Camera.Far, RenderContext.Camera.Far, 1);
+            //Vector4d.Multiply(ref end, ref scale, out end);
+        }
+
+        public override void Render(double delta_time)
+        {
+            RenderContext.Model = Model;
+            Resources.Programs["normal"].UniformLocations["PVM"].Set(RenderContext.ProjectionViewModel);
+            //graphic.Draw();
+
+            if (ray == null)
+                return;
+
+            GL.LineWidth(3);
+
+            var P = RenderContext.Projection;
+            var V = RenderContext.View;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref P);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref V);
+
+            var start = ray.Origin;
+            var end = ray.Origin + (ray.Direction * RenderContext.Camera.Far);
 
             GL.Begin(BeginMode.Lines);
-            GL.Color4(0f, 1f, 1f, 1f);
-            GL.Vertex4(start);
-            GL.Vertex4(end);
-            GL.Color4(0f, 1f, 1f, 0.5f);
-            GL.Vertex4(0, 0, 0, 1);
-            GL.Vertex4(start);
-            GL.Vertex4(0, 0, 0, 1);
-            GL.Vertex4(end);
+            GL.Color4(1f, 1f, 0f, 0.25f);
+            GL.Vertex3(start);
+            GL.Vertex3(end);
             GL.Color4(0f, 1f, 1f, 0.25f);
-            GL.Vertex4(start);
-            GL.Vertex4(start.X, 0, start.Z, start.W);
-            GL.Vertex4(start);
-            GL.Vertex4(0, start.Y, start.Z, start.W);
-            GL.Vertex4(start);
-            GL.Vertex4(start.X, start.Y, 0, start.W);
-            GL.Vertex4(end);
-            GL.Vertex4(end.X, 0, end.Z, end.W);
-            GL.Vertex4(end);
-            GL.Vertex4(0, end.Y, end.Z, end.W);
-            GL.Vertex4(end);
-            GL.Vertex4(end.X, end.Y, 0, end.W);
+            GL.Vertex3(0, 0, 0);
+            GL.Vertex3(start);
+            GL.Vertex3(0, 0, 0);
+            GL.Vertex3(end);
+            GL.Color4(1f, 0f, 1f, 0.25f);
+            GL.Vertex3(start);
+            GL.Vertex3(start.X, 0, start.Z);
+            GL.Vertex3(start);
+            GL.Vertex3(0, start.Y, start.Z);
+            GL.Vertex3(start);
+            GL.Vertex3(start.X, start.Y, 0);
+            GL.Vertex3(end);
+            GL.Vertex3(end.X, 0, end.Z);
+            GL.Vertex3(end);
+            GL.Vertex3(0, end.Y, end.Z);
+            GL.Vertex3(end);
+            GL.Vertex3(end.X, end.Y, 0);
             GL.End();
 
             GL.MatrixMode(MatrixMode.Projection);

@@ -15,11 +15,13 @@ namespace MartinZottmann.Game.State
     {
         protected List<Entities.Entity> entities = new List<Entities.Entity>();
 
-        protected Physical steerable;
+        protected List<Entities.Physical> selection = new List<Entities.Physical>();
 
         protected Camera camera;
 
         protected Resources resources;
+
+        protected Cursor cursor;
 
         public Running(GameWindow window)
             : base(window)
@@ -103,7 +105,12 @@ namespace MartinZottmann.Game.State
 
             Add(new Entities.GUI.FPSCounter(resources));
 
-            Add(new Cursor(resources));
+            cursor = new Cursor(resources);
+            Window.Mouse.ButtonDown += (s, e) =>
+            {
+                if (e.Button == MouseButton.Left) cursor.Set();
+            };
+            Add(cursor);
 
             Add(new Grid(resources));
 
@@ -113,7 +120,6 @@ namespace MartinZottmann.Game.State
                 Add(new Asteroid(resources));
 
             var textured = new Textured(resources);
-            steerable = textured;
             textured.quad[0] = new Vector3d(-10, 0, -10);
             textured.quad[1] = new Vector3d(-10, 0, 10);
             textured.quad[2] = new Vector3d(10, 0, 10);
@@ -184,6 +190,39 @@ namespace MartinZottmann.Game.State
                 camera.Fov = System.Math.PI;
 
             camera.Update(delta_time);
+
+            if (cursor.ray != null)
+            {
+                foreach (var entity in selection)
+                    entity.Mark = false;
+
+                Entities.Physical g_entity = null;
+                var g_min = Double.MaxValue;
+                var g_max = Double.MinValue;
+                foreach (Entities.Entity entity in entities)
+                {
+                    if (entity is Physical)
+                    {
+                        var l_min = Double.MinValue;
+                        var l_max = Double.MaxValue;
+                        if ((entity as Physical).BoundingBox.Intersect(ref cursor.ray, entity.Position, ref l_min, ref l_max))
+                        {
+                            if (l_min < g_min)
+                            {
+                                g_entity = (entity as Physical);
+                                g_min = l_min;
+                                g_max = l_max;
+                            }
+                        }
+                    }
+                }
+                if (g_entity != null)
+                {
+                    selection.Add(g_entity);
+                    g_entity.Mark = true;
+                }
+                //cursor.ray = null;
+            }
 
             foreach (Entities.Entity entity in entities)
             {
