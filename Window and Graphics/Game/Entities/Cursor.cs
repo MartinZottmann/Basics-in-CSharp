@@ -48,16 +48,13 @@ namespace MartinZottmann.Game.Entities
                 1.0
             );
 
-            var P = RenderContext.Projection;
-            var V = RenderContext.View;
-
-            var IP = Matrix4d.Invert(P);
+            var IP = RenderContext.InvertedProjection;
             start = Vector4d.Transform(start, IP);
             start /= start.W;
             end = Vector4d.Transform(end, IP);
             end /= end.W;
 
-            var IV = Matrix4d.Invert(V);
+            var IV = RenderContext.InvertedView;
             start = Vector4d.Transform(start, IV);
             start /= start.W;
             end = Vector4d.Transform(end, IV);
@@ -75,55 +72,17 @@ namespace MartinZottmann.Game.Entities
             //Vector4d.Multiply(ref end, ref scale, out end);
         }
 
+        public override void Update(double delta_time)
+        {
+            Set();
+
+            RenderContext.Model = Model;
+        }
+
         public override void Render(double delta_time)
         {
-            RenderContext.Model = Model;
             Resources.Programs["normal"].UniformLocations["PVM"].Set(RenderContext.ProjectionViewModel);
-            //graphic.Draw();
-
-            if (ray == null)
-                return;
-
-            GL.LineWidth(3);
-
-            var P = RenderContext.Projection;
-            var V = RenderContext.View;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref P);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref V);
-
-            var start = ray.Origin;
-            var end = ray.Origin + (ray.Direction * RenderContext.Camera.Far);
-
-            GL.Begin(BeginMode.Lines);
-            GL.Color4(1f, 1f, 0f, 0.25f);
-            GL.Vertex3(start);
-            GL.Vertex3(end);
-            GL.Color4(0f, 1f, 1f, 0.25f);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(start);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(end);
-            GL.Color4(1f, 0f, 1f, 0.25f);
-            GL.Vertex3(start);
-            GL.Vertex3(start.X, 0, start.Z);
-            GL.Vertex3(start);
-            GL.Vertex3(0, start.Y, start.Z);
-            GL.Vertex3(start);
-            GL.Vertex3(start.X, start.Y, 0);
-            GL.Vertex3(end);
-            GL.Vertex3(end.X, 0, end.Z);
-            GL.Vertex3(end);
-            GL.Vertex3(0, end.Y, end.Z);
-            GL.Vertex3(end);
-            GL.Vertex3(end.X, end.Y, 0);
-            GL.End();
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
+            graphic.Draw();
         }
     }
 }

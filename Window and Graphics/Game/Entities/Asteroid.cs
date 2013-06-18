@@ -34,9 +34,8 @@ namespace MartinZottmann.Game.Entities
             var scale = (float)(randomNumber.NextDouble() * 5 + 1);
             for (int i = 0; i < cube.VerticesLength; i++)
                 cube.Vertices[i].position *= scale;
-            Position.X = (randomNumber.NextDouble() - 0.5) * 25;
-            Position.Y = (randomNumber.NextDouble() - 0.5) * 25;
-            Position.Z = (randomNumber.NextDouble() - 0.5) * 25;
+
+            Mass *= scale;
 
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Add(cube);
@@ -71,11 +70,19 @@ namespace MartinZottmann.Game.Entities
             BoundingBox.Min = new Vector3d(-1, -1, -1) * scale;
         }
 
+        public override void Update(double delta_time)
+        {
+            Force += new Vector3d(
+                (randomNumber.NextDouble() - 0.5) * 10.0 * delta_time,
+                (randomNumber.NextDouble() - 0.5) * 10.0 * delta_time,
+                (randomNumber.NextDouble() - 0.5) * 10.0 * delta_time
+            );
+
+            base.Update(delta_time);
+        }
+
         public override void Render(double delta_time)
         {
-            var model = RenderContext.Model;
-            Matrix4d.CreateTranslation(ref Position, out model);
-            RenderContext.Model = model;
             ModelUniform.Set(RenderContext.Model);
             ViewUniform.Set(RenderContext.View);
             ModelViewUniform.Set(RenderContext.ViewModel);

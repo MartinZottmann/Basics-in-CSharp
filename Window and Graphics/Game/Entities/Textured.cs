@@ -27,7 +27,6 @@ namespace MartinZottmann.Game.Entities
             GL.PushMatrix();
             using (new Bind(texture))
             {
-                GL.Rotate(Angle, Vector3d.UnitY);
                 GL.Translate(Position.X, Position.Y, Position.Z);
 
                 GL.Begin(BeginMode.Quads);

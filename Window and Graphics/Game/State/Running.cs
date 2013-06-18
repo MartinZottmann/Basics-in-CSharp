@@ -106,9 +106,42 @@ namespace MartinZottmann.Game.State
             Add(new Entities.GUI.FPSCounter(resources));
 
             cursor = new Cursor(resources);
-            Window.Mouse.ButtonDown += (s, e) =>
+            Window.Mouse.ButtonUp += (s, e) =>
             {
-                if (e.Button == MouseButton.Left) cursor.Set();
+                if (e.Button == MouseButton.Left)
+                {
+                    cursor.Set();
+
+                    foreach (var entity in selection)
+                        entity.Mark = false;
+
+                    Entities.Physical g_entity = null;
+                    var g_min = Double.MaxValue;
+                    var g_max = Double.MinValue;
+                    foreach (Entities.Entity entity in entities)
+                    {
+                        if (entity is Physical)
+                        {
+                            var l_min = Double.MinValue;
+                            var l_max = Double.MaxValue;
+                            if ((entity as Physical).BoundingBox.Intersect(ref cursor.ray, entity.Position, ref l_min, ref l_max))
+                            {
+                                if (l_min < g_min)
+                                {
+                                    g_entity = (entity as Physical);
+                                    g_min = l_min;
+                                    g_max = l_max;
+                                }
+                            }
+                        }
+                    }
+                    if (g_entity != null)
+                    {
+                        selection.Add(g_entity);
+                        g_entity.Mark = true;
+                    }
+                    cursor.ray = null;
+                }
             };
             Add(cursor);
 
@@ -155,19 +188,15 @@ namespace MartinZottmann.Game.State
                     camera.Position += camera.Direction * delta_time * 100;
                 else
                     camera.Position += camera.Forward * delta_time * 100;
-            //steerable.Velocity.Y += 100 * delta_time;
             if (Window.Keyboard[Key.S])
                 if (camera.MouseLook)
                     camera.Position -= camera.Direction * delta_time * 100;
                 else
                     camera.Position -= camera.Forward * delta_time * 100;
-            //steerable.Velocity.Y -= 100 * delta_time;
             if (Window.Keyboard[Key.A])
                 camera.Position -= camera.Right * delta_time * 100;
-            //steerable.Velocity.X -= 100 * delta_time;
             if (Window.Keyboard[Key.D])
                 camera.Position += camera.Right * delta_time * 100;
-            //steerable.Velocity.X += 100 * delta_time;
             if (Window.Keyboard[Key.Space])
                 camera.Position += camera.Up * delta_time * 100;
             if (Window.Keyboard[Key.ShiftLeft])
@@ -191,52 +220,6 @@ namespace MartinZottmann.Game.State
 
             camera.Update(delta_time);
 
-            if (cursor.ray != null)
-            {
-                foreach (var entity in selection)
-                    entity.Mark = false;
-
-                Entities.Physical g_entity = null;
-                var g_min = Double.MaxValue;
-                var g_max = Double.MinValue;
-                foreach (Entities.Entity entity in entities)
-                {
-                    if (entity is Physical)
-                    {
-                        var l_min = Double.MinValue;
-                        var l_max = Double.MaxValue;
-                        if ((entity as Physical).BoundingBox.Intersect(ref cursor.ray, entity.Position, ref l_min, ref l_max))
-                        {
-                            if (l_min < g_min)
-                            {
-                                g_entity = (entity as Physical);
-                                g_min = l_min;
-                                g_max = l_max;
-                            }
-                        }
-                    }
-                }
-                if (g_entity != null)
-                {
-                    selection.Add(g_entity);
-                    g_entity.Mark = true;
-                }
-                //cursor.ray = null;
-            }
-
-            foreach (Entities.Entity entity in entities)
-            {
-                entity.Update(delta_time);
-
-                entity.Reposition(100, 100, 100);
-            }
-        }
-
-        public override void Render(double delta_time)
-        {
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.Viewport(0, 0, Window.Width, Window.Height);
-
             var render_context = new RenderContext()
             {
                 Window = Window,
@@ -248,6 +231,20 @@ namespace MartinZottmann.Game.State
             foreach (Entities.Entity entity in entities)
             {
                 entity.RenderContext = render_context;
+
+                entity.Update(delta_time);
+
+                entity.Reposition(100, 100, 100);
+            }
+        }
+
+        public override void Render(double delta_time)
+        {
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.Viewport(0, 0, Window.Width, Window.Height);
+
+            foreach (Entities.Entity entity in entities)
+            {
                 entity.Render(delta_time);
             }
 

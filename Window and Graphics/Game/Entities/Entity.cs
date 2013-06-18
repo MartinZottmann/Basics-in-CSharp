@@ -17,7 +17,7 @@ namespace MartinZottmann.Game.Entities
 
         public Resources Resources { get; protected set; }
 
-        public RenderContext RenderContext { get; set; }
+        public RenderContext RenderContext;
 
         public Entity(Resources resources)
         {

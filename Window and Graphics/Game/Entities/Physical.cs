@@ -9,30 +9,30 @@ namespace MartinZottmann.Game.Entities
     {
         public bool Mark { get; set; }
 
+        /// <summary>
+        /// Scale * Rotation * Translation
+        /// </summary>
+        public Matrix4d Model = Matrix4d.Identity;
+
         public AABB3d BoundingBox;
 
+        public Vector3d Force = Vector3d.Zero;
+
+        public double Mass = 10;
+
+        public Vector3d Acceleration { get { return Force / Mass; } }
+
         public Vector3d Velocity = Vector3d.Zero;
-
-        public double Angle = 0;
-
-        public double AngleVelocity = 10;
 
         public Physical(Resources resources) : base(resources) { }
 
         public override void Update(double delta_time)
         {
-            Angle += AngleVelocity * delta_time;
-            if (Angle > 359)
-                Angle -= 360;
-            else if (Angle < 0)
-                Angle += 360;
-
+            Velocity += Acceleration * delta_time;
             Position += Velocity * delta_time;
-            Velocity += new Vector3d(
-                (randomNumber.NextDouble() - 0.5) * 10.0 * delta_time,
-                (randomNumber.NextDouble() - 0.5) * 10.0 * delta_time,
-                (randomNumber.NextDouble() - 0.5) * 10.0 * delta_time
-            );
+            Model = Matrix4d.CreateTranslation(Position);
+
+            RenderContext.Model = Model;
         }
 
 #if DEBUG

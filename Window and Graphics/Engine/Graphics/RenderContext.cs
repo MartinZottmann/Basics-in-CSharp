@@ -2,26 +2,41 @@
 
 namespace MartinZottmann.Engine.Graphics
 {
-    public class RenderContext
+    public struct RenderContext
     {
-        public GameWindow Window { get; set; }
+        public GameWindow Window;
 
-        public Camera Camera { get; set; }
-
-        /// <summary>
-        /// Set with Camera
-        /// </summary>
-        public Matrix4d Projection { get; set; }
+        public Camera Camera;
 
         /// <summary>
         /// Set with Camera
         /// </summary>
-        public Matrix4d View { get; set; }
+        public Matrix4d Projection;
+
+        /// <summary>
+        /// Calculated: P^-1
+        /// </summary>
+        public Matrix4d InvertedProjection { get { return Matrix4d.Invert(Projection); } }
+
+        /// <summary>
+        /// Set with Camera
+        /// </summary>
+        public Matrix4d View;
+
+        /// <summary>
+        /// Calculated: V^-1
+        /// </summary>
+        public Matrix4d InvertedView { get { return Matrix4d.Invert(View); } }
 
         /// <summary>
         /// Set with Model/Entity
         /// </summary>
-        public Matrix4d Model { get; set; }
+        public Matrix4d Model;
+
+        /// <summary>
+        /// Calculated: M^-1
+        /// </summary>
+        public Matrix4d InvertedModel { get { return Matrix4d.Invert(Model); } }
 
         /// <summary>
         /// Calculated: P * V * M = M' * V' * P'
