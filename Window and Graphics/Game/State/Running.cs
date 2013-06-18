@@ -23,6 +23,8 @@ namespace MartinZottmann.Game.State
 
         protected Cursor cursor;
 
+        protected Textured textured;
+
         public Running(GameWindow window)
             : base(window)
         {
@@ -142,6 +144,11 @@ namespace MartinZottmann.Game.State
                     }
                     cursor.ray = null;
                 }
+
+                if (e.Button == MouseButton.Right)
+                {
+                    textured.Target = cursor.Target;
+                }
             };
             Add(cursor);
 
@@ -152,15 +159,8 @@ namespace MartinZottmann.Game.State
             for (int i = 1; i <= 10; i++)
                 Add(new Asteroid(resources));
 
-            var textured = new Textured(resources);
-            textured.quad[0] = new Vector3d(-10, 0, -10);
-            textured.quad[1] = new Vector3d(-10, 0, 10);
-            textured.quad[2] = new Vector3d(10, 0, 10);
-            textured.quad[3] = new Vector3d(10, 0, -10);
+            textured = new Textured(resources);
             Add(textured);
-
-            for (int i = 1; i <= 10; i++)
-                Add(new SuperBall(resources));
         }
 
         public override void Dispose()

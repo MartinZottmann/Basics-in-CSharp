@@ -1,56 +1,69 @@
-﻿using MartinZottmann.Engine;
-using MartinZottmann.Engine.Graphics.OpenGL;
+﻿using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
-using MartinZottmann.Math;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using System.Drawing;
 
 namespace MartinZottmann.Game.Entities
 {
+
     class Textured : Physical
     {
-        public Quad quad = Quad.Zero;
+        Engine.Graphics.OpenGL.Entity graphic;
 
-        protected string texture_filename = "res/textures/pointer.png";
+        public Vector3d Target;
 
-        protected Texture texture;
+        protected const double max_speed = 20;
+
+        protected const double slowing_distance = 40;
 
         public Textured(Resources resources)
             : base(resources)
         {
-            texture = new Texture(texture_filename, false);
+            Scale = 2;
+            rotate_x = -MathHelper.PiOver2;
+
+            graphic = new Engine.Graphics.OpenGL.Entity();
+            graphic.Add(new Quad());
+            graphic.Program = Resources.Programs["plain_texture"];
+            graphic.Texture = Resources.Textures["res/textures/pointer.png"];
+
+            graphic.Program.AddUniformLocation("Texture").Set(0);
+            graphic.Program.AddUniformLocation("PVM");
+
+            BoundingBox.Max = new Vector3d(1, 1, 1) * Scale;
+            BoundingBox.Min = new Vector3d(-1, -1, -1) * Scale;
+        }
+
+        public override void Update(double delta_time)
+        {
+            //var direction = Target - Position;
+            //var distance = direction.Length;
+            //if (distance > System.Double.Epsilon)
+            //{
+            //    Force = (direction * (System.Math.Min(max_speed * (distance / slowing_distance), max_speed) / distance)) - Velocity;
+            //}
+
+            var direction = Target - Position;
+            var distance = direction.Length;
+            if (distance > System.Double.Epsilon)
+            {
+                direction /= distance;
+                if (distance < slowing_distance)
+                    Force = (direction * max_speed * (distance / slowing_distance)) - Velocity;
+                else
+                    Force = (direction * max_speed) - Velocity;
+            }
+
+            base.Update(delta_time);
         }
 
         public override void Render(double delta_time)
         {
-            GL.PushMatrix();
-            using (new Bind(texture))
-            {
-                GL.Translate(Position.X, Position.Y, Position.Z);
-
-                GL.Begin(BeginMode.Quads);
-                {
-                    GL.Color3(Color.Transparent);
-
-                    GL.TexCoord2(0, 1);
-                    GL.Vertex3(quad[0]);
-
-                    GL.TexCoord2(1, 1);
-                    GL.Vertex3(quad[1]);
-
-                    GL.TexCoord2(1, 0);
-                    GL.Vertex3(quad[2]);
-
-                    GL.TexCoord2(0, 0);
-                    GL.Vertex3(quad[3]);
-                }
-                GL.End();
-            }
-            GL.PopMatrix();
+            graphic.Program.UniformLocations["PVM"].Set(RenderContext.ProjectionViewModel);
+            graphic.Draw();
 
 #if DEBUG
             RenderVelocity(delta_time);
+            RenderBoundingBox(delta_time);
 #endif
         }
     }

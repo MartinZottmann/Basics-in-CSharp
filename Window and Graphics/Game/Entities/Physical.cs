@@ -9,10 +9,28 @@ namespace MartinZottmann.Game.Entities
     {
         public bool Mark { get; set; }
 
+        public double Scale = 1;
+
+        public double rotate_x = 0;
+
+        public double rotate_y = 0;
+
+        public double rotate_z = 0;
+
         /// <summary>
         /// Scale * Rotation * Translation
         /// </summary>
-        public Matrix4d Model = Matrix4d.Identity;
+        public Matrix4d Model
+        {
+            get
+            {
+                return Matrix4d.Scale(Scale)
+                    * Matrix4d.RotateX(rotate_x)
+                    * Matrix4d.RotateY(rotate_y)
+                    * Matrix4d.RotateZ(rotate_z)
+                    * Matrix4d.CreateTranslation(Position);
+            }
+        }
 
         public AABB3d BoundingBox;
 
@@ -30,7 +48,6 @@ namespace MartinZottmann.Game.Entities
         {
             Velocity += Acceleration * delta_time;
             Position += Velocity * delta_time;
-            Model = Matrix4d.CreateTranslation(Position);
 
             RenderContext.Model = Model;
         }
@@ -40,42 +57,51 @@ namespace MartinZottmann.Game.Entities
         {
             base.Render(delta_time);
             RenderVelocity(delta_time);
+            RenderBoundingBox(delta_time);
         }
 
         public virtual void RenderVelocity(double delta_time)
         {
-            GL.PushMatrix();
+            var P = RenderContext.Projection;
+            var V = RenderContext.View;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref P);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref V);
+
+            GL.LineWidth(1);
+            GL.Begin(BeginMode.Lines);
             {
-                GL.PointSize(1);
-                GL.Begin(BeginMode.Lines);
-                {
-                    #region Velocity
-                    GL.Color4(color.R, color.G, color.B, (byte)127);
-                    GL.Vertex3(Position);
-                    GL.Vertex3(Position + Velocity);
-                    #endregion
+                #region Velocity
+                GL.Color4(color.R, color.G, color.B, (byte)127);
+                GL.Vertex3(Position);
+                GL.Vertex3(Position + Velocity);
+                #endregion
 
-                    #region Contact to circle
-                    GL.Color4(1, 1, 1, 0.2);
-                    GL.Vertex3(Position);
-                    var position_on_y = new Vector3d(Position.X, 0, Position.Z);
-                    GL.Vertex3(position_on_y);
+                #region Contact to circle
+                GL.Color4(1, 1, 1, 0.2);
+                GL.Vertex3(Position);
+                var position_on_y = new Vector3d(Position.X, 0, Position.Z);
+                GL.Vertex3(position_on_y);
 
-                    double radius = 100;
-                    Vector3d center = Vector3d.Zero;
-                    Vector3d difference = position_on_y - center;
-                    Vector3d contact = center + difference / difference.Length * radius;
+                double radius = 100;
+                Vector3d center = Vector3d.Zero;
+                Vector3d difference = position_on_y - center;
+                Vector3d contact = center + difference / difference.Length * radius;
 
-                    GL.Vertex3(position_on_y);
-                    GL.Vertex3(contact);
-                    #endregion
-                }
-                GL.End();
+                GL.Vertex3(position_on_y);
+                GL.Vertex3(contact);
+                #endregion
             }
-            GL.PopMatrix();
+            GL.End();
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
         }
 
-        public void RenderBoundingBox()
+        public void RenderBoundingBox(double delta_time)
         {
             var P = RenderContext.Projection;
             var V = RenderContext.View;

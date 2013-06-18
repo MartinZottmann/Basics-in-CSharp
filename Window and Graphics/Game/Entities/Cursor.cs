@@ -14,6 +14,10 @@ namespace MartinZottmann.Game.Entities
 
         public Ray3d ray;
 
+        public Vector3d Target;
+
+        public Plane3d xz = new Plane3d(Vector3d.Zero, Vector3d.UnitY);
+
         public Cursor(Resources resources)
             : base(resources)
         {
@@ -67,6 +71,8 @@ namespace MartinZottmann.Game.Entities
                 new Vector3d(start.X, start.Y, start.Z),
                 Vector3d.Normalize(new Vector3d(end.X, end.Y, end.Z))
             );
+
+            ray.Intersect(xz, out Target);
 
             //var scale = new Vector4d(RenderContext.Camera.Far, RenderContext.Camera.Far, RenderContext.Camera.Far, 1);
             //Vector4d.Multiply(ref end, ref scale, out end);

@@ -53,21 +53,6 @@ namespace MartinZottmann.Game.Entities
 
         public virtual void Update(double delta_time) { }
 
-        public virtual void Render(double delta_time)
-        {
-            GL.PushMatrix();
-            {
-                GL.PointSize(3);
-                GL.Translate(Position.X, Position.Y, Position.Z);
-
-                GL.Begin(BeginMode.Points);
-                {
-                    GL.Color3(color);
-                    GL.Vertex3(0, 0, 0);
-                }
-                GL.End();
-            }
-            GL.PopMatrix();
-        }
+        public virtual void Render(double delta_time) { }
     }
 }
