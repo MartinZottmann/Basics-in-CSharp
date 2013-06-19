@@ -61,6 +61,29 @@ namespace MartinZottmann.Engine.Graphics
         }
     }
 
+    public struct VertexP3N3
+    {
+        public Vector3 position;
+
+        public Vector3 normal;
+
+        public VertexP3N3(Vector3 position, Vector3 normal)
+        {
+            this.position = position;
+            this.normal = normal;
+        }
+
+        public VertexP3N3(float px, float py, float pz, float nx, float ny, float nz) : this(new Vector3(px, py, pz), new Vector3(nx, ny, nz)) { }
+
+        public string[] GetAttributeLayout()
+        {
+            return new string[] {
+                "in_Position",
+                "in_Normal"
+            };
+        }
+    }
+
     public struct VertexP3N3T2SOA
     {
         public Vector3[] position;

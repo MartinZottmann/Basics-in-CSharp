@@ -53,6 +53,21 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="res\Shaders\directional_light.fs.glsl" />
+    <None Include="res\Shaders\directional_light.vs.glsl" />
+    <None Include="res\Shaders\normal.fs.glsl" />
+    <None Include="res\Shaders\normal.vs.glsl" />
+    <None Include="res\Shaders\phong.fs.glsl" />
+    <None Include="res\Shaders\phong.vs.glsl" />
+    <None Include="res\Shaders\plain_texture.fs.glsl" />
+    <None Include="res\Shaders\plain_texture.vs.glsl" />
+    <None Include="res\Shaders\point_light.fs.glsl" />
+    <None Include="res\Shaders\point_light.vs.glsl" />
+    <None Include="res\Shaders\point_light_2.fs.glsl" />
+    <None Include="res\Shaders\point_light_2.vs.glsl" />
+    <None Include="res\Shaders\standard.fs.glsl" />
+    <None Include="res\Shaders\standard.vs.glsl" />
+    <None Include="res\textures\pointer.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\Graphics\Camera.cs" />
@@ -118,23 +133,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\Shaders\normal.fs.glsl" />
-    <None Include="res\Shaders\normal.vs.glsl" />
-    <None Include="res\Shaders\plain_texture.fs.glsl" />
-    <None Include="res\Shaders\plain_texture.vs.glsl" />
-    <None Include="res\Shaders\point_light.fs.glsl" />
-    <None Include="res\Shaders\point_light.vs.glsl" />
-    <None Include="res\Shaders\point_light_2.fs.glsl" />
-    <None Include="res\Shaders\point_light_2.vs.glsl" />
-    <None Include="res\Shaders\directional_light.fs.glsl" />
-    <None Include="res\Shaders\directional_light.vs.glsl" />
-    <None Include="res\Shaders\phong.fs.glsl" />
-    <None Include="res\Shaders\phong.vs.glsl" />
-    <None Include="res\Shaders\standard.fs.glsl" />
-    <None Include="res\Shaders\standard.vs.glsl" />
-    <None Include="res\textures\pointer.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
@@ -155,9 +153,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="res\textures\rainbow-45deg-128.png" />
     <Content Include="res\textures\debug-256.png" />
     <Content Include="res\textures\debug-512.png" />
+    <Content Include="res\textures\rainbow-45deg-128.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

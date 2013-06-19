@@ -12,6 +12,8 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public TextureTarget target;
 
+        protected EnableCap gl_texture_capability;
+
         public Texture(String text, Font font, Color textColor, Color backColor, bool mipmapped, SizeF size)
         {
             using (var img = new Bitmap((int)size.Width, (int)size.Height))
@@ -64,6 +66,17 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         protected void Init(Bitmap bmp, bool mipmapped, TextureTarget target)
         {
+            switch (target)
+            {
+                case TextureTarget.Texture2D:
+                    gl_texture_capability = EnableCap.Texture2D;
+                    break;
+                case TextureTarget.TextureCubeMap:
+                    gl_texture_capability = EnableCap.TextureCubeMap;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
             id = GL.GenTexture();
             this.target = target;
 
@@ -103,8 +116,8 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 }
                 bmp.UnlockBits(bmp_data);
 
-                //GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                //GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                //GL.TexParameter(target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                //GL.TexParameter(target, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
                 if (mipmapped)
                 {
                     GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
@@ -118,12 +131,13 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
                 GL.TexParameter(target, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
                 GL.TexParameter(target, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+                GL.TexParameter(target, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
             }
         }
 
         public void Bind()
         {
-            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(gl_texture_capability);
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(target, id);
         }
@@ -131,7 +145,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         public void UnBind()
         {
             GL.BindTexture(target, 0);
-            GL.Disable(EnableCap.Texture2D);
+            GL.Disable(gl_texture_capability);
         }
 
         public void Dispose()

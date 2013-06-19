@@ -43,6 +43,19 @@ namespace MartinZottmann.Game.State
                     "in_Texcoord"
                 }
             );
+            vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/standard_cube.vs.glsl");
+            fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/standard_cube.fs.glsl");
+            resources.Programs.Load(
+                "standard_cube",
+                new Shader[] {
+                    vertex_shader,
+                    fragment_shader
+                },
+                new string[] {
+                    "in_Position",
+                    "in_Normal"
+                }
+            );
             vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/phong.vs.glsl");
             fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/phong.fs.glsl");
             resources.Programs.Load(
