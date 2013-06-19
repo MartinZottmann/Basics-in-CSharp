@@ -15,11 +15,11 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d Position = Vector3d.Zero;
 
-        public Resources Resources { get; protected set; }
+        public ResourceManager Resources { get; protected set; }
 
         public RenderContext RenderContext;
 
-        public Entity(Resources resources)
+        public Entity(ResourceManager resources)
         {
             Resources = resources;
 

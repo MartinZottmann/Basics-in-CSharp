@@ -9,7 +9,7 @@ namespace MartinZottmann.Game.Entities
     {
         Engine.Graphics.OpenGL.Entity graphic;
 
-        public Asteroid(Resources resources)
+        public Asteroid(ResourceManager resources)
             : base(resources)
         {
             Position = new Vector3d(

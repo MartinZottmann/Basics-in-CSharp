@@ -24,7 +24,7 @@ namespace MartinZottmann.Game.Entities.GUI
 
         protected const double scale = 2;
 
-        public FPSCounter(Resources resources)
+        public FPSCounter(ResourceManager resources)
             : base(resources)
         {
             graphic = new Engine.Graphics.OpenGL.Entity();

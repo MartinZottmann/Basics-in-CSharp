@@ -1,44 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MartinZottmann.Engine.Graphics.OpenGL;
+using System;
 
 namespace MartinZottmann.Engine.Resources
 {
-    public abstract class ResourceManager<T> : IDisposable where T : IDisposable
+    public class ResourceManager : IDisposable
     {
-        public Resources Resources { get; protected set; }
+        public Programs Programs { get; set; }
 
-        protected Dictionary<string, T> resources = new Dictionary<string, T>();
+        public Shaders Shaders { get; set; }
 
-        public ResourceManager(Resources resources)
+        public Textures Textures { get; set; }
+
+        public ResourceManager()
         {
-            this.Resources = resources;
-        }
-
-        public T this[string key]
-        {
-            get
-            {
-                return resources[key];
-            }
-            set
-            {
-                resources[key] = value;
-            }
-        }
-
-        public void Clear()
-        {
-            foreach (var x in resources.Values)
-                x.Dispose();
-
-            resources.Clear();
+            Programs = new Programs(this);
+            Shaders = new Shaders(this);
+            Textures = new Textures(this);
         }
 
         public void Dispose()
         {
-            Clear();
+            Programs.Dispose();
+            Shaders.Dispose();
+            Textures.Dispose();
         }
-
-        //public abstract void LoadFromFile(string filename);
     }
 }

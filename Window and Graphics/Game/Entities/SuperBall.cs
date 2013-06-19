@@ -4,6 +4,6 @@ namespace MartinZottmann.Game.Entities
 {
     public class SuperBall : Physical
     {
-        public SuperBall(Resources resources) : base(resources) { }
+        public SuperBall(ResourceManager resources) : base(resources) { }
     }
 }

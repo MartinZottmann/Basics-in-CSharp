@@ -19,7 +19,7 @@ namespace MartinZottmann.Game.State
 
         protected Camera camera;
 
-        protected Resources resources;
+        protected ResourceManager resources;
 
         protected Cursor cursor;
 
@@ -28,76 +28,42 @@ namespace MartinZottmann.Game.State
         public Running(GameWindow window)
             : base(window)
         {
-            resources = new Resources();
-            var vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/standard.vs.glsl");
-            var fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/standard.fs.glsl");
-            resources.Programs.Load(
-                "standard",
-                new Shader[] {
-                    vertex_shader,
-                    fragment_shader
-                },
-                new string[] {
-                    "in_Position",
-                    "in_Normal",
-                    "in_Texcoord"
+            resources = new ResourceManager();
+
+            var shaders = new Dictionary<string, List<Shader>>();
+            foreach (var filename in Directory.GetFiles("res/Shaders/", "*.glsl"))
+            {
+                System.Console.WriteLine(filename);
+                var chunks = filename.Split(new char[] {'/', '.'});
+                var name = chunks[chunks.Length - 3];
+                var type = chunks[chunks.Length - 2];
+                Shader shader;
+
+                switch (type) {
+                    case "vs":
+                        shader = resources.Shaders.Load(ShaderType.VertexShader, filename);
+                        break;
+                    case "fs":
+                        shader = resources.Shaders.Load(ShaderType.FragmentShader, filename);
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
-            );
-            vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/standard_cube.vs.glsl");
-            fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/standard_cube.fs.glsl");
-            resources.Programs.Load(
-                "standard_cube",
-                new Shader[] {
-                    vertex_shader,
-                    fragment_shader
-                },
-                new string[] {
-                    "in_Position",
-                    "in_Normal"
-                }
-            );
-            vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/phong.vs.glsl");
-            fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/phong.fs.glsl");
-            resources.Programs.Load(
-                "phong",
-                new Shader[] {
-                    vertex_shader,
-                    fragment_shader
-                },
-                new string[] {
-                    "in_Position",
-                    "in_Normal",
-                    "in_Texcoord"
-                }
-            );
-            vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/normal.vs.glsl");
-            fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/normal.fs.glsl");
-            resources.Programs.Load(
-                "normal",
-                new Shader[] {
-                    vertex_shader,
-                    fragment_shader
-                },
-                new string[] {
-                    "in_Position",
-                    "in_Color"
-                }
-            );
+
+                if (!shaders.ContainsKey(name))
+                    shaders.Add(name, new List<Shader>());
+                shaders[name].Add(shader);
+            }
+            foreach (var shader in shaders)
+            {
+                System.Console.WriteLine(shader.Key);
+                resources.Programs.Load(
+                    shader.Key,
+                    shader.Value.ToArray(),
+                    new string[] { }
+                );
+            }
             resources.Programs["normal"].AddUniformLocation("PVM");
-            vertex_shader = resources.Shaders.Load(ShaderType.VertexShader, "res/Shaders/plain_texture.vs.glsl");
-            fragment_shader = resources.Shaders.Load(ShaderType.FragmentShader, "res/Shaders/plain_texture.fs.glsl");
-            resources.Programs.Load(
-                "plain_texture",
-                new Shader[] {
-                    vertex_shader,
-                    fragment_shader
-                },
-                new string[] {
-                    "in_Position",
-                    "in_Normal",
-                    "in_Texcoord"
-                }
-            );
             resources.Programs["plain_texture"].AddUniformLocation("PVM");
             resources.Programs["plain_texture"].AddUniformLocation("Texture");
 

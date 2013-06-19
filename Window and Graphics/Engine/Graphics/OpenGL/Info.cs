@@ -22,9 +22,9 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             GL.GetProgram(program, ProgramParameter.AttachedShaders, out shader_count);
             int shader_index;
             GL.GetAttachedShaders(program, shader_count, out shader_count, out shader_index);
-            for (int i = 0; i < shader_count; i++)
+            for (int i = shader_index - shader_count + 1; i <= shader_index; i++)
             {
-                GL.GetShader(shader_index + i, ShaderParameter.ShaderType, out info);
+                GL.GetShader(i, ShaderParameter.ShaderType, out info);
                 if (info == (int)ShaderType.GeometryShader)
                     geometry_shader = true;
                 if (info == (int)ShaderType.TessControlShader || info == (int)ShaderType.TessEvaluationShader)

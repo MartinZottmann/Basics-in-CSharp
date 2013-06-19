@@ -14,7 +14,7 @@ namespace MartinZottmann.Game.Entities
 
         Engine.Graphics.OpenGL.Entity grid_xz;
 
-        public Grid(Resources resources)
+        public Grid(ResourceManager resources)
             : base(resources)
         {
             color = Color.LightGray;

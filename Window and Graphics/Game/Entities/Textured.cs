@@ -15,7 +15,7 @@ namespace MartinZottmann.Game.Entities
 
         protected const double slowing_distance = 40;
 
-        public Textured(Resources resources)
+        public Textured(ResourceManager resources)
             : base(resources)
         {
             Scale = 2;

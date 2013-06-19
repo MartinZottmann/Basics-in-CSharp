@@ -18,7 +18,7 @@ namespace MartinZottmann.Game.Entities
 
         public Plane3d xz = new Plane3d(Vector3d.Zero, Vector3d.UnitY);
 
-        public Cursor(Resources resources)
+        public Cursor(ResourceManager resources)
             : base(resources)
         {
             graphic = new Engine.Graphics.OpenGL.Entity();

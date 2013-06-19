@@ -2,9 +2,9 @@
 
 namespace MartinZottmann.Engine.Resources
 {
-    public class Shaders : ResourceManager<Shader>
+    public class Shaders : Resource<Shader>
     {
-        public Shaders(Resources resources) : base(resources) { }
+        public Shaders(ResourceManager resources) : base(resources) { }
 
         public Shader Load(OpenTK.Graphics.OpenGL.ShaderType type, string filename)
         {

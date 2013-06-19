@@ -2,9 +2,9 @@
 
 namespace MartinZottmann.Engine.Resources
 {
-    public class Programs : ResourceManager<Engine.Graphics.OpenGL.Program>
+    public class Programs : Resource<Engine.Graphics.OpenGL.Program>
     {
-        public Programs(Resources resources) : base(resources) { }
+        public Programs(ResourceManager resources) : base(resources) { }
 
         public Engine.Graphics.OpenGL.Program Load(string name, string[] shader_files, string[] attribute_location_names)
         {

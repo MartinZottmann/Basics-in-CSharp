@@ -79,7 +79,7 @@
     <Compile Include="Engine\Physics\AABB3d.cs" />
     <Compile Include="Engine\Physics\Plane3d.cs" />
     <Compile Include="Engine\Physics\Ray3d.cs" />
-    <Compile Include="Engine\Resources\Resources.cs" />
+    <Compile Include="Engine\Resources\ResourceManager.cs" />
     <Compile Include="Engine\Resources\Programs.cs" />
     <Compile Include="Engine\Resources\Shaders.cs" />
     <Compile Include="Engine\Resources\Textures.cs" />
@@ -106,7 +106,7 @@
     <Compile Include="Engine\Graphics\OpenGL\Program.cs" />
     <Compile Include="Engine\Graphics\OpenGL\Shader.cs" />
     <Compile Include="Engine\Graphics\OpenGL\Texture.cs" />
-    <Compile Include="Engine\Resources\ResourceManager.cs" />
+    <Compile Include="Engine\Resources\Resource.cs" />
     <Compile Include="Engine\Graphics\Shapes\CubeHardNormals.cs" />
     <Compile Include="Engine\Graphics\Shapes\CubeSoftNormals.cs" />
     <Compile Include="Engine\Graphics\SubBuffer.cs" />

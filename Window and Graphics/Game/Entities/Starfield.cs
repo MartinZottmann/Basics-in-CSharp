@@ -10,7 +10,7 @@ namespace MartinZottmann.Game.Entities
 
         Engine.Graphics.OpenGL.Entity graphic;
 
-        public Starfield(Resources resources)
+        public Starfield(ResourceManager resources)
             : base(resources)
         {
             var vertex_data = new VertexP3C4[num_stars];

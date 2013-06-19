@@ -30,8 +30,7 @@ void main(void)
         specular = 0.0;
     else
         specular = pow(specular, in_Shininess) * in_Strength;
-    vec3 scatteredLight = in_AmbientLight + in_LightColor * diffuse * attenuation;
-    vec3 reflectedLight = in_LightColor * specular * attenuation;
-    vec3 rgb = min(texture2D(in_Texture, uv).rgb * scatteredLight + reflectedLight, vec3(1.0));
-    FragColor = vec4(rgb, 1.0);
+    vec4 scatteredLight = in_AmbientLight + in_LightColor * diffuse * attenuation;
+    vec4 reflectedLight = in_LightColor * specular * attenuation;
+    FragColor = min(texture2D(in_Texture, uv) * scatteredLight + reflectedLight, vec4(1.0));
 }

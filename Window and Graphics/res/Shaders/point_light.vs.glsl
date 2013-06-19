@@ -16,6 +16,6 @@ void main(void)
 {
     uv = in_Texcoord;
     Normal = normalize(mat3(in_NormalMatrix) * in_Normal);
-    Position = in_ModelView * vec4(in_Position, 1.0);
+    Position = (in_ModelView * vec4(in_Position, 1.0)).xyz;
     gl_Position = in_ModelViewProjection * vec4(in_Position, 1.0);
 }

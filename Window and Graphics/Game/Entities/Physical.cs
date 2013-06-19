@@ -42,7 +42,7 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d Velocity = Vector3d.Zero;
 
-        public Physical(Resources resources) : base(resources) { }
+        public Physical(ResourceManager resources) : base(resources) { }
 
         public override void Update(double delta_time)
         {
@@ -111,7 +111,7 @@ namespace MartinZottmann.Game.Entities
             GL.LoadMatrix(ref V);
 
             GL.Translate(Position);
-            GL.LineWidth(3);
+            GL.LineWidth(1);
             GL.Begin(BeginMode.Lines);
             if (Mark)
                 GL.Color3(1f, 1f, 0f);
