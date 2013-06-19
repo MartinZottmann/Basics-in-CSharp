@@ -23,7 +23,7 @@ namespace MartinZottmann.Game.Entities
             Mass *= Scale;
 
             graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Add(new CubeHardNormals());
+            graphic.Add(new Sphere());
             graphic.Program = Resources.Programs["standard_cube"];
             var texture = new Texture("res/textures/debug-256.png", false, OpenTK.Graphics.OpenGL.TextureTarget.TextureCubeMap);
             graphic.Texture = texture;
