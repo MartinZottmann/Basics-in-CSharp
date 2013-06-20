@@ -1,5 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
+using System.Text;
 
 namespace MartinZottmann.Engine.Graphics.OpenGL
 {
@@ -90,21 +91,46 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             GL.GetProgram(program, ProgramParameter.ActiveUniforms, out count);
             for (int i = 0; i < count; i++)
             {
+                Console.WriteLine("\t{0}: {1} (", i, GL.GetActiveUniformName(program, i));
+                GL.GetActiveUniformName(program, i);
                 foreach (ActiveUniformParameter parameter in (ActiveUniformParameter[])Enum.GetValues(typeof(ActiveUniformParameter)))
                 {
                     GL.GetActiveUniforms(program, 1, ref i, parameter, out info);
-                    Console.WriteLine("\t{0}: {1}", parameter, info);
+                    Console.WriteLine("\t\t{0}: {1}", parameter, info);
                 }
+                Console.WriteLine("\t)");
             }
             GL.GetProgram(program, ProgramParameter.ActiveUniformBlocks, out count);
             for (int i = 0; i < count; i++)
             {
-                Console.WriteLine("\t{0}", GL.GetActiveUniformBlockName(program, i));
+                Console.WriteLine("\t{0}: {1} (", i, GL.GetActiveUniformBlockName(program, i));
                 foreach (ActiveUniformBlockParameter parameter in (ActiveUniformBlockParameter[])Enum.GetValues(typeof(ActiveUniformBlockParameter)))
                 {
                     GL.GetActiveUniformBlock(program, i, parameter, out info);
-                    Console.WriteLine("\t{0}: {1}", parameter, info);
+                    Console.WriteLine("\t\t{0}: {1}", parameter, info);
                 }
+                Console.WriteLine("\t)");
+            }
+            Console.WriteLine(")");
+        }
+
+        public static void Attribue(int program)
+        {
+            int count;
+
+            Console.WriteLine("Attribue {0} (", program);
+            GL.GetProgram(program, ProgramParameter.ActiveAttributes, out count);
+            int buffer_size;
+            GL.GetProgram(program, ProgramParameter.ActiveAttributeMaxLength, out buffer_size);
+            for (int i = 0; i < count; i++)
+            {
+                int size;
+                int length;
+                ActiveAttribType type;
+                StringBuilder name = new StringBuilder();
+                GL.GetActiveAttrib(program, i, buffer_size, out length, out size, out type, name);
+                //GL.BindAttribLocation(id, i, name.ToString());
+                Console.WriteLine("\t{0}: {1}: {2}: {3}: {4}", i, length, size, type, name);
             }
             Console.WriteLine(")");
         }

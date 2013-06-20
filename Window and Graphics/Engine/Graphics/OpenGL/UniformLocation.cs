@@ -12,6 +12,13 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public string name;
 
+        public UniformLocation(Program program, int id, string name)
+        {
+            this.program = program;
+            this.id = id;
+            this.name = name;
+        }
+
         public UniformLocation(Program program, string name)
         {
             this.program = program;

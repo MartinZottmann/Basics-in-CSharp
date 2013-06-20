@@ -21,13 +21,8 @@ namespace MartinZottmann.Game.Entities
             var texture = new Texture("res/textures/debug-256.png", false, OpenTK.Graphics.OpenGL.TextureTarget.TextureCubeMap);
             graphic.Texture = texture;
 
-            graphic.Program.AddUniformLocation("in_Texture").Set(0);
-            graphic.Program.AddUniformLocation("in_Model");
-            graphic.Program.AddUniformLocation("in_View");
-            graphic.Program.AddUniformLocation("in_ModelView");
-            graphic.Program.AddUniformLocation("in_ModelViewProjection");
-            graphic.Program.AddUniformLocation("in_NormalView");
-            graphic.Program.AddUniformLocation("in_LightPosition").Set(new Vector3(10, 10, 10));
+            graphic.Program.UniformLocations["in_Texture"].Set(0);
+            graphic.Program.UniformLocations["in_LightPosition"].Set(new Vector3(10, 10, 10));
 
             BoundingBox.Max = new Vector3d(1, 1, 1);
             BoundingBox.Min = new Vector3d(-1, -1, -1);

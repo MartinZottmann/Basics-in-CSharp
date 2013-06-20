@@ -57,15 +57,8 @@ namespace MartinZottmann.Game.State
             foreach (var shader in shaders)
             {
                 System.Console.WriteLine(shader.Key);
-                resources.Programs.Load(
-                    shader.Key,
-                    shader.Value.ToArray(),
-                    new string[] { }
-                );
+                resources.Programs.Load(shader.Key, shader.Value.ToArray());
             }
-            resources.Programs["normal"].AddUniformLocation("PVM");
-            resources.Programs["plain_texture"].AddUniformLocation("PVM");
-            resources.Programs["plain_texture"].AddUniformLocation("Texture");
 
             foreach (var filename in Directory.GetFiles("res/textures/", "*.png"))
                 resources.Textures.Load(filename, true, TextureTarget.Texture2D);

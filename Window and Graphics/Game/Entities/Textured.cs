@@ -25,8 +25,7 @@ namespace MartinZottmann.Game.Entities
             graphic.Program = Resources.Programs["plain_texture"];
             graphic.Texture = Resources.Textures["res/textures/pointer.png"];
 
-            graphic.Program.AddUniformLocation("Texture").Set(0);
-            graphic.Program.AddUniformLocation("PVM");
+            graphic.Program.UniformLocations["Texture"].Set(0);
 
             BoundingBox.Max = Scale;
             BoundingBox.Min = -Scale;

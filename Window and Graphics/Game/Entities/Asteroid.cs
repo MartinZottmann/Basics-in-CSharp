@@ -29,29 +29,8 @@ namespace MartinZottmann.Game.Entities
             var texture = new Texture("res/textures/debug-256.png", false, OpenTK.Graphics.OpenGL.TextureTarget.TextureCubeMap);
             graphic.Texture = texture;
 
-            graphic.Program.AddUniformLocation("in_Texture").Set(0);
-            //in_texture.Set(graphic.texture.id);
-
-            graphic.Program.AddUniformLocation("in_Model");
-            graphic.Program.AddUniformLocation("in_View");
-            //graphic.program.AddUniformLocation("in_Projection");
-            graphic.Program.AddUniformLocation("in_ModelView");
-            //graphic.program.AddUniformLocation("in_ViewProjection");
-            graphic.Program.AddUniformLocation("in_ModelViewProjection");
-            //graphic.program.AddUniformLocation("in_AmbientColor").Set(new OpenTK.Graphics.Color4(0, 0, 0, 255));
-            //graphic.program.AddUniformLocation("in_DiffuseColor").Set(new OpenTK.Graphics.Color4(255, 255, 255, 255));
-            //graphic.program.AddUniformLocation("in_SpecularColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
-            //graphic.program.AddUniformLocation("in_AmbientLight").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
-            //NormalMatrixUniform = graphic.program.AddUniformLocation("in_NormalMatrix");
-            graphic.Program.AddUniformLocation("in_NormalView");
-            //graphic.program.AddUniformLocation("in_LightColor").Set(new OpenTK.Graphics.Color4(127, 127, 127, 255));
-            graphic.Program.AddUniformLocation("in_LightPosition").Set(new Vector3(10, 10, 10));
-            //graphic.program.AddUniformLocation("in_Shininess").Set(100f);
-            //graphic.program.AddUniformLocation("in_Strength").Set(0.1f);
-            //graphic.program.AddUniformLocation("in_EyeDirection");
-            //graphic.program.AddUniformLocation("in_ConstantAttenuation").Set(0.1f);
-            //graphic.program.AddUniformLocation("in_LinearAttenuation").Set(0.1f);
-            //graphic.program.AddUniformLocation("in_QuadraticAttenuation").Set(0.1f);
+            graphic.Program.UniformLocations["in_Texture"].Set(0);
+            graphic.Program.UniformLocations["in_LightPosition"].Set(new Vector3(10, 10, 10));
 
             BoundingBox.Max = Scale;
             BoundingBox.Min = -Scale;
