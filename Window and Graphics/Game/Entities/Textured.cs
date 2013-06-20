@@ -4,7 +4,6 @@ using OpenTK;
 
 namespace MartinZottmann.Game.Entities
 {
-
     class Textured : Physical
     {
         Engine.Graphics.OpenGL.Entity graphic;
@@ -18,7 +17,7 @@ namespace MartinZottmann.Game.Entities
         public Textured(ResourceManager resources)
             : base(resources)
         {
-            Scale = 2;
+            Scale *= 2;
             rotate_x = -MathHelper.PiOver2;
 
             graphic = new Engine.Graphics.OpenGL.Entity();
@@ -29,8 +28,8 @@ namespace MartinZottmann.Game.Entities
             graphic.Program.AddUniformLocation("Texture").Set(0);
             graphic.Program.AddUniformLocation("PVM");
 
-            BoundingBox.Max = new Vector3d(1, 1, 1) * Scale;
-            BoundingBox.Min = new Vector3d(-1, -1, -1) * Scale;
+            BoundingBox.Max = Scale;
+            BoundingBox.Min = -Scale;
         }
 
         public override void Update(double delta_time)

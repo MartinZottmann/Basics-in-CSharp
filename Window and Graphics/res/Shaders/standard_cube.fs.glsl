@@ -15,7 +15,7 @@ void main() {
     vec4 LightColor = vec4(1, 1, 1, 1);
     float LightPower = 50.0f;
 
-    vec4 MaterialDiffuseColor = textureCube(in_Texture, UV);
+    vec4 MaterialDiffuseColor = texture(in_Texture, UV);
     vec4 MaterialAmbientColor = vec4(0, 0, 0, 1) * MaterialDiffuseColor;
     vec4 MaterialSpecularColor = vec4(0.5, 0.5, 0.5, 1);
 

@@ -9,7 +9,9 @@ namespace MartinZottmann.Game.Entities
     {
         public bool Mark { get; set; }
 
-        public double Scale = 1;
+        public Vector3d Scale = new Vector3d(1, 1, 1);
+
+        public Vector3d Offset = Vector3d.Zero;
 
         public double rotate_x = 0;
 
@@ -25,6 +27,7 @@ namespace MartinZottmann.Game.Entities
             get
             {
                 return Matrix4d.Scale(Scale)
+                    * Matrix4d.CreateTranslation(Offset)
                     * Matrix4d.RotateX(rotate_x)
                     * Matrix4d.RotateY(rotate_y)
                     * Matrix4d.RotateZ(rotate_z)

@@ -18,9 +18,10 @@ namespace MartinZottmann.Game.Entities
                 (randomNumber.NextDouble() - 0.5) * 100.0
             );
 
-            Scale = (float)(randomNumber.NextDouble() * 5 + 1);
+            var scale = randomNumber.NextDouble() * 5 + 1;
+            Scale *= scale;
 
-            Mass *= Scale;
+            Mass *= scale;
 
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Add(new Sphere());
@@ -52,8 +53,8 @@ namespace MartinZottmann.Game.Entities
             //graphic.program.AddUniformLocation("in_LinearAttenuation").Set(0.1f);
             //graphic.program.AddUniformLocation("in_QuadraticAttenuation").Set(0.1f);
 
-            BoundingBox.Max = new Vector3d(1, 1, 1) * Scale;
-            BoundingBox.Min = new Vector3d(-1, -1, -1) * Scale;
+            BoundingBox.Max = Scale;
+            BoundingBox.Min = -Scale;
         }
 
         public override void Update(double delta_time)

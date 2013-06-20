@@ -13,16 +13,26 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             Console.WriteLine(")");
         }
 
+#if DEBUG
+        public static unsafe int[] AttachedShaders(int program)
+        {
+            int icount = 0;
+            int* count = (int*)&icount;
+            GL.GetProgram(program, ProgramParameter.AttachedShaders, count);
+
+            int[] shaders = new int[*count];
+            GL.GetAttachedShaders(program, *count, count, shaders);
+
+            return shaders;
+        }
+#endif
+
         public static void ProgramParameters(int program)
         {
             int info;
             bool geometry_shader = false;
             bool tesslation_shader = false;
-            int shader_count;
-            GL.GetProgram(program, ProgramParameter.AttachedShaders, out shader_count);
-            int shader_index;
-            GL.GetAttachedShaders(program, shader_count, out shader_count, out shader_index);
-            for (int i = shader_index - shader_count + 1; i <= shader_index; i++)
+            foreach (var i in AttachedShaders(program))
             {
                 GL.GetShader(i, ShaderParameter.ShaderType, out info);
                 if (info == (int)ShaderType.GeometryShader)

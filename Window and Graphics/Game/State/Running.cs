@@ -68,9 +68,7 @@ namespace MartinZottmann.Game.State
             resources.Programs["plain_texture"].AddUniformLocation("Texture");
 
             foreach (var filename in Directory.GetFiles("res/textures/", "*.png"))
-            {
                 resources.Textures.Load(filename, true, TextureTarget.Texture2D);
-            }
 
             camera = new Camera(Window);
             //camera.MouseLook = true;
@@ -140,6 +138,8 @@ namespace MartinZottmann.Game.State
 
             textured = new Textured(resources);
             Add(textured);
+
+            Add(new Ship(resources));
         }
 
         public override void Dispose()

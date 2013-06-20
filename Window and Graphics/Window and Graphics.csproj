@@ -36,6 +36,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -67,6 +68,8 @@
     <None Include="res\Shaders\point_light_2.vs.glsl" />
     <None Include="res\Shaders\standard.fs.glsl" />
     <None Include="res\Shaders\standard.vs.glsl" />
+    <None Include="res\Shaders\standard_cube.fs.glsl" />
+    <None Include="res\Shaders\standard_cube.vs.glsl" />
     <None Include="res\textures\pointer.png" />
   </ItemGroup>
   <ItemGroup>
@@ -89,10 +92,12 @@
     <Compile Include="Game\Entities\Grid.cs" />
     <Compile Include="Game\Entities\GUI\Entity.cs" />
     <Compile Include="Game\Entities\GUI\FPSCounter.cs" />
+    <Compile Include="Game\Entities\Ship\Floor.cs" />
     <Compile Include="Game\Entities\Starfield.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Game\Entities\Physical.cs" />
     <Compile Include="Game\Entities\Textured.cs" />
+    <Compile Include="Game\Entities\Ship.cs" />
     <Compile Include="Game\State\GameState.cs" />
     <Compile Include="Game\State\Running.cs" />
     <Compile Include="Engine\Bind.cs" />
