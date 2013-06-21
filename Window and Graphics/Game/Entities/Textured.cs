@@ -19,10 +19,13 @@ namespace MartinZottmann.Game.Entities
             : base(resources)
         {
             Scale *= 2;
-            Orientation.Xyz = -Vector3d.UnitX;
+
+            var shape = new Quad();
+            for (var i = 0; i < shape.VerticesLength; i++)
+                shape.Vertices[i].position = new Vector3(shape.Vertices[i].position.X, 0, -shape.Vertices[i].position.Y);
 
             graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Add(new Quad());
+            graphic.Add(shape);
             graphic.Program = Resources.Programs["plain_texture"];
             graphic.Texture = Resources.Textures["res/textures/pointer.png"];
 
@@ -34,6 +37,15 @@ namespace MartinZottmann.Game.Entities
 
         public override void Update(double delta_time)
         {
+            var rotation_angle = Vector3d.Dot(Orientation.Xyz, Target - Position);
+            if (rotation_angle > System.Double.Epsilon)
+            {
+                var rotation_axis = Vector3d.UnitY; // Cross(Orientation.Xyz, Target - Position);
+                rotation_axis.Normalize();
+                var rotation = Quaterniond.FromAxisAngle(rotation_axis, rotation_angle);
+                rotation.Normalize();
+                AngularForce = rotation.Xyz - AngularVelocity;
+            }
             //var direction = Target - Position;
             //var distance = direction.Length;
             //if (distance > System.Double.Epsilon)
