@@ -2,6 +2,7 @@
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities;
+using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
@@ -23,8 +24,6 @@ namespace MartinZottmann.Game.State
 
         protected Cursor cursor;
 
-        protected Textured textured;
-
         public Running(GameWindow window)
             : base(window)
         {
@@ -34,12 +33,13 @@ namespace MartinZottmann.Game.State
             foreach (var filename in Directory.GetFiles("res/Shaders/", "*.glsl"))
             {
                 System.Console.WriteLine(filename);
-                var chunks = filename.Split(new char[] {'/', '.'});
+                var chunks = filename.Split(new char[] { '/', '.' });
                 var name = chunks[chunks.Length - 3];
                 var type = chunks[chunks.Length - 2];
                 Shader shader;
 
-                switch (type) {
+                switch (type)
+                {
                     case "vs":
                         shader = resources.Shaders.Load(ShaderType.VertexShader, filename);
                         break;
@@ -86,6 +86,7 @@ namespace MartinZottmann.Game.State
 
                     foreach (var entity in selection)
                         entity.Mark = false;
+                    selection.Clear();
 
                     Entities.Physical g_entity = null;
                     var g_min = Double.MaxValue;
@@ -116,9 +117,9 @@ namespace MartinZottmann.Game.State
                 }
 
                 if (e.Button == MouseButton.Right)
-                {
-                    textured.Target = cursor.Target;
-                }
+                    foreach (var entity in selection)
+                        if (entity is INavigation)
+                            (entity as INavigation).Target = cursor.Target;
             };
             Add(cursor);
 
@@ -129,14 +130,15 @@ namespace MartinZottmann.Game.State
             for (int i = 1; i <= 10; i++)
                 Add(new Asteroid(resources));
 
-            textured = new Textured(resources);
-            Add(textured);
+            Add(new Textured(resources));
 
             Add(new Ship(resources));
         }
 
         public override void Dispose()
         {
+            cursor = null;
+
             entities.Clear();
 
             resources.Dispose();
@@ -189,6 +191,28 @@ namespace MartinZottmann.Game.State
                 camera.Fov = delta_time;
             if (camera.Fov > System.Math.PI)
                 camera.Fov = System.Math.PI;
+            if (Window.Keyboard[Key.J])
+                foreach (var entity in selection)
+                    entity.AngularForce.Y += 2 * MathHelper.Pi * delta_time;
+            if (Window.Keyboard[Key.L])
+                foreach (var entity in selection)
+                    entity.AngularForce.Y -= 2 * MathHelper.Pi * delta_time;
+            if (Window.Keyboard[Key.I])
+                foreach (var entity in selection)
+                    entity.AngularForce.X += 2 * MathHelper.Pi * delta_time;
+            if (Window.Keyboard[Key.K])
+                foreach (var entity in selection)
+                    entity.AngularForce.X -= 2 * MathHelper.Pi * delta_time;
+            if (Window.Keyboard[Key.U])
+                foreach (var entity in selection)
+                    entity.AngularForce.Z += 2 * MathHelper.Pi * delta_time;
+            if (Window.Keyboard[Key.O])
+                foreach (var entity in selection)
+                    entity.AngularForce.Z -= 2 * MathHelper.Pi * delta_time;
+            if (Window.Keyboard[Key.M])
+                foreach (var entity in selection)
+                    entity.AngularVelocity = Vector3d.Zero;
+
 
             camera.Update(delta_time);
 
@@ -216,9 +240,7 @@ namespace MartinZottmann.Game.State
             GL.Viewport(0, 0, Window.Width, Window.Height);
 
             foreach (Entities.Entity entity in entities)
-            {
                 entity.Render(delta_time);
-            }
 
             Window.SwapBuffers();
         }

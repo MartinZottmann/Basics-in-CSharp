@@ -12,8 +12,8 @@ namespace MartinZottmann.Game.Entities
         public Floor(ResourceManager resources)
             : base(resources)
         {
-            Scale = new Vector3d(1, 0.1, 1);
-            Offset.Y -= 0.9;
+            Scale = new Vector3d(0.5, 0.5, 0.5);
+            Offset.Y -= 1;
 
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Add(new CubeHardNormals());
@@ -24,8 +24,8 @@ namespace MartinZottmann.Game.Entities
             graphic.Program.UniformLocations["in_Texture"].Set(0);
             graphic.Program.UniformLocations["in_LightPosition"].Set(new Vector3(10, 10, 10));
 
-            BoundingBox.Max = new Vector3d(1, 1, 1);
-            BoundingBox.Min = new Vector3d(-1, -1, -1);
+            BoundingBox.Max = new Vector3d(0.5, 1.5, 0.5);
+            BoundingBox.Min = new Vector3d(-0.5, -1.5, -0.5);
         }
 
         public override void Render(double delta_time)

@@ -1,14 +1,15 @@
 ﻿using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Textured : Physical
+    class Textured : Physical, INavigation
     {
         Engine.Graphics.OpenGL.Entity graphic;
 
-        public Vector3d Target;
+        public Vector3d Target { get; set; }
 
         protected const double max_speed = 20;
 
@@ -18,7 +19,7 @@ namespace MartinZottmann.Game.Entities
             : base(resources)
         {
             Scale *= 2;
-            rotate_x = -MathHelper.PiOver2;
+            Orientation.Xyz = -Vector3d.UnitX;
 
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Add(new Quad());

@@ -92,6 +92,7 @@
     <Compile Include="Game\Entities\Grid.cs" />
     <Compile Include="Game\Entities\GUI\Entity.cs" />
     <Compile Include="Game\Entities\GUI\FPSCounter.cs" />
+    <Compile Include="Game\Entities\Helper\INavigation.cs" />
     <Compile Include="Game\Entities\Ship\Floor.cs" />
     <Compile Include="Game\Entities\Starfield.cs" />
     <Compile Include="Game\Game.cs" />

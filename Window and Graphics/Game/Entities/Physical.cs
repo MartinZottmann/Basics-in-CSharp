@@ -13,11 +13,11 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d Offset = Vector3d.Zero;
 
-        public double rotate_x = 0;
+        public Quaterniond Orientation = Quaterniond.Identity;
 
-        public double rotate_y = 0;
+        public Vector3d AngularForce = Vector3d.Zero;
 
-        public double rotate_z = 0;
+        public Vector3d AngularVelocity = Vector3d.Zero;
 
         /// <summary>
         /// Scale * Rotation * Translation
@@ -28,9 +28,7 @@ namespace MartinZottmann.Game.Entities
             {
                 return Matrix4d.Scale(Scale)
                     * Matrix4d.CreateTranslation(Offset)
-                    * Matrix4d.RotateX(rotate_x)
-                    * Matrix4d.RotateY(rotate_y)
-                    * Matrix4d.RotateZ(rotate_z)
+                    * Matrix4d.Rotate(Orientation)
                     * Matrix4d.CreateTranslation(Position);
             }
         }
@@ -41,15 +39,19 @@ namespace MartinZottmann.Game.Entities
 
         public double Mass = 10;
 
-        public Vector3d Acceleration { get { return Force / Mass; } }
-
         public Vector3d Velocity = Vector3d.Zero;
 
         public Physical(ResourceManager resources) : base(resources) { }
 
         public override void Update(double delta_time)
         {
-            Velocity += Acceleration * delta_time;
+            AngularVelocity += (AngularForce / Mass) * delta_time;
+            AngularForce = Vector3d.Zero;
+            Orientation += new Quaterniond(AngularVelocity.X, AngularVelocity.Y, AngularVelocity.Z, 0) * Orientation * delta_time;
+            Orientation.Normalize();
+
+            Velocity += (Force / Mass) * delta_time;
+            Force = Vector3d.Zero;
             Position += Velocity * delta_time;
 
             RenderContext.Model = Model;

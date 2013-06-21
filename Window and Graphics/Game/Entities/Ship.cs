@@ -1,20 +1,24 @@
 ﻿using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Ship : Physical
+    class Ship : Physical, INavigation
     {
+        public Vector3d Target { get; set; }
+
         Physical[] components;
 
         public Ship(ResourceManager resources)
             : base(resources)
         {
-            components = new Physical[3];
-            components[0] = new Floor(resources) { Position = new Vector3d(0, 0, -2) };
-            components[1] = new Floor(resources);
-            components[2] = new Floor(resources) { Position = new Vector3d(0, 0, 2) };
+            components = new Physical[] {
+                new Floor(resources) { Position = new Vector3d(0, 0, -1) },
+                new Floor(resources),
+                new Floor(resources) { Position = new Vector3d(0, 0, 1) }
+            };
             
             foreach (var component in components)
             {
