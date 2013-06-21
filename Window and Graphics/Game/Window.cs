@@ -89,6 +89,8 @@ namespace MartinZottmann.Game
 
         protected void Loop()
         {
+            var target_delta_time = 30.0 / 1000.0;
+
             MakeCurrent();
 
             Stopwatch update_time = new Stopwatch();
@@ -98,9 +100,15 @@ namespace MartinZottmann.Game
 
             while (!IsExiting)
             {
-                game.Update(update_time.Elapsed.TotalSeconds);
+                var delta_time = update_time.Elapsed.TotalSeconds;
                 update_time.Reset();
                 update_time.Start();
+                while (delta_time >= target_delta_time)
+                {
+                    game.Update(target_delta_time);
+                    delta_time -= target_delta_time;
+                }
+                game.Update(delta_time);
 
                 game.Render(render_time.Elapsed.TotalSeconds);
                 render_time.Reset();

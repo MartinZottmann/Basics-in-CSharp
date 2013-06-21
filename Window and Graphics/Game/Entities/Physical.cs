@@ -47,7 +47,7 @@ namespace MartinZottmann.Game.Entities
         {
             AngularVelocity += (AngularForce / Mass) * delta_time;
             AngularForce = Vector3d.Zero;
-            Orientation += new Quaterniond(AngularVelocity.X, AngularVelocity.Y, AngularVelocity.Z, 0) * Orientation * delta_time;
+            Orientation += 0.5 * new Quaterniond(AngularVelocity.X, AngularVelocity.Y, AngularVelocity.Z, 0) * Orientation * delta_time;
             Orientation.Normalize();
 
             Velocity += (Force / Mass) * delta_time;
