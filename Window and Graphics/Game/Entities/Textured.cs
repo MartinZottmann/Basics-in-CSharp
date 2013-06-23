@@ -37,15 +37,15 @@ namespace MartinZottmann.Game.Entities
 
         public override void Update(double delta_time)
         {
-            var rotation_angle = Vector3d.Dot(Orientation.Xyz, Target - Position);
-            if (rotation_angle > System.Double.Epsilon)
-            {
-                var rotation_axis = Vector3d.UnitY; // Cross(Orientation.Xyz, Target - Position);
-                rotation_axis.Normalize();
-                var rotation = Quaterniond.FromAxisAngle(rotation_axis, rotation_angle);
-                rotation.Normalize();
-                AngularForce = rotation.Xyz - AngularVelocity;
-            }
+            //var rotation_angle = Vector3d.Dot(Orientation.Xyz, Target - Position);
+            //if (rotation_angle > System.Double.Epsilon)
+            //{
+            //    var rotation_axis = Vector3d.UnitY; // Cross(Orientation.Xyz, Target - Position);
+            //    rotation_axis.Normalize();
+            //    var rotation = Quaterniond.FromAxisAngle(rotation_axis, rotation_angle);
+            //    rotation.Normalize();
+            //    AngularForce += rotation.Xyz - AngularVelocity;
+            //}
             //var direction = Target - Position;
             //var distance = direction.Length;
             //if (distance > System.Double.Epsilon)
@@ -53,16 +53,16 @@ namespace MartinZottmann.Game.Entities
             //    Force = (direction * (System.Math.Min(max_speed * (distance / slowing_distance), max_speed) / distance)) - Velocity;
             //}
 
-            var direction = Target - Position;
-            var distance = direction.Length;
-            if (distance > System.Double.Epsilon)
-            {
-                direction /= distance;
-                if (distance < slowing_distance)
-                    Force = (direction * max_speed * (distance / slowing_distance)) - Velocity;
-                else
-                    Force = (direction * max_speed) - Velocity;
-            }
+            //var direction = Target - Position;
+            //var distance = direction.Length;
+            //if (distance > System.Double.Epsilon)
+            //{
+            //    direction /= distance;
+            //    if (distance < slowing_distance)
+            //        Force += (direction * max_speed * (distance / slowing_distance)) - Velocity;
+            //    else
+            //        Force += (direction * max_speed) - Velocity;
+            //}
 
             base.Update(delta_time);
         }

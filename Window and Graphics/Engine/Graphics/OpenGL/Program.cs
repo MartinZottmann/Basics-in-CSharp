@@ -54,7 +54,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             {
                 string info_log;
                 GL.GetProgramInfoLog(id, out info_log);
-                throw new Exception(info_log);
+                Console.WriteLine(info_log);
             }
             GL.GetProgram(id, ProgramParameter.LinkStatus, out info);
             if (info != 1)

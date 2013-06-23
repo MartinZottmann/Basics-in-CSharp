@@ -193,22 +193,40 @@ namespace MartinZottmann.Game.State
                 camera.Fov = System.Math.PI;
             if (Window.Keyboard[Key.J])
                 foreach (var entity in selection)
-                    entity.AngularForce.Y += 2 * MathHelper.Pi * delta_time;
+                {
+                    entity.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(10, 0, 0) * delta_time);
+                    entity.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(-10, 0, 0) * delta_time);
+                }
             if (Window.Keyboard[Key.L])
                 foreach (var entity in selection)
-                    entity.AngularForce.Y -= 2 * MathHelper.Pi * delta_time;
+                {
+                    entity.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(-10, 0, 0) * delta_time);
+                    entity.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(10, 0, 0) * delta_time);
+                }
             if (Window.Keyboard[Key.I])
                 foreach (var entity in selection)
-                    entity.AngularForce.X += 2 * MathHelper.Pi * delta_time;
+                {
+                    entity.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(0, 10, 0) * delta_time);
+                    entity.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(0, -10, 0) * delta_time);
+                }
             if (Window.Keyboard[Key.K])
                 foreach (var entity in selection)
-                    entity.AngularForce.X -= 2 * MathHelper.Pi * delta_time;
+                {
+                    entity.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(0, -10, 0) * delta_time);
+                    entity.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(0, 10, 0) * delta_time);
+                }
             if (Window.Keyboard[Key.U])
                 foreach (var entity in selection)
-                    entity.AngularForce.Z += 2 * MathHelper.Pi * delta_time;
+                {
+                    entity.AddForceRelative(new Vector3d(0, -1, 0), new Vector3d(0, -10, 0) * delta_time);
+                    entity.AddForceRelative(new Vector3d(0, 1, 0), new Vector3d(0, 10, 0) * delta_time);
+                }
             if (Window.Keyboard[Key.O])
                 foreach (var entity in selection)
-                    entity.AngularForce.Z -= 2 * MathHelper.Pi * delta_time;
+                {
+                    entity.AddForceRelative(new Vector3d(0, -1, 0), new Vector3d(0, 10, 0) * delta_time);
+                    entity.AddForceRelative(new Vector3d(0, 1, 0), new Vector3d(0, -10, 0) * delta_time);
+                }
             if (Window.Keyboard[Key.M])
                 foreach (var entity in selection)
                     entity.AngularVelocity = Vector3d.Zero;

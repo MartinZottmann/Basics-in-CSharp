@@ -55,6 +55,23 @@ namespace MartinZottmann.Game.Entities
             Position += Velocity * delta_time;
 
             RenderContext.Model = Model;
+
+            // @todo Damping
+        }
+
+        public void AddForceRelative(Vector3d point, Vector3d force)
+        {
+            Vector3d.Transform(ref point, ref Orientation, out point);
+            Vector3d.Transform(ref force, ref Orientation, out force);
+
+            Force += force;
+            AngularForce += Vector3d.Cross(point - Position, force);
+        }
+
+        public void AddForce(Vector3d point, Vector3d force)
+        {
+            Force += force;
+            AngularForce += Vector3d.Cross(point - Position, force);
         }
 
 #if DEBUG
@@ -64,6 +81,19 @@ namespace MartinZottmann.Game.Entities
             RenderVelocity(delta_time);
             RenderBoundingBox(delta_time);
         }
+
+        //public virtual void RenderVector(double delta_time)
+        //{
+        //    var vector = new MartinZottmann.Engine.Graphics.OpenGL.Entity();
+        //    vector.mode = BeginMode.Lines;
+        //    vector.Add(
+        //        new Engine.Graphics.Mesh<Vector3d, uint>()
+        //        {
+        //            Vertices = new Vector3d[] { },
+        //            Indices = new uint[] { 0, 1 }
+        //        }
+        //    );
+        //}
 
         public virtual void RenderVelocity(double delta_time)
         {
