@@ -218,14 +218,14 @@ namespace MartinZottmann.Game.State
             if (Window.Keyboard[Key.U])
                 foreach (var entity in selection)
                 {
-                    entity.AddForceRelative(new Vector3d(0, -1, 0), new Vector3d(0, -10, 0) * delta_time);
-                    entity.AddForceRelative(new Vector3d(0, 1, 0), new Vector3d(0, 10, 0) * delta_time);
+                    entity.AddForceRelative(new Vector3d(-1, 0, 0), new Vector3d(0, -10, 0) * delta_time);
+                    entity.AddForceRelative(new Vector3d(1, 0, 0), new Vector3d(0, 10, 0) * delta_time);
                 }
             if (Window.Keyboard[Key.O])
                 foreach (var entity in selection)
                 {
-                    entity.AddForceRelative(new Vector3d(0, -1, 0), new Vector3d(0, 10, 0) * delta_time);
-                    entity.AddForceRelative(new Vector3d(0, 1, 0), new Vector3d(0, -10, 0) * delta_time);
+                    entity.AddForceRelative(new Vector3d(-1, 0, 0), new Vector3d(0, 10, 0) * delta_time);
+                    entity.AddForceRelative(new Vector3d(1, 0, 0), new Vector3d(0, -10, 0) * delta_time);
                 }
             if (Window.Keyboard[Key.M])
                 foreach (var entity in selection)

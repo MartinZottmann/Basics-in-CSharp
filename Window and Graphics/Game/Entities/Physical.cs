@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Engine.Physics;
+﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -18,6 +19,18 @@ namespace MartinZottmann.Game.Entities
         public Vector3d AngularForce = Vector3d.Zero;
 
         public Vector3d AngularVelocity = Vector3d.Zero;
+        
+        public Vector3d Forward = -Vector3d.UnitZ;
+
+        public Vector3d ForwardRelative { get { return Vector3d.Transform(Forward, Orientation); } }
+
+        public Vector3d Up = Vector3d.UnitY;
+
+        public Vector3d UpRelative { get { return Vector3d.Transform(Up, Orientation); } }
+
+        public Vector3d Right = Vector3d.UnitX;
+
+        public Vector3d RightRelative { get { return Vector3d.Transform(Right, Orientation); } }
 
         /// <summary>
         /// Scale * Rotation * Translation
@@ -56,7 +69,10 @@ namespace MartinZottmann.Game.Entities
 
             RenderContext.Model = Model;
 
-            // @todo Damping
+            // Damping
+            const double damping = 0.98;
+            Velocity *= System.Math.Pow(damping, delta_time);
+            AngularVelocity *= System.Math.Pow(damping, delta_time);
         }
 
         public void AddForceRelative(Vector3d point, Vector3d force)
@@ -65,13 +81,13 @@ namespace MartinZottmann.Game.Entities
             Vector3d.Transform(ref force, ref Orientation, out force);
 
             Force += force;
-            AngularForce += Vector3d.Cross(point - Position, force);
+            AngularForce += Vector3d.Cross(point, force);
         }
 
         public void AddForce(Vector3d point, Vector3d force)
         {
             Force += force;
-            AngularForce += Vector3d.Cross(point - Position, force);
+            AngularForce += Vector3d.Cross(point, force);
         }
 
 #if DEBUG
@@ -81,19 +97,6 @@ namespace MartinZottmann.Game.Entities
             RenderVelocity(delta_time);
             RenderBoundingBox(delta_time);
         }
-
-        //public virtual void RenderVector(double delta_time)
-        //{
-        //    var vector = new MartinZottmann.Engine.Graphics.OpenGL.Entity();
-        //    vector.mode = BeginMode.Lines;
-        //    vector.Add(
-        //        new Engine.Graphics.Mesh<Vector3d, uint>()
-        //        {
-        //            Vertices = new Vector3d[] { },
-        //            Indices = new uint[] { 0, 1 }
-        //        }
-        //    );
-        //}
 
         public virtual void RenderVelocity(double delta_time)
         {

@@ -9,6 +9,14 @@ namespace MartinZottmann.Engine.Physics
 
         public Vector3d Max;
 
+        public bool Intersect(Vector3d point, Vector3d position)
+        {
+            Vector3d.Add(ref point, ref position, out point);
+            return point.X >= Min.X && point.X <= Max.X
+                && point.Y >= Min.Y && point.Y <= Max.Y
+                && point.Z >= Min.Z && point.Z <= Max.Z;
+        }
+
         public bool Intersect(ref Ray3d r, Vector3d position)
         {
             var min = Double.MinValue;
