@@ -8,7 +8,7 @@ namespace MartinZottmann.Game.Entities
 {
     public class Physical : Entity
     {
-        public bool Mark { get; set; }
+        public OpenTK.Graphics.Color4 Mark { get; set; }
 
         public Vector3d Scale = new Vector3d(1, 1, 1);
 
@@ -148,10 +148,7 @@ namespace MartinZottmann.Game.Entities
             GL.Translate(Position);
             GL.LineWidth(1);
             GL.Begin(BeginMode.Lines);
-            if (Mark)
-                GL.Color3(1f, 1f, 0f);
-            else
-                GL.Color3(1f, 1f, 1f);
+            GL.Color4(Mark.R, Mark.G, Mark.B, Mark.A);
             GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
             GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
             GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Max.Z);

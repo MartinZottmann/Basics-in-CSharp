@@ -13,5 +13,15 @@ namespace MartinZottmann.Engine.Physics
             Origin = origin;
             Radius = radius;
         }
+
+        public bool Intersect(ref Ray3d r, Vector3d position)
+        {
+            var A = Vector3d.Dot(r.Direction, r.Direction);
+            var p = r.Origin - (Origin + position);
+            var B = Vector3d.Dot(r.Direction, p) * 2;
+            var C = Vector3d.Dot(p, p) - Radius * Radius;
+            var discrim = B * B - 4 * (A * C);
+            return discrim > 0;
+        }
     }
 }

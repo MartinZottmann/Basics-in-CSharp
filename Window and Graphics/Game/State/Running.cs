@@ -85,7 +85,7 @@ namespace MartinZottmann.Game.State
                     cursor.Set();
 
                     foreach (var entity in selection)
-                        entity.Mark = false;
+                        entity.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 127);
                     selection.Clear();
 
                     Entities.Physical g_entity = null;
@@ -111,7 +111,7 @@ namespace MartinZottmann.Game.State
                     if (g_entity != null)
                     {
                         selection.Add(g_entity);
-                        g_entity.Mark = true;
+                        g_entity.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255);
                     }
                     cursor.ray = null;
                 }
