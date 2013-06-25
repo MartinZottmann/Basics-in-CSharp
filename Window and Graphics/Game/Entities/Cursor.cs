@@ -12,11 +12,9 @@ namespace MartinZottmann.Game.Entities
 
         Matrix4d Model = Matrix4d.Identity;
 
-        public Ray3d ray;
+        public Ray3d Ray;
 
-        public Vector3d Target;
-
-        public Plane3d xz = new Plane3d(Vector3d.Zero, Vector3d.UnitY);
+        public Plane3d Plane = new Plane3d(Vector3d.Zero, Vector3d.UnitY);
 
         public Cursor(ResourceManager resources)
             : base(resources)
@@ -67,12 +65,12 @@ namespace MartinZottmann.Game.Entities
             end = end - start;
             end.W = 1;
 
-            ray = new Ray3d(
+            Ray = new Ray3d(
                 new Vector3d(start.X, start.Y, start.Z),
                 Vector3d.Normalize(new Vector3d(end.X, end.Y, end.Z))
             );
 
-            ray.Intersect(xz, out Target);
+            Ray.Intersect(Plane, out Position);
         }
 
         public override void Update(double delta_time)

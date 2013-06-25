@@ -101,7 +101,7 @@ namespace MartinZottmann.Game.State
                         {
                             double l_min;
                             double l_max;
-                            if ((entity as Physical).BoundingBox.Intersect(ref cursor.ray, entity.Position, out l_min, out l_max))
+                            if ((entity as Physical).BoundingBox.Intersect(ref cursor.Ray, entity.Position, out l_min, out l_max))
                                 if (l_min < g_min)
                                 {
                                     g_entity = (entity as Physical);
@@ -111,7 +111,7 @@ namespace MartinZottmann.Game.State
 
                             double l_s_min;
                             double l_s_max;
-                            if ((entity as Physical).BoundingSphere.Intersect(ref cursor.ray, entity.Position, out l_s_min, out l_s_max))
+                            if ((entity as Physical).BoundingSphere.Intersect(ref cursor.Ray, entity.Position, out l_s_min, out l_s_max))
                             {
                                 System.Console.WriteLine(entity);
                                 System.Console.WriteLine(l_s_min);
@@ -141,7 +141,7 @@ namespace MartinZottmann.Game.State
                 if (e.Button == MouseButton.Right)
                     foreach (var entity in selection)
                         if (entity is INavigation)
-                            (entity as INavigation).Target = cursor.Target;
+                            (entity as INavigation).Target = cursor.Position;
             };
             Add(cursor);
 
