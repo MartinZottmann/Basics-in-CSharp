@@ -26,22 +26,19 @@ namespace MartinZottmann.Game.AI
                 var cos = Vector3d.Dot(entity.ForwardRelative, direction) / entity.ForwardRelative.Length / distance;
                 if (!System.Double.IsNaN(cos))
                 {
-                    var angular_velocity_y = new Vector3d(0, entity.AngularVelocity.Y, 0);
-                    angular_velocity_y = Vector3d.Cross(angular_velocity_y, entity.Forward);
-                    Vector3d.Transform(ref angular_velocity_y, ref entity.Orientation, out angular_velocity_y);
-
-                    var cross = Vector3d.Cross(entity.ForwardRelative, direction);
-                    if (cross.Y > 0) // Target is right
+                    var acos = System.Math.Acos(cos);
+                    if (!System.Double.IsNaN(acos))
                     {
-                        entity.AddForceRelative(entity.Forward, -Vector3d.UnitX * entity.thrust * delta_time);
-                        entity.AddForceRelative(-entity.Forward, Vector3d.UnitX * entity.thrust * delta_time);
+                        var cross = Vector3d.Cross(entity.ForwardRelative, direction);
+                        if (cross.Y > 0) // Target is right
+                            entity.AngularVelocity.Y = System.Math.Acos(cos) / System.Math.PI / entity.Mass * entity.thrust * delta_time;
+                        //entity.AddForceRelative(entity.Forward, -Vector3d.UnitX * entity.thrust * delta_time);
+                        //entity.AddForceRelative(-entity.Forward, Vector3d.UnitX * entity.thrust * delta_time);
+                        else
+                            entity.AngularVelocity.Y = -System.Math.Acos(cos) / System.Math.PI / entity.Mass * entity.thrust * delta_time;
+                        //entity.AddForceRelative(entity.Forward, Vector3d.UnitX * entity.thrust * delta_time);
+                        //entity.AddForceRelative(-entity.Forward, -Vector3d.UnitX * entity.thrust * delta_time);
                     }
-                    else
-                    {
-                        entity.AddForceRelative(entity.Forward, Vector3d.UnitX * entity.thrust * delta_time);
-                        entity.AddForceRelative(-entity.Forward, -Vector3d.UnitX * entity.thrust * delta_time);
-                    }
-                    entity.AngularVelocity *= System.Math.Pow(0.75, delta_time);
 
                     var a = entity.ForwardRelative * entity.thrust;
                     var v0 = entity.Velocity;

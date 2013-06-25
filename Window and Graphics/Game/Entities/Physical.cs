@@ -15,7 +15,7 @@ namespace MartinZottmann.Game.Entities
 
         public double thrust = 1000;
 
-        public Vector3d AngularForce = Vector3d.Zero;
+        public Vector3d Torque = Vector3d.Zero;
 
         public Vector3d AngularVelocity = Vector3d.Zero;
 
@@ -33,19 +33,19 @@ namespace MartinZottmann.Game.Entities
 
         public override void Update(double delta_time, RenderContext render_context)
         {
-            AngularVelocity += (AngularForce / Mass) * delta_time;
-            AngularForce = Vector3d.Zero;
-            Orientation += 0.5 * new Quaterniond(AngularVelocity.X, AngularVelocity.Y, AngularVelocity.Z, 0) * Orientation * delta_time;
+            AngularVelocity += (Torque / Mass) * delta_time;
+            Torque = Vector3d.Zero;
+            Orientation += new Quaterniond(AngularVelocity * delta_time, 0) * Orientation;
             Orientation.Normalize();
 
             Velocity += (Force / Mass) * delta_time;
             Force = Vector3d.Zero;
             Position += Velocity * delta_time;
 
-            // Damping
-            const double damping = 0.98;
-            Velocity *= System.Math.Pow(damping, delta_time);
-            AngularVelocity *= System.Math.Pow(damping, delta_time);
+            //// Damping
+            //const double damping = 0.98;
+            //Velocity *= System.Math.Pow(damping, delta_time);
+            //AngularVelocity *= System.Math.Pow(damping, delta_time);
         }
 
         public void AddForceRelative(Vector3d point, Vector3d force)
@@ -54,13 +54,18 @@ namespace MartinZottmann.Game.Entities
             Vector3d.Transform(ref force, ref Orientation, out force);
 
             Force += force;
-            AngularForce += Vector3d.Cross(point, force);
+            Torque += Vector3d.Cross(point, force);
         }
 
         public void AddForce(Vector3d point, Vector3d force)
         {
             Force += force;
-            AngularForce += Vector3d.Cross(point, force);
+            Torque += Vector3d.Cross(point, force);
+        }
+
+        public Vector3d PointVelocity(Vector3d world_point)
+        {
+            return Vector3d.Cross(AngularVelocity, world_point - Position) + Velocity;
         }
 
 #if DEBUG

@@ -44,7 +44,7 @@ namespace MartinZottmann.Game.Entities
                 (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
                 (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time
             );
-            AngularForce = new Vector3d(
+            Torque = new Vector3d(
                 (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
                 (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
                 (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time
