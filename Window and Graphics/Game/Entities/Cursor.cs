@@ -73,9 +73,6 @@ namespace MartinZottmann.Game.Entities
             );
 
             ray.Intersect(xz, out Target);
-
-            //var scale = new Vector4d(RenderContext.Camera.Far, RenderContext.Camera.Far, RenderContext.Camera.Far, 1);
-            //Vector4d.Multiply(ref end, ref scale, out end);
         }
 
         public override void Update(double delta_time)

@@ -83,27 +83,44 @@ namespace MartinZottmann.Game.State
                 if (e.Button == MouseButton.Left)
                 {
                     cursor.Set();
+                    cursor.vertex.Clear();
 
                     foreach (var entity in selection)
                         entity.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 127);
                     selection.Clear();
 
                     Entities.Physical g_entity = null;
+                    Entities.Physical s_entity = null;
                     var g_min = Double.MaxValue;
                     var g_max = Double.MinValue;
+                    var g_s_min = Double.MaxValue;
+                    var g_s_max = Double.MinValue;
                     foreach (Entities.Entity entity in entities)
                     {
                         if (entity is Physical)
                         {
-                            var l_min = Double.MinValue;
-                            var l_max = Double.MaxValue;
-                            if ((entity as Physical).BoundingBox.Intersect(ref cursor.ray, entity.Position, ref l_min, ref l_max))
-                            {
+                            double l_min;
+                            double l_max;
+                            if ((entity as Physical).BoundingBox.Intersect(ref cursor.ray, entity.Position, out l_min, out l_max))
                                 if (l_min < g_min)
                                 {
                                     g_entity = (entity as Physical);
                                     g_min = l_min;
                                     g_max = l_max;
+                                }
+
+                            double l_s_min;
+                            double l_s_max;
+                            if ((entity as Physical).BoundingSphere.Intersect(ref cursor.ray, entity.Position, out l_s_min, out l_s_max))
+                            {
+                                System.Console.WriteLine(entity);
+                                System.Console.WriteLine(l_s_min);
+                                System.Console.WriteLine(g_s_min);
+                                if (l_s_min < g_s_min)
+                                {
+                                    s_entity = (entity as Physical);
+                                    g_s_min = l_s_min;
+                                    g_s_max = l_s_max;
                                 }
                             }
                         }
@@ -113,7 +130,12 @@ namespace MartinZottmann.Game.State
                         selection.Add(g_entity);
                         g_entity.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255);
                     }
-                    cursor.ray = null;
+                    if (s_entity != null)
+                    {
+                        selection.Add(s_entity);
+                        s_entity.Mark = new OpenTK.Graphics.Color4(255, 0, 255, 255);
+                    }
+                    //cursor.ray = null;
                 }
 
                 if (e.Button == MouseButton.Right)

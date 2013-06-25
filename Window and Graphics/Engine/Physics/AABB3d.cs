@@ -19,13 +19,15 @@ namespace MartinZottmann.Engine.Physics
 
         public bool Intersect(ref Ray3d r, Vector3d position)
         {
-            var min = Double.MinValue;
-            var max = Double.MaxValue;
-            return Intersect(ref r, position, ref min, ref max);
+            double distance_min;
+            double distance_max;
+            return Intersect(ref r, position, out distance_min, out distance_max);
         }
 
-        public bool Intersect(ref Ray3d r, Vector3d position, ref double distance_min, ref double distance_max)
+        public bool Intersect(ref Ray3d r, Vector3d position, out double distance_min, out double distance_max)
         {
+            distance_min = Double.MinValue;
+            distance_max = Double.MaxValue;
             double min, max, min_y, max_y, min_z, max_z;
             min = ((r.Sign[0] ? Max : Min).X + position.X - r.Origin.X) * r.DirectionFraction.X;
             max_y = ((r.Sign[1] ? Min : Max).Y + position.Y - r.Origin.Y) * r.DirectionFraction.Y;

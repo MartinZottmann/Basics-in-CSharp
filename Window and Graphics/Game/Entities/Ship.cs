@@ -29,6 +29,8 @@ namespace MartinZottmann.Game.Entities
                 BoundingBox.Min.Y = System.Math.Min(BoundingBox.Min.Y, component.BoundingBox.Min.Y + component.Position.Y);
                 BoundingBox.Min.Z = System.Math.Min(BoundingBox.Min.Z, component.BoundingBox.Min.Z + component.Position.Z);
             }
+
+            BoundingSphere = new Engine.Physics.Sphere3d(Vector3d.Zero, 1);
         }
 
         public override void Update(double delta_time)

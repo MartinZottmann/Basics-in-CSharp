@@ -35,6 +35,7 @@ namespace MartinZottmann.Game.Entities
             graphic.Program.UniformLocations["in_LightPosition"].Set(new Vector3(10, 10, 10));
 
             BoundingBox = shape.BoundingBox;
+            BoundingSphere = shape.BoundingSphere;
         }
 
         public override void Update(double delta_time)

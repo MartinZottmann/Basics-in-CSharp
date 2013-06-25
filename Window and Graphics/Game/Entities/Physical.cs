@@ -45,6 +45,8 @@ namespace MartinZottmann.Game.Entities
 
         public AABB3d BoundingBox;
 
+        public Sphere3d BoundingSphere;
+
         public Vector3d Force = Vector3d.Zero;
 
         public double Mass = 10;

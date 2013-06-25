@@ -29,6 +29,7 @@ namespace MartinZottmann.Game.Entities
             graphic.Program.UniformLocations["Texture"].Set(0);
 
             BoundingBox = shape.BoundingBox;
+            BoundingSphere = shape.BoundingSphere;
         }
 
         public override void Update(double delta_time)
