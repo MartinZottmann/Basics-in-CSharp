@@ -148,6 +148,8 @@ namespace MartinZottmann.Game.State
             Add(new Textured(resources));
 
             Add(new Ship(resources));
+
+            Add(new Explosion(resources));
         }
 
         public override void Dispose()

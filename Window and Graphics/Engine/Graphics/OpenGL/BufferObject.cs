@@ -32,7 +32,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
     public class BufferObject<T> : BufferObject, IBindable, IDisposable where T : struct
     {
-        public readonly T[] Data;
+        public T[] Data;
 
         public BufferObject(BufferTarget target, T[] data, BufferUsageHint usage_hint = BufferUsageHint.StaticDraw)
             : base(target, BlittableValueType.StrideOf(data), data.Length * BlittableValueType.StrideOf(data))
@@ -62,6 +62,13 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             Data[offset] = data;
             using (new Bind(this))
                 GL.BufferSubData(Target, (IntPtr)(offset * Stride), (IntPtr)Stride, new T[] { data });
+        }
+
+        public void Write(T[] data)
+        {
+            Data = data;
+            using (new Bind(this))
+                GL.BufferSubData(Target, (IntPtr)0, (IntPtr)Size, data);
         }
 
         public override void Bind()

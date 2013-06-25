@@ -80,6 +80,8 @@ namespace MartinZottmann.Game.Entities
         {
             render_context.Model = Model;
             Resources.Programs["normal"].UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
+
+            GL.LineWidth(1);
             base.Render(delta_time, render_context);
         }
     }

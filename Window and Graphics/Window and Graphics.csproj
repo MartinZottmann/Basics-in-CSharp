@@ -93,6 +93,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Game\Entities\Drawable.cs" />
+    <Compile Include="Game\Entities\Explosion.cs" />
     <Compile Include="Game\Entities\Grid.cs" />
     <Compile Include="Game\Entities\GUI\Entity.cs" />
     <Compile Include="Game\Entities\GUI\FPSCounter.cs" />
