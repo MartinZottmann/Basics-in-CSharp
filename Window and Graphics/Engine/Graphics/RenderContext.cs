@@ -2,36 +2,44 @@
 
 namespace MartinZottmann.Engine.Graphics
 {
-    public struct RenderContext
+    public class RenderContext
     {
+        public RenderContext Parent;
+
         public GameWindow Window;
 
         public Camera Camera;
 
+        protected Matrix4d projection;
+
         /// <summary>
         /// Set with Camera
         /// </summary>
-        public Matrix4d Projection;
+        public Matrix4d Projection { get { return Parent == null ? projection : projection * Parent.Projection; } set { projection = value; } }
 
         /// <summary>
         /// Calculated: P^-1
         /// </summary>
         public Matrix4d InvertedProjection { get { return Matrix4d.Invert(Projection); } }
 
+        protected Matrix4d view;
+
         /// <summary>
         /// Set with Camera
         /// </summary>
-        public Matrix4d View;
+        public Matrix4d View { get { return Parent == null ? view : view * Parent.View; } set { view = value; } }
 
         /// <summary>
         /// Calculated: V^-1
         /// </summary>
         public Matrix4d InvertedView { get { return Matrix4d.Invert(View); } }
 
+        protected Matrix4d model;
+
         /// <summary>
         /// Set with Model/Entity
         /// </summary>
-        public Matrix4d Model;
+        public Matrix4d Model { get { return Parent == null ? model : model * Parent.Model; } set { model = value; } }
 
         /// <summary>
         /// Calculated: M^-1
@@ -57,5 +65,23 @@ namespace MartinZottmann.Engine.Graphics
         /// Calculated: [[V * M]^-1]^T = [[M' * V']^-1]^T
         /// </summary>
         public Matrix4d Normal { get { return Matrix4d.Transpose(Matrix4d.Invert(Model * View)); } }
+
+        public RenderContext Push()
+        {
+            return new RenderContext()
+            {
+                Parent =  this,
+                Window = Window,
+                Camera = Camera,
+                Projection = Matrix4d.Identity,
+                View = Matrix4d.Identity,
+                Model = Matrix4d.Identity
+            };
+        }
+
+        public RenderContext Pop()
+        {
+            return Parent;
+        }
     }
 }

@@ -39,8 +39,10 @@ namespace MartinZottmann.Game.Entities
         {
             Streering.Update(delta_time);
 
+            render_context = render_context.Push();
             foreach (var component in components)
                 component.Update(delta_time, render_context);
+            render_context = render_context.Pop();
 
             base.Update(delta_time, render_context);
         }
@@ -49,8 +51,10 @@ namespace MartinZottmann.Game.Entities
         {
             render_context.Model = Model;
 
+            render_context = render_context.Push();
             foreach (var component in components)
                 component.Render(delta_time, render_context);
+            render_context = render_context.Pop();
 
 #if DEBUG
             RenderVelocity(delta_time, render_context);
