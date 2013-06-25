@@ -12,11 +12,11 @@ namespace MartinZottmann.Game.Entities
         public Floor(ResourceManager resources)
             : base(resources)
         {
-            Scale = new Vector3d(0.5, 0.5, 0.5);
-            Offset.Y -= 1;
+            var shape = new CubeHardNormals();
+            shape.Translate(Matrix4.Scale(0.5f) * Matrix4.CreateTranslation(new Vector3(0, -1, 0)));
 
             graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Add(new CubeHardNormals());
+            graphic.Mesh(shape);
             graphic.Program = Resources.Programs["standard_cube"];
             var texture = new Texture("res/textures/debug-256.png", false, OpenTK.Graphics.OpenGL.TextureTarget.TextureCubeMap);
             graphic.Texture = texture;

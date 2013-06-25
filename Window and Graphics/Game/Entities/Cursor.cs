@@ -22,7 +22,7 @@ namespace MartinZottmann.Game.Entities
             : base(resources)
         {
             graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Add(
+            graphic.Mesh(
                 new Mesh<VertexP3C4, uint>(
                     new VertexP3C4[] {
                         new VertexP3C4(-1, 0, 0, 1, 1, 1, 1),
@@ -33,7 +33,7 @@ namespace MartinZottmann.Game.Entities
                     new uint[] { 0, 1, 2, 3 }
                 )
             );
-            graphic.mode = BeginMode.Quads;
+            graphic.Mode = BeginMode.Quads;
             graphic.Program = Resources.Programs["normal"];
         }
 

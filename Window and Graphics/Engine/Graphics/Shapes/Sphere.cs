@@ -37,7 +37,7 @@ namespace MartinZottmann.Engine.Graphics.Shapes
 
             for (var i = 0; i < vertices.Length; i++)
             {
-                var tmp = vertices[i].position;
+                var tmp = vertices[i].Position;
                 tmp /= tmp.Length;
                 vertices[i] = new VertexP3N3(tmp, tmp);
             }

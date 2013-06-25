@@ -5,7 +5,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class Entity : IDisposable
     {
-        public BeginMode mode = BeginMode.Triangles;
+        public BeginMode Mode = BeginMode.Triangles;
 
         public Program Program;
 
@@ -17,8 +17,10 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public Entity() : base() { }
 
-        public void Add<V, I>(Mesh<V, I> mesh)
-            where V : struct
+        public IMesh Mesh() { return mesh; }
+
+        public void Mesh<V, I>(Mesh<V, I> mesh)
+            where V : struct, IVertex
             where I : struct
         {
             this.mesh = mesh;
@@ -38,9 +40,9 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             using (new Bind(Program))
             using (new Bind(vao))
                 if (mesh.IndicesLength == 0)
-                    GL.DrawArrays(mode, 0, mesh.VerticesLength);
+                    GL.DrawArrays(Mode, 0, mesh.VerticesLength);
                 else
-                    GL.DrawElements(mode, mesh.IndicesLength, DrawElementsType.UnsignedInt, IntPtr.Zero);
+                    GL.DrawElements(Mode, mesh.IndicesLength, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
     }
 }

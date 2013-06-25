@@ -30,12 +30,12 @@ namespace MartinZottmann.Game.Entities
                 vertices[i] = new VertexP3C4(radius * (float)System.Math.Cos(angle), 0, radius * (float)System.Math.Sin(angle), 1, 1, 1, 0.5f);
             }
             circle = new Engine.Graphics.OpenGL.Entity();
-            circle.Add(new Mesh<VertexP3C4, uint>(vertices));
-            circle.mode = BeginMode.LineLoop;
+            circle.Mesh(new Mesh<VertexP3C4, uint>(vertices));
+            circle.Mode = BeginMode.LineLoop;
             circle.Program = program;
 
             line_y = new Engine.Graphics.OpenGL.Entity();
-            line_y.Add(
+            line_y.Mesh(
                 new Mesh<VertexP3C4, uint>(
                     new VertexP3C4[] {
                         new VertexP3C4(0, 1000, 0, 1, 0, 0, 0.5f),
@@ -45,7 +45,7 @@ namespace MartinZottmann.Game.Entities
                     }
                 )
             );
-            line_y.mode = BeginMode.Lines;
+            line_y.Mode = BeginMode.Lines;
             line_y.Program = program;
 
             amount = 10;
@@ -59,8 +59,8 @@ namespace MartinZottmann.Game.Entities
                 vertices[4 * (i + amount) + 3] = new VertexP3C4(i * space, 0, -amount * space, 1, 1, 1, 0.5f);
             }
             grid_xz = new Engine.Graphics.OpenGL.Entity();
-            grid_xz.Add(new Mesh<VertexP3C4, uint>(vertices));
-            grid_xz.mode = BeginMode.Lines;
+            grid_xz.Mesh(new Mesh<VertexP3C4, uint>(vertices));
+            grid_xz.Mode = BeginMode.Lines;
             grid_xz.Program = program;
         }
 

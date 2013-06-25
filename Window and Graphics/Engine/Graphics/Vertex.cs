@@ -1,27 +1,35 @@
 ﻿using OpenTK;
+using System;
 
 namespace MartinZottmann.Engine.Graphics
 {
-    public struct VertexObject
+    public interface IVertex
     {
-        public Vector3[] vertices;
+        Vector3 PositionXyz { get; }
 
-        public Color4[] colors;
+        void Transform(Matrix4 matrix);
     }
 
-    public struct VertexP3C4
+    public struct VertexP3C4 : IVertex
     {
-        public Vector3 position;
+        public Vector3 Position;
 
-        public Color4 color;
+        public Vector3 PositionXyz { get { return Position; } }
+
+        public Color4 Color;
 
         public VertexP3C4(Vector3 position, Color4 color)
         {
-            this.position = position;
-            this.color = color;
+            Position = position;
+            Color = color;
         }
 
         public VertexP3C4(float x, float y, float z, float r, float g, float b, float a) : this(new Vector3(x, y, z), new Color4(r, g, b, a)) { }
+
+        public void Transform(Matrix4 matrix)
+        {
+            Vector3.Transform(ref Position, ref matrix, out Position);
+        }
 
         public string[] GetAttributeLayout()
         {
@@ -34,22 +42,29 @@ namespace MartinZottmann.Engine.Graphics
         //public static readonly int Stride = Marshal.SizeOf(default(VertexData));
     }
 
-    public struct VertexP3N3T2
+    public struct VertexP3N3T2 : IVertex
     {
-        public Vector3 position;
+        public Vector3 Position;
 
-        public Vector3 normal;
+        public Vector3 PositionXyz { get { return Position; } }
 
-        public Vector2 texcoord;
+        public Vector3 Normal;
+
+        public Vector2 Texcoord;
 
         public VertexP3N3T2(Vector3 position, Vector3 normal, Vector2 texcoord)
         {
-            this.position = position;
-            this.normal = normal;
-            this.texcoord = texcoord;
+            Position = position;
+            Normal = normal;
+            Texcoord = texcoord;
         }
 
         public VertexP3N3T2(float px, float py, float pz, float nx, float ny, float nz, float s, float t) : this(new Vector3(px, py, pz), new Vector3(nx, ny, nz), new Vector2(s, t)) { }
+
+        public void Transform(Matrix4 matrix)
+        {
+            Vector3.Transform(ref Position, ref matrix, out Position);
+        }
 
         public string[] GetAttributeLayout()
         {
@@ -61,50 +76,32 @@ namespace MartinZottmann.Engine.Graphics
         }
     }
 
-    public struct VertexP3N3
+    public struct VertexP3N3 : IVertex
     {
-        public Vector3 position;
+        public Vector3 Position;
 
-        public Vector3 normal;
+        public Vector3 PositionXyz { get { return Position; } }
+
+        public Vector3 Normal;
 
         public VertexP3N3(Vector3 position, Vector3 normal)
         {
-            this.position = position;
-            this.normal = normal;
+            Position = position;
+            Normal = normal;
         }
 
         public VertexP3N3(float px, float py, float pz, float nx, float ny, float nz) : this(new Vector3(px, py, pz), new Vector3(nx, ny, nz)) { }
+
+        public void Transform(Matrix4 matrix)
+        {
+            Vector3.Transform(ref Position, ref matrix, out Position);
+        }
 
         public string[] GetAttributeLayout()
         {
             return new string[] {
                 "in_Position",
                 "in_Normal"
-            };
-        }
-    }
-
-    public struct VertexP3N3T2SOA
-    {
-        public Vector3[] position;
-
-        public Vector3[] normal;
-
-        public Vector2[] texcoord;
-
-        public VertexP3N3T2SOA(Vector3[] position, Vector3[] normal, Vector2[] texcoord)
-        {
-            this.position = position;
-            this.normal = normal;
-            this.texcoord = texcoord;
-        }
-
-        public string[] GetAttributeLayout()
-        {
-            return new string[] {
-                "in_Position",
-                "in_Normal",
-                "in_TexCoord"
             };
         }
     }

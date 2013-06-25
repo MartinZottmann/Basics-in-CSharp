@@ -28,7 +28,7 @@ namespace MartinZottmann.Game.Entities.GUI
             : base(resources)
         {
             graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Add(
+            graphic.Mesh(
                 new Mesh<VertexP3N3T2, uint>(
                     new VertexP3N3T2[] {
                         new VertexP3N3T2(0, 0, 0, 0, 0, 1, 0, 1),
@@ -39,7 +39,7 @@ namespace MartinZottmann.Game.Entities.GUI
                     new uint[] { 0, 1, 2, 2, 3, 0 }
                 )
             );
-            graphic.mode = BeginMode.Triangles;
+            graphic.Mode = BeginMode.Triangles;
             graphic.Program = Resources.Programs["plain_texture"];
         }
 

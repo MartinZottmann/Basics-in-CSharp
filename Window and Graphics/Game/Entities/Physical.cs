@@ -12,8 +12,6 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d Scale = new Vector3d(1, 1, 1);
 
-        public Vector3d Offset = Vector3d.Zero;
-
         public Quaterniond Orientation = Quaterniond.Identity;
 
         public Vector3d AngularForce = Vector3d.Zero;
@@ -40,7 +38,6 @@ namespace MartinZottmann.Game.Entities
             get
             {
                 return Matrix4d.Scale(Scale)
-                    * Matrix4d.CreateTranslation(Offset)
                     * Matrix4d.Rotate(Orientation)
                     * Matrix4d.CreateTranslation(Position);
             }

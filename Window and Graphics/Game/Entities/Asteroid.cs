@@ -19,12 +19,14 @@ namespace MartinZottmann.Game.Entities
             );
 
             var scale = randomNumber.NextDouble() * 5 + 1;
-            Scale *= scale;
 
             Mass *= scale;
 
+            var shape = new Sphere();
+            shape.Translate(Matrix4.Scale((float)scale));
+
             graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Add(new Sphere());
+            graphic.Mesh(shape);
             graphic.Program = Resources.Programs["standard_cube"];
             var texture = new Texture("res/textures/debug-256.png", false, OpenTK.Graphics.OpenGL.TextureTarget.TextureCubeMap);
             graphic.Texture = texture;
@@ -32,8 +34,7 @@ namespace MartinZottmann.Game.Entities
             graphic.Program.UniformLocations["in_Texture"].Set(0);
             graphic.Program.UniformLocations["in_LightPosition"].Set(new Vector3(10, 10, 10));
 
-            BoundingBox.Max = Scale;
-            BoundingBox.Min = -Scale;
+            BoundingBox = shape.BoundingBox;
         }
 
         public override void Update(double delta_time)

@@ -18,21 +18,17 @@ namespace MartinZottmann.Game.Entities
         public Textured(ResourceManager resources)
             : base(resources)
         {
-            Scale *= 2;
-
             var shape = new Quad();
-            for (var i = 0; i < shape.VerticesLength; i++)
-                shape.Vertices[i].position = new Vector3(shape.Vertices[i].position.X, 0, -shape.Vertices[i].position.Y);
+            shape.Translate(Matrix4.Scale(2) * Matrix4.CreateRotationX(-MathHelper.PiOver2));
 
             graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Add(shape);
+            graphic.Mesh(shape);
             graphic.Program = Resources.Programs["plain_texture"];
             graphic.Texture = Resources.Textures["res/textures/pointer.png"];
 
             graphic.Program.UniformLocations["Texture"].Set(0);
 
-            BoundingBox.Max = Scale;
-            BoundingBox.Min = -Scale;
+            BoundingBox = shape.BoundingBox;
         }
 
         public override void Update(double delta_time)

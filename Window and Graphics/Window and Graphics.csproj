@@ -82,6 +82,7 @@
     <Compile Include="Engine\Physics\AABB3d.cs" />
     <Compile Include="Engine\Physics\Plane3d.cs" />
     <Compile Include="Engine\Physics\Ray3d.cs" />
+    <Compile Include="Engine\Physics\Sphere3d.cs" />
     <Compile Include="Engine\Resources\ResourceManager.cs" />
     <Compile Include="Engine\Resources\Programs.cs" />
     <Compile Include="Engine\Resources\Shaders.cs" />
