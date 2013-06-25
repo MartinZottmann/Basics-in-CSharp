@@ -83,7 +83,6 @@ namespace MartinZottmann.Game.State
                 if (e.Button == MouseButton.Left)
                 {
                     cursor.Set();
-                    cursor.vertex.Clear();
 
                     foreach (var entity in selection)
                         entity.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 127);
