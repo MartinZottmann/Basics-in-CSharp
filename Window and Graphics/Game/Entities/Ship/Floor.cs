@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Engine.Graphics.OpenGL;
+﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
@@ -26,13 +27,14 @@ namespace MartinZottmann.Game.Entities
             BoundingBox.Min = new Vector3d(-0.5, -1.5, -0.5);
         }
 
-        public override void Render(double delta_time)
+        public override void Render(double delta_time, RenderContext render_context)
         {
-            graphic.Program.UniformLocations["in_Model"].Set(RenderContext.Model);
-            graphic.Program.UniformLocations["in_View"].Set(RenderContext.View);
-            graphic.Program.UniformLocations["in_ModelView"].Set(RenderContext.ViewModel);
-            graphic.Program.UniformLocations["in_ModelViewProjection"].Set(RenderContext.ProjectionViewModel);
-            graphic.Program.UniformLocations["in_NormalView"].Set(RenderContext.Normal);
+            render_context.Model = Model;
+            graphic.Program.UniformLocations["in_Model"].Set(render_context.Model);
+            graphic.Program.UniformLocations["in_View"].Set(render_context.View);
+            graphic.Program.UniformLocations["in_ModelView"].Set(render_context.ViewModel);
+            graphic.Program.UniformLocations["in_ModelViewProjection"].Set(render_context.ProjectionViewModel);
+            graphic.Program.UniformLocations["in_NormalView"].Set(render_context.Normal);
             graphic.Draw();
         }
     }

@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Engine.Graphics.Shapes;
+﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
 using OpenTK.Graphics;
@@ -25,14 +26,15 @@ namespace MartinZottmann.Game.Entities
             BoundingSphere = shape.BoundingSphere;
         }
 
-        public override void Render(double delta_time)
+        public override void Render(double delta_time, RenderContext render_context)
         {
-            graphic.Program.UniformLocations["PVM"].Set(RenderContext.ProjectionViewModel);
+            render_context.Model = Model;
+            graphic.Program.UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
             graphic.Draw();
 
 #if DEBUG
-            var P = RenderContext.Projection;
-            var V = RenderContext.View;
+            var P = render_context.Projection;
+            var V = render_context.View;
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref P);
             GL.MatrixMode(MatrixMode.Modelview);
@@ -41,11 +43,11 @@ namespace MartinZottmann.Game.Entities
             GL.LineWidth(5);
             GL.Begin(BeginMode.Lines);
             {
-                GL.Color4(new Color4(0, 255, 255, (byte)127));
+                GL.Color4(0.0f, 1.0f, 1.0f, 0.5f);
                 GL.Vertex3(Position);
                 GL.Vertex3(Target);
 
-                GL.Color4(new Color4(255, 0, 255, (byte)127));
+                GL.Color4(1.0f, 0.0f, 1.0f, 0.5f);
                 GL.Vertex3(Position);
                 GL.Vertex3(Position + Velocity);
 
@@ -61,21 +63,21 @@ namespace MartinZottmann.Game.Entities
                 angular_velocity_z = Vector3d.Cross(angular_velocity_z, Right);
                 Vector3d.Transform(ref angular_velocity_z, ref Orientation, out angular_velocity_z);
 
-                GL.Color4(new Color4(255, 0, 0, (byte)127));
+                GL.Color4(1.0f, 0.0f, 0.0f, 0.5f);
                 GL.Vertex3(Position);
                 GL.Vertex3(Position + ForwardRelative);
 
                 GL.Vertex3(Position + ForwardRelative);
                 GL.Vertex3(Position + ForwardRelative + angular_velocity_y);
 
-                GL.Color4(new Color4(0, 255, 0, (byte)127));
+                GL.Color4(0.0f, 1.0f, 0.0f, 0.5f);
                 GL.Vertex3(Position);
                 GL.Vertex3(Position + UpRelative);
 
                 GL.Vertex3(Position + UpRelative);
                 GL.Vertex3(Position + UpRelative + angular_velocity_x);
 
-                GL.Color4(new Color4(0, 0, 255, (byte)127));
+                GL.Color4(0.0f, 0.0f, 1.0f, 0.5f);
                 GL.Vertex3(Position);
                 GL.Vertex3(Position + RightRelative);
 
@@ -89,8 +91,8 @@ namespace MartinZottmann.Game.Entities
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            RenderVelocity(delta_time);
-            RenderBoundingBox(delta_time);
+            RenderVelocity(delta_time, render_context);
+            RenderBoundingBox(delta_time, render_context);
 #endif
         }
     }

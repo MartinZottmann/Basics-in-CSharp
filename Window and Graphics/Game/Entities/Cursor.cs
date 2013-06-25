@@ -8,7 +8,6 @@ namespace MartinZottmann.Game.Entities
 {
     public class Cursor : Drawable
     {
-
         public Ray3d Ray;
 
         public Plane3d Plane = new Plane3d(Vector3d.Zero, Vector3d.UnitY);
@@ -32,28 +31,28 @@ namespace MartinZottmann.Game.Entities
             graphic.Program = Resources.Programs["normal"];
         }
 
-        public void Set()
+        public void Set(RenderContext render_context)
         {
             var start = new Vector4d(
-                (RenderContext.Window.Mouse.X / (double)RenderContext.Window.Width - 0.5) * 2.0,
-                ((RenderContext.Window.Height - RenderContext.Window.Mouse.Y) / (double)RenderContext.Window.Height - 0.5) * 2.0,
+                (render_context.Window.Mouse.X / (double)render_context.Window.Width - 0.5) * 2.0,
+                ((render_context.Window.Height - render_context.Window.Mouse.Y) / (double)render_context.Window.Height - 0.5) * 2.0,
                 -1.0,
                 1.0
             );
             var end = new Vector4d(
-                (RenderContext.Window.Mouse.X / (double)RenderContext.Window.Width - 0.5) * 2.0,
-                ((RenderContext.Window.Height - RenderContext.Window.Mouse.Y) / (double)RenderContext.Window.Height - 0.5) * 2.0,
+                (render_context.Window.Mouse.X / (double)render_context.Window.Width - 0.5) * 2.0,
+                ((render_context.Window.Height - render_context.Window.Mouse.Y) / (double)render_context.Window.Height - 0.5) * 2.0,
                 0,
                 1.0
             );
 
-            var IP = RenderContext.InvertedProjection;
+            var IP = render_context.InvertedProjection;
             start = Vector4d.Transform(start, IP);
             start /= start.W;
             end = Vector4d.Transform(end, IP);
             end /= end.W;
 
-            var IV = RenderContext.InvertedView;
+            var IV = render_context.InvertedView;
             start = Vector4d.Transform(start, IV);
             start /= start.W;
             end = Vector4d.Transform(end, IV);
@@ -70,17 +69,15 @@ namespace MartinZottmann.Game.Entities
             Ray.Intersect(Plane, out Position);
         }
 
-        public override void Update(double delta_time)
+        public override void Update(double delta_time, RenderContext render_context)
         {
-            Set();
-
-            RenderContext.Model = Model;
+            Set(render_context);
         }
 
-        public override void Render(double delta_time)
+        public override void Render(double delta_time, RenderContext render_context)
         {
-            Resources.Programs["normal"].UniformLocations["PVM"].Set(RenderContext.ProjectionViewModel);
-            System.Console.WriteLine(RenderContext.Model);
+            render_context.Model = Model;
+            Resources.Programs["normal"].UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
             graphic.Draw();
         }
     }

@@ -43,7 +43,7 @@ namespace MartinZottmann.Game.Entities.GUI
             graphic.Program = Resources.Programs["plain_texture"];
         }
 
-        public override void Update(double delta_time)
+        public override void Update(double delta_time, RenderContext render_context)
         {
             counter++;
             accumulator += delta_time;
@@ -61,19 +61,19 @@ namespace MartinZottmann.Game.Entities.GUI
             }
         }
 
-        public override void Render(double delta_time)
+        public override void Render(double delta_time, RenderContext render_context)
         {
-            double yMax = RenderContext.Camera.Near * System.Math.Tan(0.5 * RenderContext.Camera.Fov);
+            double yMax = render_context.Camera.Near * System.Math.Tan(0.5 * render_context.Camera.Fov);
             double yMin = -yMax;
-            double xMin = yMin * RenderContext.Camera.Aspect;
-            double xMax = yMax * RenderContext.Camera.Aspect;
+            double xMin = yMin * render_context.Camera.Aspect;
+            double xMax = yMax * render_context.Camera.Aspect;
             Model = Matrix4d.CreateTranslation(0, -size.Height, 0); // Move model top/left to 0, 0
-            Model *= Matrix4d.Scale(scale * RenderContext.Camera.Aspect * MathHelper.TwoPi / RenderContext.Camera.Fov / (double)RenderContext.Camera.Width / (double)size.Width);
+            Model *= Matrix4d.Scale(scale * render_context.Camera.Aspect * MathHelper.TwoPi / render_context.Camera.Fov / (double)render_context.Camera.Width / (double)size.Width);
             Model *= Matrix4d.RotateY(MathHelper.PiOver6);
-            Model *= Matrix4d.CreateTranslation(xMin, yMax, -RenderContext.Camera.Near); // Move model top/left to window top/left
+            Model *= Matrix4d.CreateTranslation(xMin, yMax, -render_context.Camera.Near); // Move model top/left to window top/left
 
-            RenderContext.Model = Model;
-            Resources.Programs["plain_texture"].UniformLocations["PVM"].Set(RenderContext.Model * RenderContext.Projection);
+            render_context.Model = Model;
+            Resources.Programs["plain_texture"].UniformLocations["PVM"].Set(render_context.Model * render_context.Projection);
             Resources.Programs["plain_texture"].UniformLocations["Texture"].Set(0);
 
             graphic.Draw();

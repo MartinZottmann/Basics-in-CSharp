@@ -4,11 +4,9 @@ using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Starfield : Entity
+    class Starfield : Drawable
     {
         const int num_stars = 100000;
-
-        Engine.Graphics.OpenGL.Entity graphic;
 
         public Starfield(ResourceManager resources)
             : base(resources)
@@ -31,8 +29,11 @@ namespace MartinZottmann.Game.Entities
             graphic.Program = Resources.Programs["normal"];
         }
 
-        public override void Render(double delta_time)
+        public override void Render(double delta_time, RenderContext render_context)
         {
+            render_context.Model = Model;
+            graphic.Program.UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
+
             GL.PointSize(1);
             graphic.Draw();
         }

@@ -17,8 +17,6 @@ namespace MartinZottmann.Game.Entities
 
         public ResourceManager Resources { get; protected set; }
 
-        public RenderContext RenderContext;
-
         public Entity(ResourceManager resources)
         {
             Resources = resources;
@@ -51,8 +49,8 @@ namespace MartinZottmann.Game.Entities
                 Position.Z = -max_z;
         }
 
-        public virtual void Update(double delta_time) { }
+        public virtual void Update(double delta_time, RenderContext render_context) { }
 
-        public virtual void Render(double delta_time) { }
+        public virtual void Render(double delta_time, RenderContext render_context) { }
     }
 }

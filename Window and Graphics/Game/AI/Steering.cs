@@ -1,5 +1,4 @@
 ﻿using MartinZottmann.Game.Entities;
-using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
 
 namespace MartinZottmann.Game.AI

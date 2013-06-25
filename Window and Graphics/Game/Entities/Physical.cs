@@ -1,7 +1,6 @@
 ﻿using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
-using MartinZottmann.Game.AI;
 using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -30,18 +29,10 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d Velocity = Vector3d.Zero;
 
-        public Steering Streering;
+        public Physical(ResourceManager resources) : base(resources) { }
 
-        public Physical(ResourceManager resources)
-            : base(resources)
+        public override void Update(double delta_time, RenderContext render_context)
         {
-            Streering = new Steering(this);
-        }
-
-        public override void Update(double delta_time)
-        {
-            Streering.Update(delta_time);
-
             AngularVelocity += (AngularForce / Mass) * delta_time;
             AngularForce = Vector3d.Zero;
             Orientation += 0.5 * new Quaterniond(AngularVelocity.X, AngularVelocity.Y, AngularVelocity.Z, 0) * Orientation * delta_time;
@@ -50,8 +41,6 @@ namespace MartinZottmann.Game.Entities
             Velocity += (Force / Mass) * delta_time;
             Force = Vector3d.Zero;
             Position += Velocity * delta_time;
-
-            RenderContext.Model = Model;
 
             // Damping
             const double damping = 0.98;
@@ -75,17 +64,18 @@ namespace MartinZottmann.Game.Entities
         }
 
 #if DEBUG
-        public override void Render(double delta_time)
+        public override void Render(double delta_time, RenderContext render_context)
         {
-            base.Render(delta_time);
-            RenderVelocity(delta_time);
-            RenderBoundingBox(delta_time);
+            render_context.Model = Model;
+            base.Render(delta_time, render_context);
+            RenderVelocity(delta_time, render_context);
+            RenderBoundingBox(delta_time, render_context);
         }
 
-        public virtual void RenderVelocity(double delta_time)
+        public virtual void RenderVelocity(double delta_time, RenderContext render_context)
         {
-            var P = RenderContext.Projection;
-            var V = RenderContext.View;
+            var P = render_context.Projection;
+            var V = render_context.View;
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref P);
             GL.MatrixMode(MatrixMode.Modelview);
@@ -123,10 +113,10 @@ namespace MartinZottmann.Game.Entities
             GL.LoadIdentity();
         }
 
-        public void RenderBoundingBox(double delta_time)
+        public void RenderBoundingBox(double delta_time, RenderContext render_context)
         {
-            var P = RenderContext.Projection;
-            var V = RenderContext.View;
+            var P = render_context.Projection;
+            var V = render_context.View;
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref P);
             GL.MatrixMode(MatrixMode.Modelview);

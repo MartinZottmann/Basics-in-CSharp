@@ -24,6 +24,8 @@ namespace MartinZottmann.Game.State
 
         protected Cursor cursor;
 
+        protected RenderContext render_context;
+
         public Running(GameWindow window)
             : base(window)
         {
@@ -82,8 +84,6 @@ namespace MartinZottmann.Game.State
             {
                 if (e.Button == MouseButton.Left)
                 {
-                    cursor.Set();
-
                     foreach (var entity in selection)
                         entity.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 127);
                     selection.Clear();
@@ -134,7 +134,6 @@ namespace MartinZottmann.Game.State
                         selection.Add(s_entity);
                         s_entity.Mark = new OpenTK.Graphics.Color4(255, 0, 255, 255);
                     }
-                    cursor.Ray = null;
                 }
 
                 if (e.Button == MouseButton.Right)
@@ -255,7 +254,7 @@ namespace MartinZottmann.Game.State
 
             camera.Update(delta_time);
 
-            var render_context = new RenderContext()
+            render_context = new RenderContext()
             {
                 Window = Window,
                 Camera = camera,
@@ -265,9 +264,7 @@ namespace MartinZottmann.Game.State
 
             foreach (Entities.Entity entity in entities)
             {
-                entity.RenderContext = render_context;
-
-                entity.Update(delta_time);
+                entity.Update(delta_time, render_context);
 
                 entity.Reposition(100, 100, 100);
             }
@@ -279,7 +276,10 @@ namespace MartinZottmann.Game.State
             GL.Viewport(0, 0, Window.Width, Window.Height);
 
             foreach (Entities.Entity entity in entities)
-                entity.Render(delta_time);
+            {
+                //render_context.Model = entity.Model;
+                entity.Render(delta_time, render_context);
+            }
 
             Window.SwapBuffers();
         }

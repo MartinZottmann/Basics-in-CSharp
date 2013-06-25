@@ -6,13 +6,11 @@ using System.Drawing;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Grid : Entity
+    class Grid : Drawable
     {
         Engine.Graphics.OpenGL.Entity circle;
 
         Engine.Graphics.OpenGL.Entity line_y;
-
-        Engine.Graphics.OpenGL.Entity grid_xz;
 
         public Grid(ResourceManager resources)
             : base(resources)
@@ -58,21 +56,21 @@ namespace MartinZottmann.Game.Entities
                 vertices[4 * (i + amount) + 2] = new VertexP3C4(i * space, 0, amount * space, 1, 1, 1, 0.5f);
                 vertices[4 * (i + amount) + 3] = new VertexP3C4(i * space, 0, -amount * space, 1, 1, 1, 0.5f);
             }
-            grid_xz = new Engine.Graphics.OpenGL.Entity();
-            grid_xz.Mesh(new Mesh<VertexP3C4, uint>(vertices));
-            grid_xz.Mode = BeginMode.Lines;
-            grid_xz.Program = program;
+            graphic = new Engine.Graphics.OpenGL.Entity();
+            graphic.Mesh(new Mesh<VertexP3C4, uint>(vertices));
+            graphic.Mode = BeginMode.Lines;
+            graphic.Program = program;
         }
 
-        public override void Render(double delta_time)
+        public override void Render(double delta_time, RenderContext render_context)
         {
-            RenderContext.Model = Matrix4d.Identity;
-            Resources.Programs["normal"].UniformLocations["PVM"].Set(RenderContext.ProjectionViewModel);
+            render_context.Model = Model;
+            Resources.Programs["normal"].UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
 
             GL.LineWidth(1);
             circle.Draw();
             line_y.Draw();
-            grid_xz.Draw();
+            graphic.Draw();
         }
     }
 }
