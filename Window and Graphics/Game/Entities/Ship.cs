@@ -56,10 +56,7 @@ namespace MartinZottmann.Game.Entities
                 component.Render(delta_time, render_context);
             render_context = render_context.Pop();
 
-#if DEBUG
-            RenderVelocity(delta_time, render_context);
-            RenderBoundingBox(delta_time, render_context);
-#endif
+            base.Render(delta_time, render_context);
         }
     }
 }

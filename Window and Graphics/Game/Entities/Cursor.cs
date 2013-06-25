@@ -72,13 +72,15 @@ namespace MartinZottmann.Game.Entities
         public override void Update(double delta_time, RenderContext render_context)
         {
             Set(render_context);
+
+            base.Update(delta_time, render_context);
         }
 
         public override void Render(double delta_time, RenderContext render_context)
         {
             render_context.Model = Model;
             Resources.Programs["normal"].UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
-            graphic.Draw();
+            base.Render(delta_time, render_context);
         }
     }
 }

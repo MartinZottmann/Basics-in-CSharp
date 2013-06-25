@@ -64,12 +64,37 @@ namespace MartinZottmann.Game.Entities
         }
 
 #if DEBUG
-        public override void Render(double delta_time, RenderContext render_context)
+        public override void RenderHelpers(double delta_time, RenderContext render_context)
         {
-            render_context.Model = Model;
-            base.Render(delta_time, render_context);
+            base.RenderHelpers(delta_time, render_context);
+            RenderTarget(delta_time, render_context);
             RenderVelocity(delta_time, render_context);
+            RenderAngularVelocity(delta_time, render_context);
             RenderBoundingBox(delta_time, render_context);
+        }
+
+        public virtual void RenderTarget(double delta_time, RenderContext render_context)
+        {
+            var P = render_context.Projection;
+            var V = render_context.View;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref P);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref V);
+
+            GL.LineWidth(1);
+            GL.Begin(BeginMode.Lines);
+            {
+                GL.Color4(0.0f, 1.0f, 1.0f, 0.5f);
+                GL.Vertex3(Position);
+                GL.Vertex3(Target);
+            }
+            GL.End();
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
         }
 
         public virtual void RenderVelocity(double delta_time, RenderContext render_context)
@@ -85,7 +110,7 @@ namespace MartinZottmann.Game.Entities
             GL.Begin(BeginMode.Lines);
             {
                 #region Velocity
-                GL.Color4(color.R, color.G, color.B, (byte)127);
+                GL.Color4(1.0f, 1.0f, 0.0f, 0.5f);
                 GL.Vertex3(Position);
                 GL.Vertex3(Position + Velocity);
                 #endregion
@@ -113,7 +138,54 @@ namespace MartinZottmann.Game.Entities
             GL.LoadIdentity();
         }
 
-        public void RenderBoundingBox(double delta_time, RenderContext render_context)
+        public virtual void RenderAngularVelocity(double delta_time, RenderContext render_context)
+        {
+            var P = render_context.Projection;
+            var V = render_context.View;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref P);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref V);
+
+            GL.LineWidth(5);
+            GL.Begin(BeginMode.Lines);
+            {
+                var angular_velocity_x = new Vector3d(AngularVelocity.X, 0, 0);
+                angular_velocity_x = Vector3d.Cross(angular_velocity_x, Up);
+                Vector3d.Transform(ref angular_velocity_x, ref Orientation, out angular_velocity_x);
+
+                var angular_velocity_y = new Vector3d(0, AngularVelocity.Y, 0);
+                angular_velocity_y = Vector3d.Cross(angular_velocity_y, Forward);
+                Vector3d.Transform(ref angular_velocity_y, ref Orientation, out angular_velocity_y);
+
+                var angular_velocity_z = new Vector3d(0, 0, AngularVelocity.Z);
+                angular_velocity_z = Vector3d.Cross(angular_velocity_z, Right);
+                Vector3d.Transform(ref angular_velocity_z, ref Orientation, out angular_velocity_z);
+
+                GL.Color4(1.0f, 0.0f, 0.0f, 0.5f);
+
+                GL.Vertex3(Position + ForwardRelative);
+                GL.Vertex3(Position + ForwardRelative + angular_velocity_y);
+
+                GL.Color4(0.0f, 1.0f, 0.0f, 0.5f);
+
+                GL.Vertex3(Position + UpRelative);
+                GL.Vertex3(Position + UpRelative + angular_velocity_x);
+
+                GL.Color4(0.0f, 0.0f, 1.0f, 0.5f);
+
+                GL.Vertex3(Position + RightRelative);
+                GL.Vertex3(Position + RightRelative + angular_velocity_z);
+            }
+            GL.End();
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+        }
+
+        public virtual void RenderBoundingBox(double delta_time, RenderContext render_context)
         {
             var P = render_context.Projection;
             var V = render_context.View;
@@ -125,33 +197,35 @@ namespace MartinZottmann.Game.Entities
             GL.Translate(Position);
             GL.LineWidth(1);
             GL.Begin(BeginMode.Lines);
-            GL.Color4(Mark.R, Mark.G, Mark.B, Mark.A);
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+            {
+                GL.Color4(Mark.R, Mark.G, Mark.B, Mark.A);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
 
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
 
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
-            GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Min.Z);
+                GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
+            }
             GL.End();
 
             GL.MatrixMode(MatrixMode.Projection);

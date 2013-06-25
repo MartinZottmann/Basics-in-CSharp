@@ -130,7 +130,6 @@
     <Compile Include="Math\Polygon.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game\Entities\Entity.cs" />
-    <Compile Include="Game\Entities\SuperBall.cs" />
     <Compile Include="Math\Quad.cs" />
   </ItemGroup>
   <ItemGroup>

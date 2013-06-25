@@ -111,17 +111,12 @@ namespace MartinZottmann.Game.State
                             double l_s_min;
                             double l_s_max;
                             if ((entity as Physical).BoundingSphere.Intersect(ref cursor.Ray, entity.Position, out l_s_min, out l_s_max))
-                            {
-                                System.Console.WriteLine(entity);
-                                System.Console.WriteLine(l_s_min);
-                                System.Console.WriteLine(g_s_min);
                                 if (l_s_min < g_s_min)
                                 {
                                     s_entity = (entity as Physical);
                                     g_s_min = l_s_min;
                                     g_s_max = l_s_max;
                                 }
-                            }
                         }
                     }
                     if (g_entity != null)

@@ -35,7 +35,7 @@ namespace MartinZottmann.Game.Entities
             graphic.Program.UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
 
             GL.PointSize(1);
-            graphic.Draw();
+            base.Render(delta_time, render_context);
         }
     }
 }
