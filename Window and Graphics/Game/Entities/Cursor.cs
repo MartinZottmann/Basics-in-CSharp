@@ -6,11 +6,8 @@ using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Entities
 {
-    public class Cursor : Entity
+    public class Cursor : Drawable
     {
-        Engine.Graphics.OpenGL.Entity graphic;
-
-        Matrix4d Model = Matrix4d.Identity;
 
         public Ray3d Ray;
 
@@ -31,7 +28,7 @@ namespace MartinZottmann.Game.Entities
                     new uint[] { 0, 1, 2, 3 }
                 )
             );
-            graphic.Mode = BeginMode.Quads;
+            graphic.Mode = BeginMode.LineLoop;
             graphic.Program = Resources.Programs["normal"];
         }
 
@@ -83,6 +80,7 @@ namespace MartinZottmann.Game.Entities
         public override void Render(double delta_time)
         {
             Resources.Programs["normal"].UniformLocations["PVM"].Set(RenderContext.ProjectionViewModel);
+            System.Console.WriteLine(RenderContext.Model);
             graphic.Draw();
         }
     }

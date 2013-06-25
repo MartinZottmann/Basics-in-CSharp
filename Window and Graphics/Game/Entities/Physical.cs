@@ -1,47 +1,24 @@
 ﻿using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.AI;
+using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Entities
 {
-    public class Physical : Entity
+    public class Physical : Drawable, INavigation
     {
         public OpenTK.Graphics.Color4 Mark { get; set; }
 
-        public Vector3d Scale = new Vector3d(1, 1, 1);
+        public Vector3d Target { get; set; }
 
-        public Quaterniond Orientation = Quaterniond.Identity;
+        public double thrust = 1000;
 
         public Vector3d AngularForce = Vector3d.Zero;
 
         public Vector3d AngularVelocity = Vector3d.Zero;
-        
-        public Vector3d Forward = -Vector3d.UnitZ;
-
-        public Vector3d ForwardRelative { get { return Vector3d.Transform(Forward, Orientation); } }
-
-        public Vector3d Up = Vector3d.UnitY;
-
-        public Vector3d UpRelative { get { return Vector3d.Transform(Up, Orientation); } }
-
-        public Vector3d Right = Vector3d.UnitX;
-
-        public Vector3d RightRelative { get { return Vector3d.Transform(Right, Orientation); } }
-
-        /// <summary>
-        /// Scale * Rotation * Translation
-        /// </summary>
-        public Matrix4d Model
-        {
-            get
-            {
-                return Matrix4d.Scale(Scale)
-                    * Matrix4d.Rotate(Orientation)
-                    * Matrix4d.CreateTranslation(Position);
-            }
-        }
 
         public AABB3d BoundingBox;
 
@@ -53,10 +30,18 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d Velocity = Vector3d.Zero;
 
-        public Physical(ResourceManager resources) : base(resources) { }
+        public Steering Streering;
+
+        public Physical(ResourceManager resources)
+            : base(resources)
+        {
+            Streering = new Steering(this);
+        }
 
         public override void Update(double delta_time)
         {
+            Streering.Update(delta_time);
+
             AngularVelocity += (AngularForce / Mass) * delta_time;
             AngularForce = Vector3d.Zero;
             Orientation += 0.5 * new Quaterniond(AngularVelocity.X, AngularVelocity.Y, AngularVelocity.Z, 0) * Orientation * delta_time;

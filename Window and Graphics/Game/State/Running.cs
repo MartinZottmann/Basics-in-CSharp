@@ -126,7 +126,7 @@ namespace MartinZottmann.Game.State
                     }
                     if (g_entity != null)
                     {
-                        selection.Add(g_entity);
+                        //selection.Add(g_entity);
                         g_entity.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255);
                     }
                     if (s_entity != null)
@@ -134,7 +134,7 @@ namespace MartinZottmann.Game.State
                         selection.Add(s_entity);
                         s_entity.Mark = new OpenTK.Graphics.Color4(255, 0, 255, 255);
                     }
-                    //cursor.ray = null;
+                    cursor.Ray = null;
                 }
 
                 if (e.Button == MouseButton.Right)

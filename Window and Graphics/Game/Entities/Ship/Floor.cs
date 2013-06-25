@@ -7,8 +7,6 @@ namespace MartinZottmann.Game.Entities
 {
     class Floor : Physical
     {
-        Engine.Graphics.OpenGL.Entity graphic;
-
         public Floor(ResourceManager resources)
             : base(resources)
         {

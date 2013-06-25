@@ -1,20 +1,13 @@
 ﻿using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
-using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Textured : Physical, INavigation
+    class Textured : Physical
     {
-        Engine.Graphics.OpenGL.Entity graphic;
-
-        public Vector3d Target { get; set; }
-
-        protected const double thrust = 1000;
-
         public Textured(ResourceManager resources)
             : base(resources)
         {
@@ -30,56 +23,6 @@ namespace MartinZottmann.Game.Entities
 
             BoundingBox = shape.BoundingBox;
             BoundingSphere = shape.BoundingSphere;
-        }
-
-        public override void Update(double delta_time)
-        {
-            var direction = Target - Position;
-            var distance = direction.Length;
-            if (distance < 0.1)
-            {
-                AngularVelocity *= delta_time;
-                Velocity *= delta_time;
-            }
-            else
-            {
-                var cos = Vector3d.Dot(ForwardRelative, direction) / ForwardRelative.Length / distance;
-                if (!System.Double.IsNaN(cos))
-                {
-                    var angular_velocity_y = new Vector3d(0, AngularVelocity.Y, 0);
-                    angular_velocity_y = Vector3d.Cross(angular_velocity_y, Forward);
-                    Vector3d.Transform(ref angular_velocity_y, ref Orientation, out angular_velocity_y);
-
-                    var cross = Vector3d.Cross(ForwardRelative, direction);
-                    if (cross.Y > 0) // Target is right
-                    {
-                        AddForceRelative(Forward, -Vector3d.UnitX * thrust * delta_time);
-                        AddForceRelative(-Forward, Vector3d.UnitX * thrust * delta_time);
-                    }
-                    else
-                    {
-                        AddForceRelative(Forward, Vector3d.UnitX * thrust * delta_time);
-                        AddForceRelative(-Forward, -Vector3d.UnitX * thrust * delta_time);
-                    }
-                    AngularVelocity *= System.Math.Pow(0.75, delta_time);
-
-                    var a = ForwardRelative * thrust;
-                    var v0 = Velocity;
-                    var s = Position - Target;
-                    var x = v0.Length / a.Length * 1000;
-                    var y = 2 * s.Length / v0.Length;
-
-                    if (cos > 0.99)
-                        if (x <= y)
-                            AddForceRelative(-Forward, Forward * thrust * delta_time);
-                        else
-                            AddForceRelative(Forward, -Forward * thrust * delta_time);
-                    if (cos < -0.99)
-                        AddForceRelative(Forward, -Forward * thrust * delta_time);
-                }
-            }
-
-            base.Update(delta_time);
         }
 
         public override void Render(double delta_time)

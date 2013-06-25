@@ -1,14 +1,10 @@
-﻿using MartinZottmann.Engine.Graphics.Shapes;
-using MartinZottmann.Engine.Resources;
-using MartinZottmann.Game.Entities.Helper;
+﻿using MartinZottmann.Engine.Resources;
 using OpenTK;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Ship : Physical, INavigation
+    class Ship : Physical
     {
-        public Vector3d Target { get; set; }
-
         Physical[] components;
 
         public Ship(ResourceManager resources)

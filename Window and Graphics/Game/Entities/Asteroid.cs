@@ -7,8 +7,6 @@ namespace MartinZottmann.Game.Entities
 {
     class Asteroid : Physical
     {
-        Engine.Graphics.OpenGL.Entity graphic;
-
         public Asteroid(ResourceManager resources)
             : base(resources)
         {
