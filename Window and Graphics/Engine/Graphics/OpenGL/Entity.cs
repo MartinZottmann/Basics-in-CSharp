@@ -11,7 +11,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public Texture Texture;
 
-        protected VertexArrayObject vao = new VertexArrayObject();
+        public readonly VertexArrayObject VertexArrayObject = new VertexArrayObject();
 
         protected IMesh mesh;
 
@@ -24,21 +24,21 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             where I : struct
         {
             this.mesh = mesh;
-            vao.Add(new BufferObject<V>(BufferTarget.ArrayBuffer, mesh.Vertices));
+            VertexArrayObject.Add(new BufferObject<V>(BufferTarget.ArrayBuffer, mesh.Vertices));
             if (mesh.IndicesLength != 0)
-                vao.Add(new BufferObject<I>(BufferTarget.ElementArrayBuffer, mesh.Indices));
+                VertexArrayObject.Add(new BufferObject<I>(BufferTarget.ElementArrayBuffer, mesh.Indices));
         }
 
         public void Dispose()
         {
-            vao.Dispose();
+            VertexArrayObject.Dispose();
         }
 
         public void Draw()
         {
             using (new Bind(Texture))
             using (new Bind(Program))
-            using (new Bind(vao))
+            using (new Bind(VertexArrayObject))
                 if (mesh.IndicesLength == 0)
                     GL.DrawArrays(Mode, 0, mesh.VerticesLength);
                 else

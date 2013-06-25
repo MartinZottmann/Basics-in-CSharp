@@ -1,13 +1,16 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class VertexArrayObject : IBindable, IDisposable
     {
-        public uint id;
+        protected uint id;
+
+        public List<BufferObject> BufferObjects = new List<BufferObject>();
 
         public VertexArrayObject()
         {
@@ -16,18 +19,20 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public void Add<U>(BufferObject<U> bo) where U : struct
         {
+            BufferObjects.Add(bo);
+
             using (new Bind(this))
             {
-                switch (bo.target)
+                switch (bo.Target)
                 {
                     case BufferTarget.ArrayBuffer:
                         using (new Bind(bo)) // to VertexAttribPointer
                         {
                             var vertex_attribute = 0;
                             var offset = 0;
-                            var stride = BlittableValueType.StrideOf(bo.data);
+                            var stride = bo.Stride;
 
-                            FieldInfo[] fi = bo.data[0].GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+                            FieldInfo[] fi = bo.Data[0].GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
                             foreach (FieldInfo info in fi)
                             {
                                 int size = 0;

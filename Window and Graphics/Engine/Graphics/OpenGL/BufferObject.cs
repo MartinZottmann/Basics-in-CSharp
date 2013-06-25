@@ -7,13 +7,21 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public abstract class BufferObject : IBindable, IDisposable
     {
-        public uint id;
+        protected uint id;
 
-        public BufferTarget target;
+        public readonly BufferTarget Target;
 
-        public int stride;
+        public readonly int Stride;
 
-        public int size;
+        public readonly int Size;
+
+        public BufferObject(BufferTarget target, int stride, int size)
+        {
+            GL.GenBuffers(1, out id);
+            Target = target;
+            Stride = stride;
+            Size = size;
+        }
 
         public abstract void Bind();
 
@@ -24,35 +32,46 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
     public class BufferObject<T> : BufferObject, IBindable, IDisposable where T : struct
     {
-        public T[] data;
+        public readonly T[] Data;
 
         public BufferObject(BufferTarget target, T[] data, BufferUsageHint usage_hint = BufferUsageHint.StaticDraw)
+            : base(target, BlittableValueType.StrideOf(data), data.Length * BlittableValueType.StrideOf(data))
         {
-            this.target = target;
-            this.data = data;
-            stride = BlittableValueType.StrideOf(data);
-            size = data.Length * stride;
+            Data = data;
 
-            GL.GenBuffers(1, out id);
             using (new Bind(this))
             {
-                GL.BufferData(target, (IntPtr)size, data, usage_hint);
+                GL.BufferData(target, (IntPtr)Size, data, usage_hint);
 #if DEBUG
                 int info;
                 GL.GetBufferParameter(target, BufferParameterName.BufferSize, out info);
-                Debug.Assert(size == info);
+                Debug.Assert(Size == info);
 #endif
             }
         }
 
+        public void Write(int offset, int size, T[] data)
+        {
+            // @todo Update Data
+            using (new Bind(this))
+                GL.BufferSubData(Target, (IntPtr)offset, (IntPtr)size, data);
+        }
+
+        public void Write(int offset, T data)
+        {
+            Data[offset] = data;
+            using (new Bind(this))
+                GL.BufferSubData(Target, (IntPtr)(offset * Stride), (IntPtr)Stride, new T[] { data });
+        }
+
         public override void Bind()
         {
-            GL.BindBuffer(target, id);
+            GL.BindBuffer(Target, id);
         }
 
         public override void UnBind()
         {
-            GL.BindBuffer(target, 0);
+            GL.BindBuffer(Target, 0);
         }
 
         public override void Dispose()
