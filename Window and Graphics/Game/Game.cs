@@ -16,6 +16,8 @@ namespace MartinZottmann.Game
                     state.Dispose();
 
                 state = value;
+
+                GC.Collect();
             }
         }
 

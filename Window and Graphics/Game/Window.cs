@@ -103,6 +103,7 @@ namespace MartinZottmann.Game
                 var delta_time = update_time.Elapsed.TotalSeconds;
                 update_time.Reset();
                 update_time.Start();
+                Console.WriteLine(GC.GetTotalMemory(false));
                 while (delta_time >= target_delta_time)
                 {
                     game.Update(target_delta_time);
