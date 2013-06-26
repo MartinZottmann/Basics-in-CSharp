@@ -38,9 +38,11 @@ namespace MartinZottmann.Game.Entities
             Orientation += new Quaterniond(AngularVelocity * delta_time, 0) * Orientation;
             Orientation.Normalize();
 
+            var velocity_old = Velocity;
             Velocity += (Force / Mass) * delta_time;
             Force = Vector3d.Zero;
-            Position += Velocity * delta_time;
+            var velocity_average = (velocity_old + Velocity) / 2;
+            Position += velocity_average * delta_time;
 
             //// Damping
             //const double damping = 0.98;
