@@ -142,14 +142,29 @@ namespace MartinZottmann.Game.State
 
             Add(new Starfield(resources));
 
-            for (int i = 1; i <= 10; i++)
-                Add(new Asteroid(resources));
+            //for (int i = 1; i <= 10; i++)
+            //    Add(new Asteroid(resources));
 
             Add(new Textured(resources));
 
             Add(new Ship(resources));
 
-            Add(new Explosion(resources));
+            //Add(new Explosion(resources));
+
+            Add(
+                new Asteroid(resources)
+                {
+                    Position = new Vector3d(20, 10, 49),
+                    Velocity = new Vector3d(-1, 0, 0),
+                }
+            );
+            Add(
+                new Asteroid(resources)
+                {
+                    Position = new Vector3d(-20, 10, 51),
+                    Velocity = new Vector3d(1, 0, 0)
+                }
+            );
         }
 
         public override void Dispose()
@@ -258,6 +273,42 @@ namespace MartinZottmann.Game.State
                 Projection = camera.ProjectionMatrix(),
                 View = camera.ViewMatrix()
             };
+
+            foreach (Entities.Entity a in entities)
+            {
+                if (!(a is Physical))
+                    continue;
+
+                foreach (Entities.Entity b in entities)
+                {
+                    if (a == b)
+                        continue;
+
+                    if (!(b is Physical))
+                        continue;
+
+                    Vector3d hit_a;
+                    Vector3d hit_b;
+
+                    var i = a as Physical;
+                    var j = b as Physical;
+
+                    var s = i.BoundingSphere;
+                    s.Origin += i.Position;
+                    var t = j.BoundingSphere;
+                    t.Origin += j.Position;
+
+                    var hit = s.Intersect(ref t, out hit_a, out hit_b);
+                    if (hit)
+                    {
+                        Console.WriteLine("{0} - {1}", hit_a, hit_b);
+                        var o = j.PointVelocity(hit_b);
+                        var p = i.PointVelocity(hit_a);
+                        i.AddImpulse(hit_a, o * j.Mass / i.Mass);
+                        j.AddImpulse(hit_b, p * i.Mass / j.Mass);
+                    }
+                }
+            }
 
             foreach (Entities.Entity entity in entities)
             {

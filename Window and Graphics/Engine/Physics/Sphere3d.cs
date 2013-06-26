@@ -2,16 +2,26 @@
 
 namespace MartinZottmann.Engine.Physics
 {
-    public class Sphere3d
+    public struct Sphere3d
     {
-        public Vector3d Origin { get; protected set; }
+        public Vector3d Origin;
 
-        public double Radius { get; protected set; }
+        public double Radius;
 
         public Sphere3d(Vector3d origin, double radius)
         {
             Origin = origin;
             Radius = radius;
+        }
+
+        public bool Intersect(ref Sphere3d s, out Vector3d hit, out Vector3d hit_s)
+        {
+            var relative = Origin - s.Origin;
+            var distance = relative.Length;
+            hit = -relative / distance * Radius;
+            hit_s = relative / distance * s.Radius;
+
+            return distance <= Radius + s.Radius;
         }
 
         public bool Intersect(ref Ray3d r, Vector3d position)

@@ -39,16 +39,16 @@ namespace MartinZottmann.Game.Entities
 
         public override void Update(double delta_time, RenderContext render_context)
         {
-            Force = new Vector3d(
-                (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
-                (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
-                (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time
-            );
-            Torque = new Vector3d(
-                (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
-                (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
-                (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time
-            );
+            //Force = new Vector3d(
+            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
+            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
+            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time
+            //);
+            //Torque = new Vector3d(
+            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
+            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
+            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time
+            //);
 
             base.Update(delta_time, render_context);
         }

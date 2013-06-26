@@ -27,6 +27,9 @@ namespace MartinZottmann.Game.Entities
 
         public double Mass = 10;
 
+        // @todo
+        //public Matrix3d Inertia = Matrix3d.Identity;
+
         public Vector3d Velocity = Vector3d.Zero;
 
         public Physical(ResourceManager resources) : base(resources) { }
@@ -62,6 +65,12 @@ namespace MartinZottmann.Game.Entities
         {
             Force += force;
             Torque += Vector3d.Cross(point, force);
+        }
+
+        public void AddImpulse(Vector3d point, Vector3d force)
+        {
+            Velocity += force;
+            AngularVelocity += Vector3d.Cross(point, force);
         }
 
         public Vector3d PointVelocity(Vector3d world_point)
