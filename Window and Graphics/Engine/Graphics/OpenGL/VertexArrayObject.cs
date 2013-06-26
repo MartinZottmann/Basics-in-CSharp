@@ -1,5 +1,4 @@
-﻿using OpenTK;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -22,7 +21,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             BufferObjects.Add(bo);
 
             using (new Bind(this))
-            {
                 switch (bo.Target)
                 {
                     case BufferTarget.ArrayBuffer:
@@ -32,8 +30,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                             var offset = 0;
                             var stride = bo.Stride;
 
-                            FieldInfo[] fi = bo.Data[0].GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
-                            foreach (FieldInfo info in fi)
+                            foreach (FieldInfo info in bo.DataFieldInfo)
                             {
                                 int size = 0;
                                 VertexAttribPointerType type = VertexAttribPointerType.Byte;
@@ -61,7 +58,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                     default:
                         throw new NotImplementedException();
                 }
-            }
         }
 
         public void Bind()

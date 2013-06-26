@@ -2,6 +2,7 @@
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace MartinZottmann.Engine.Graphics.OpenGL
 {
@@ -32,12 +33,13 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
     public class BufferObject<T> : BufferObject, IBindable, IDisposable where T : struct
     {
-        public T[] Data;
+        public readonly FieldInfo[] DataFieldInfo;
 
         public BufferObject(BufferTarget target, T[] data, BufferUsageHint usage_hint = BufferUsageHint.StaticDraw)
             : base(target, BlittableValueType.StrideOf(data), data.Length * BlittableValueType.StrideOf(data))
         {
-            Data = data;
+            if (data.Length != 0)
+                DataFieldInfo = data[0].GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
 
             using (new Bind(this))
             {
@@ -52,21 +54,18 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public void Write(int offset, int size, T[] data)
         {
-            // @todo Update Data
             using (new Bind(this))
                 GL.BufferSubData(Target, (IntPtr)offset, (IntPtr)size, data);
         }
 
         public void Write(int offset, T data)
         {
-            Data[offset] = data;
             using (new Bind(this))
                 GL.BufferSubData(Target, (IntPtr)(offset * Stride), (IntPtr)Stride, new T[] { data });
         }
 
         public void Write(T[] data)
         {
-            Data = data;
             using (new Bind(this))
                 GL.BufferSubData(Target, (IntPtr)0, (IntPtr)Size, data);
         }
