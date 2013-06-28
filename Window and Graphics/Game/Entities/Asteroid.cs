@@ -20,9 +20,16 @@ namespace MartinZottmann.Game.Entities
             var scale = randomNumber.NextDouble() * 5 + 1;
 
             Mass *= scale;
+            var I = 2 * Mass * System.Math.Pow(scale, 2) / 5;
+            Inertia = new Matrix4d(
+                I, 0, 0, 0,
+                0, I, 0, 0,
+                0, 0, I, 0,
+                0, 0, 0, 1
+            );
 
             var shape = new Sphere();
-            shape.Translate(Matrix4.Scale((float)scale));
+            shape.Translate(Matrix4.CreateScale((float)scale));
 
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Mesh(shape);

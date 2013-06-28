@@ -15,7 +15,7 @@ namespace MartinZottmann.Game.Entities
             Position = new Vector3d(-10, -10, -10);
 
             var shape = new Quad();
-            shape.Translate(Matrix4.Scale(2) * Matrix4.CreateRotationX(-MathHelper.PiOver2));
+            shape.Translate(Matrix4.CreateScale(2) * Matrix4.CreateRotationX(-MathHelper.PiOver2));
 
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Mesh(shape);

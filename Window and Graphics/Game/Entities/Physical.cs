@@ -25,31 +25,85 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d Force = Vector3d.Zero;
 
-        public double Mass = 10;
+        #region Mass
 
-        // @todo
-        //public Matrix3d Inertia = Matrix3d.Identity;
+        protected double mass = 10.0;
+
+        public double Mass { get { return mass; } set { mass = value; inverse_mass = 1.0 / value; } }
+
+        protected double inverse_mass = 1.0 / 10.0;
+
+        public double InverseMass { get { return inverse_mass; } set { inverse_mass = value; mass = 1.0 / value; } }
+
+        #endregion
+
+        #region Inertia
+
+        protected Matrix4d inertia = Matrix4d.Identity;
+
+        protected Matrix4d inverse_inertia = Matrix4d.Identity.Inverted();
+
+        protected Matrix4d inertia_world;
+
+        protected Matrix4d inverse_inertia_world;
+
+        public Matrix4d Inertia { get { return inertia; } set { inertia = value; inverse_inertia = value.Inverted(); } }
+
+        public Matrix4d InverseInertia { get { return inverse_inertia; } set { inverse_inertia = value; inertia = value.Inverted(); } }
+
+        public Matrix4d InertiaWorld { get { return inertia_world; } set { inertia_world = value; } }
+
+        public Matrix4d InverseInertiaWorld { get { return inverse_inertia_world; } set { inverse_inertia_world = value; } }
+
+        #endregion
 
         public Vector3d Velocity = Vector3d.Zero;
+
+        public Matrix4d OrientationMatrix { get; set; }
+
+        public Matrix4d InverseOrientationMatrix { get; set; }
 
         public Physical(ResourceManager resources) : base(resources) { }
 
         public override void Update(double delta_time, RenderContext render_context)
         {
-            AngularVelocity += (Torque / Mass) * delta_time;
-            Torque = Vector3d.Zero;
-            Orientation += new Quaterniond(AngularVelocity * delta_time, 0) * Orientation;
-            Orientation.Normalize();
 
-            Velocity += 0.5 * (Force / Mass) * delta_time;
-            Position += Velocity * delta_time;
-            Velocity += 0.5 * (Force / Mass) * delta_time;
-            Force = Vector3d.Zero;
+        }
+
+        public virtual void UpdateVelocity(double delta_time)
+        {
+            Velocity += Force * InverseMass * delta_time;
+
+            AngularVelocity += Torque * InverseInertia * delta_time;
 
             //// Damping
             //const double damping = 0.98;
             //Velocity *= System.Math.Pow(damping, delta_time);
             //AngularVelocity *= System.Math.Pow(damping, delta_time);
+
+            UpdateMatrix();
+        }
+
+        public virtual void UpdatePosition(double delta_time)
+        {
+            Position += Velocity * delta_time;
+
+            Force = Vector3d.Zero;
+
+            Orientation += 0.5 * new Quaterniond(AngularVelocity * delta_time, 0) * Orientation;
+            Orientation.Normalize();
+
+            Torque = Vector3d.Zero;
+
+            UpdateMatrix();
+        }
+
+        protected void UpdateMatrix()
+        {
+            OrientationMatrix = Matrix4d.CreateFromQuaternion(ref Orientation);
+            InverseOrientationMatrix = OrientationMatrix.Inverted();
+            InertiaWorld = OrientationMatrix * Inertia * InverseOrientationMatrix;
+            InverseInertiaWorld = OrientationMatrix * InverseInertia * InverseOrientationMatrix;
         }
 
         public void AddForceRelative(Vector3d point, Vector3d force)
@@ -73,9 +127,9 @@ namespace MartinZottmann.Game.Entities
             AngularVelocity += Vector3d.Cross(point, force);
         }
 
-        public Vector3d PointVelocity(Vector3d world_point)
+        public Vector3d PointVelocity(Vector3d point)
         {
-            return Vector3d.Cross(AngularVelocity, world_point - Position) + Velocity;
+            return Vector3d.Cross(AngularVelocity, point) + Velocity;
         }
 
 #if DEBUG

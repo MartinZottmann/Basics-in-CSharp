@@ -274,6 +274,30 @@ namespace MartinZottmann.Game.State
                 View = camera.ViewMatrix()
             };
 
+            var collisions = DetectCollisions();
+
+            foreach (Entities.Entity entity in entities)
+                if (entity is Physical)
+                    (entity as Physical).UpdateVelocity(delta_time);
+
+            ApplyImpusles(collisions, delta_time);
+
+            foreach (Entities.Entity entity in entities)
+                if (entity is Physical)
+                    (entity as Physical).UpdatePosition(delta_time);
+
+            foreach (Entities.Entity entity in entities)
+            {
+                entity.Update(delta_time, render_context);
+
+                entity.Reposition(100, 100, 100);
+            }
+        }
+
+        protected List<Collision> DetectCollisions()
+        {
+            var collisions = new List<Collision>();
+
             foreach (Entities.Entity a in entities)
             {
                 if (!(a is Physical))
@@ -289,6 +313,7 @@ namespace MartinZottmann.Game.State
 
                     Vector3d hit_a;
                     Vector3d hit_b;
+                    double penetration_depth;
 
                     var i = a as Physical;
                     var j = b as Physical;
@@ -298,23 +323,72 @@ namespace MartinZottmann.Game.State
                     var t = j.BoundingSphere;
                     t.Origin += j.Position;
 
-                    var hit = s.Intersect(ref t, out hit_a, out hit_b);
-                    if (hit)
-                    {
-                        Console.WriteLine("{0} - {1}", hit_a, hit_b);
-                        var o = j.PointVelocity(hit_b);
-                        var p = i.PointVelocity(hit_a);
-                        i.AddImpulse(hit_a, o * j.Mass / i.Mass);
-                        j.AddImpulse(hit_b, p * i.Mass / j.Mass);
-                    }
+                    if (s.Intersect(ref t, out hit_a, out hit_b, out penetration_depth))
+                        collisions.Add(
+                            new Collision()
+                            {
+                                HitPoint = i.Position + hit_a,
+                                Normal = (i.Position - j.Position).Normalized() * penetration_depth,
+                                Object0 = i,
+                                Object1 = j,
+                                PenetrationDepth = penetration_depth
+                            }
+                        );
                 }
             }
 
-            foreach (Entities.Entity entity in entities)
-            {
-                entity.Update(delta_time, render_context);
+            return collisions;
+        }
 
-                entity.Reposition(100, 100, 100);
+        protected void ApplyImpusles(List<Collision> collisions, double delta_time)
+        {
+            foreach (var collision in collisions)
+            {
+                var r0 = collision.HitPoint - collision.Object0.Position;
+                var r1 = collision.HitPoint - collision.Object1.Position;
+                var v0 = collision.Object0.Velocity + Vector3d.Cross(collision.Object0.AngularVelocity, r0);
+                var v1 = collision.Object1.Velocity + Vector3d.Cross(collision.Object1.AngularVelocity, r1);
+                var dv = v0 - v1;
+
+                if (-Vector3d.Dot(dv, collision.Normal) < -0.01)
+                    return;
+
+                #region NORMAL Impulse
+                var e = 0.0;
+                var normDiv = Vector3d.Dot(collision.Normal, collision.Normal) * (
+                    (collision.Object0.InverseMass + collision.Object1.InverseMass)
+                    + Vector3d.Dot(
+                        collision.Normal,
+                        Vector3d.Cross(Vector3d.Transform(Vector3d.Cross(r0, collision.Normal), collision.Object0.InverseInertiaWorld), r0)
+                        + Vector3d.Cross(Vector3d.Transform(Vector3d.Cross(r1, collision.Normal), collision.Object1.InverseInertiaWorld), r1)
+                    )
+                );
+                var jn = -1 * (1 + e) * Vector3d.Dot(dv, collision.Normal) / normDiv;
+                jn += (collision.PenetrationDepth * 1.5);
+
+                collision.Object0.Velocity += collision.Object0.InverseMass * collision.Normal * jn;
+                collision.Object0.AngularVelocity += Vector3d.Transform(Vector3d.Cross(r0, collision.Normal * jn), collision.Object0.InverseInertiaWorld);
+
+                collision.Object1.Velocity -= collision.Object1.InverseMass * collision.Normal * jn;
+                collision.Object1.AngularVelocity -= Vector3d.Transform(Vector3d.Cross(r1, collision.Normal * jn), collision.Object1.InverseInertiaWorld);
+                #endregion
+
+                #region TANGENT Impulse
+                var tangent = dv - (Vector3d.Dot(dv, collision.Normal) * collision.Normal);
+                tangent.Normalize();
+                var k_tangent = collision.Object0.InverseMass
+                    + collision.Object1.InverseMass
+                    + Vector3d.Dot(
+                        tangent,
+                        Vector3d.Cross(Vector3d.Cross(r0, tangent) * collision.Object0.InverseInertiaWorld, r0)
+                        + Vector3d.Cross(Vector3d.Cross(r1, tangent) * collision.Object1.InverseInertiaWorld, r1)
+                    );
+                var Pt = -1 * Vector3d.Dot(dv, tangent) / k_tangent * tangent;
+                collision.Object0.Velocity += collision.Object0.InverseMass * Pt;
+                collision.Object0.AngularVelocity += Vector3d.Cross(r0, Pt) * collision.Object0.InverseInertiaWorld;
+                collision.Object1.Velocity -= collision.Object1.InverseMass * Pt;
+                collision.Object1.AngularVelocity -= Vector3d.Cross(r1, Pt) * collision.Object1.InverseInertiaWorld;
+                #endregion
             }
         }
 
@@ -324,12 +398,22 @@ namespace MartinZottmann.Game.State
             GL.Viewport(0, 0, Window.Width, Window.Height);
 
             foreach (Entities.Entity entity in entities)
-            {
-                //render_context.Model = entity.Model;
                 entity.Render(delta_time, render_context);
-            }
 
             Window.SwapBuffers();
         }
+    }
+
+    public struct Collision
+    {
+        public Vector3d HitPoint;
+
+        public Vector3d Normal;
+
+        public Physical Object0;
+
+        public Physical Object1;
+
+        public double PenetrationDepth;
     }
 }

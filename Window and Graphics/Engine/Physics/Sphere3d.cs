@@ -14,12 +14,13 @@ namespace MartinZottmann.Engine.Physics
             Radius = radius;
         }
 
-        public bool Intersect(ref Sphere3d s, out Vector3d hit, out Vector3d hit_s)
+        public bool Intersect(ref Sphere3d s, out Vector3d hit, out Vector3d hit_s, out double penetration_depth)
         {
             var relative = Origin - s.Origin;
             var distance = relative.Length;
             hit = -relative / distance * Radius;
             hit_s = relative / distance * s.Radius;
+            penetration_depth = Radius + s.Radius - distance;
 
             return distance <= Radius + s.Radius;
         }

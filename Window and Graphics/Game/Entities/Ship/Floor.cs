@@ -12,7 +12,7 @@ namespace MartinZottmann.Game.Entities
             : base(resources)
         {
             var shape = new CubeHardNormals();
-            shape.Translate(Matrix4.Scale(0.5f) * Matrix4.CreateTranslation(new Vector3(0, -1, 0)));
+            shape.Translate(Matrix4.CreateScale(0.5f) * Matrix4.CreateTranslation(new Vector3(0, -1, 0)));
 
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Mesh(shape);
