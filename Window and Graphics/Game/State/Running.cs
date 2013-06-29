@@ -142,29 +142,14 @@ namespace MartinZottmann.Game.State
 
             Add(new Starfield(resources));
 
-            //for (int i = 1; i <= 10; i++)
-            //    Add(new Asteroid(resources));
+            for (int i = 1; i <= 10; i++)
+                Add(new Asteroid(resources));
 
             Add(new Textured(resources));
 
             Add(new Ship(resources));
 
             //Add(new Explosion(resources));
-
-            Add(
-                new Asteroid(resources)
-                {
-                    Position = new Vector3d(20, 10, 49),
-                    Velocity = new Vector3d(-1, 0, 0),
-                }
-            );
-            Add(
-                new Asteroid(resources)
-                {
-                    Position = new Vector3d(-20, 10, 51),
-                    Velocity = new Vector3d(1, 0, 0)
-                }
-            );
         }
 
         public override void Dispose()
@@ -317,6 +302,9 @@ namespace MartinZottmann.Game.State
 
                     var i = a as Physical;
                     var j = b as Physical;
+
+                    if (!i.BoundingBox.Intersect(ref i.Position, ref j.BoundingBox, ref j.Position))
+                        continue;
 
                     var s = i.BoundingSphere;
                     s.Origin += i.Position;

@@ -9,6 +9,28 @@ namespace MartinZottmann.Engine.Physics
 
         public Vector3d Max;
 
+        public bool Intersect(ref Vector3d position, ref AABB3d b, ref  Vector3d b_position)
+        {
+            if (Max.X + position.X < b.Min.X + b_position.X) return false;
+            if (Min.X + position.X > b.Max.X + b_position.X) return false;
+            if (Max.Y + position.Y < b.Min.Y + b_position.Y) return false;
+            if (Min.Y + position.Y > b.Max.Y + b_position.Y) return false;
+            if (Max.Z + position.Z < b.Min.Z + b_position.Z) return false;
+            if (Min.Z + position.Z > b.Max.Z + b_position.Z) return false;
+            return true;
+        }
+
+        public bool Intersect(ref AABB3d b)
+        {
+            if (Max.X < b.Min.X) return false;
+            if (Min.X > b.Max.X) return false;
+            if (Max.Y < b.Min.Y) return false;
+            if (Min.Y > b.Max.Y) return false;
+            if (Max.Z < b.Min.Z) return false;
+            if (Min.Z > b.Max.Z) return false;
+            return true;
+        }
+
         public bool Intersect(Vector3d point, Vector3d position)
         {
             Vector3d.Add(ref point, ref position, out point);

@@ -42,22 +42,15 @@ namespace MartinZottmann.Game.Entities
 
             BoundingBox = shape.BoundingBox;
             BoundingSphere = shape.BoundingSphere;
-        }
 
-        public override void Update(double delta_time, RenderContext render_context)
-        {
-            //Force = new Vector3d(
-            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
-            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
-            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time
-            //);
-            //Torque = new Vector3d(
-            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
-            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time,
-            //    (randomNumber.NextDouble() - 0.5) * 10000.0 * delta_time
-            //);
-
-            base.Update(delta_time, render_context);
+            AddImpulse(
+                Vector3d.Zero,
+                new Vector3d(
+                    (randomNumber.NextDouble() - 0.5) * 100.0,
+                    (randomNumber.NextDouble() - 0.5) * 100.0,
+                    (randomNumber.NextDouble() - 0.5) * 100.0
+                )
+            );
         }
 
         public override void Render(double delta_time, RenderContext render_context)

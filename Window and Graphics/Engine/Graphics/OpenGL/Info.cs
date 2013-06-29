@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿#if DEBUG
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Text;
 
@@ -14,7 +15,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             Console.WriteLine(")");
         }
 
-#if DEBUG
         public static unsafe int[] AttachedShaders(int program)
         {
             int icount = 0;
@@ -26,7 +26,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
             return shaders;
         }
-#endif
 
         public static void ProgramParameters(int program)
         {
@@ -136,3 +135,4 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         }
     }
 }
+#endif

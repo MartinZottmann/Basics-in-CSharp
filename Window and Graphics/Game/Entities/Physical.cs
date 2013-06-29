@@ -144,6 +144,9 @@ namespace MartinZottmann.Game.Entities
 
         public virtual void RenderTarget(double delta_time, RenderContext render_context)
         {
+            if (Target.Equals(Vector3d.Zero))
+                return;
+
             var P = render_context.Projection;
             var V = render_context.View;
             GL.MatrixMode(MatrixMode.Projection);
