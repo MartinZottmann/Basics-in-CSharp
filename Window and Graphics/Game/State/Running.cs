@@ -359,18 +359,16 @@ namespace MartinZottmann.Game.State
                     (collision.Object0.InverseMass + collision.Object1.InverseMass)
                     + Vector3d.Dot(
                         collision.Normal,
-                        Vector3d.Cross(Vector3d.Transform(Vector3d.Cross(r0, collision.Normal), collision.Object0.InverseInertiaWorld), r0)
-                        + Vector3d.Cross(Vector3d.Transform(Vector3d.Cross(r1, collision.Normal), collision.Object1.InverseInertiaWorld), r1)
+                        Vector3d.Cross(Vector3d.Cross(r0, collision.Normal) * collision.Object0.InverseInertiaWorld, r0)
+                        + Vector3d.Cross(Vector3d.Cross(r1, collision.Normal) * collision.Object1.InverseInertiaWorld, r1)
                     )
                 );
                 var jn = -1 * (1 + e) * Vector3d.Dot(dv, collision.Normal) / normDiv;
                 jn += (collision.PenetrationDepth * 1.5);
+                var Pn = collision.Normal * jn;
 
-                collision.Object0.Velocity += collision.Object0.InverseMass * collision.Normal * jn;
-                collision.Object0.AngularVelocity += Vector3d.Transform(Vector3d.Cross(r0, collision.Normal * jn), collision.Object0.InverseInertiaWorld);
-
-                collision.Object1.Velocity -= collision.Object1.InverseMass * collision.Normal * jn;
-                collision.Object1.AngularVelocity -= Vector3d.Transform(Vector3d.Cross(r1, collision.Normal * jn), collision.Object1.InverseInertiaWorld);
+                collision.Object0.AddImpulse(r0, Pn);
+                collision.Object1.AddImpulse(r1, -1 * Pn);
                 #endregion
 
                 #region TANGENT Impulse
@@ -384,10 +382,9 @@ namespace MartinZottmann.Game.State
                         + Vector3d.Cross(Vector3d.Cross(r1, tangent) * collision.Object1.InverseInertiaWorld, r1)
                     );
                 var Pt = -1 * Vector3d.Dot(dv, tangent) / k_tangent * tangent;
-                collision.Object0.Velocity += collision.Object0.InverseMass * Pt;
-                collision.Object0.AngularVelocity += Vector3d.Cross(r0, Pt) * collision.Object0.InverseInertiaWorld;
-                collision.Object1.Velocity -= collision.Object1.InverseMass * Pt;
-                collision.Object1.AngularVelocity -= Vector3d.Cross(r1, Pt) * collision.Object1.InverseInertiaWorld;
+
+                collision.Object0.AddImpulse(r0, Pt);
+                collision.Object1.AddImpulse(r1, -1 * Pt);
                 #endregion
             }
         }

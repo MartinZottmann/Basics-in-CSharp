@@ -123,8 +123,8 @@ namespace MartinZottmann.Game.Entities
 
         public void AddImpulse(Vector3d point, Vector3d force)
         {
-            Velocity += force;
-            AngularVelocity += Vector3d.Cross(point, force);
+            Velocity += force * InverseMass;
+            AngularVelocity += Vector3d.Cross(point, force) * InverseInertiaWorld;
         }
 
         public Vector3d PointVelocity(Vector3d point)
