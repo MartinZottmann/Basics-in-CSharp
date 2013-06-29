@@ -8,9 +8,7 @@ namespace MartinZottmann.Game.Entities
 {
     public abstract class Entity : IDisposable
     {
-        protected static Random randomNumber = new Random();
-
-        public Color color;
+        public static Random Random = new Random();
 
         public Vector3d Position = Vector3d.Zero;
 
@@ -19,10 +17,6 @@ namespace MartinZottmann.Game.Entities
         public Entity(ResourceManager resources)
         {
             Resources = resources;
-
-            KnownColor[] names = (KnownColor[])Enum.GetValues(typeof(KnownColor));
-            KnownColor randomColorName = names[randomNumber.Next(names.Length)];
-            color = Color.FromKnownColor(randomColorName);
         }
 
         public virtual void Dispose()

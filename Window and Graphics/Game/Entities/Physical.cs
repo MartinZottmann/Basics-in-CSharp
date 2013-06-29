@@ -13,7 +13,7 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d Target { get; set; }
 
-        public double thrust = 1000;
+        public double thrust = 10.0;
 
         public Vector3d Torque = Vector3d.Zero;
 
@@ -160,6 +160,13 @@ namespace MartinZottmann.Game.Entities
                 GL.Color4(0.0f, 1.0f, 1.0f, 0.5f);
                 GL.Vertex3(Position);
                 GL.Vertex3(Target);
+
+                GL.Vertex3(Target - Vector3d.UnitX);
+                GL.Vertex3(Target + Vector3d.UnitX);
+                GL.Vertex3(Target - Vector3d.UnitY);
+                GL.Vertex3(Target + Vector3d.UnitY);
+                GL.Vertex3(Target - Vector3d.UnitZ);
+                GL.Vertex3(Target + Vector3d.UnitZ);
             }
             GL.End();
 
@@ -185,10 +192,30 @@ namespace MartinZottmann.Game.Entities
                 GL.Color4(1.0f, 1.0f, 0.0f, 0.5f);
                 GL.Vertex3(Position);
                 GL.Vertex3(Position + Velocity);
+
+                GL.Vertex3(Position + Velocity - Vector3d.UnitX);
+                GL.Vertex3(Position + Velocity + Vector3d.UnitX);
+                GL.Vertex3(Position + Velocity - Vector3d.UnitY);
+                GL.Vertex3(Position + Velocity + Vector3d.UnitY);
+                GL.Vertex3(Position + Velocity - Vector3d.UnitZ);
+                GL.Vertex3(Position + Velocity + Vector3d.UnitZ);
+                #endregion
+
+                #region Force
+                GL.Color4(1.0f, 0.75f, 0.0f, 0.5f);
+                GL.Vertex3(Position + Velocity);
+                GL.Vertex3(Position + Velocity + Force);
+
+                GL.Vertex3(Position + Velocity + Force - Vector3d.UnitX);
+                GL.Vertex3(Position + Velocity + Force + Vector3d.UnitX);
+                GL.Vertex3(Position + Velocity + Force - Vector3d.UnitY);
+                GL.Vertex3(Position + Velocity + Force + Vector3d.UnitY);
+                GL.Vertex3(Position + Velocity + Force - Vector3d.UnitZ);
+                GL.Vertex3(Position + Velocity + Force + Vector3d.UnitZ);
                 #endregion
 
                 #region Contact to circle
-                GL.Color4(1, 1, 1, 0.2);
+                GL.Color4(1.0f, 1.0f, 1.0f, 0.2f);
                 GL.Vertex3(Position);
                 var position_on_y = new Vector3d(Position.X, 0, Position.Z);
                 GL.Vertex3(position_on_y);

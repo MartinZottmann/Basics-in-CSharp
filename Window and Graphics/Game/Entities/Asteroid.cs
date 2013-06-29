@@ -12,12 +12,12 @@ namespace MartinZottmann.Game.Entities
             : base(resources)
         {
             Position = new Vector3d(
-                (randomNumber.NextDouble() - 0.5) * 100.0,
-                (randomNumber.NextDouble() - 0.5) * 100.0,
-                (randomNumber.NextDouble() - 0.5) * 100.0
+                (Random.NextDouble() - 0.5) * 100.0,
+                (Random.NextDouble() - 0.5) * 100.0,
+                (Random.NextDouble() - 0.5) * 100.0
             );
 
-            var scale = randomNumber.NextDouble() * 5 + 1;
+            var scale = Random.NextDouble() * 5 + 1;
 
             Mass *= scale;
             var I = 2 * Mass * System.Math.Pow(scale, 2) / 5;
@@ -46,9 +46,9 @@ namespace MartinZottmann.Game.Entities
             AddImpulse(
                 Vector3d.Zero,
                 new Vector3d(
-                    (randomNumber.NextDouble() - 0.5) * 100.0,
-                    (randomNumber.NextDouble() - 0.5) * 100.0,
-                    (randomNumber.NextDouble() - 0.5) * 100.0
+                    (Random.NextDouble() - 0.5) * 100.0,
+                    (Random.NextDouble() - 0.5) * 100.0,
+                    (Random.NextDouble() - 0.5) * 100.0
                 )
             );
         }

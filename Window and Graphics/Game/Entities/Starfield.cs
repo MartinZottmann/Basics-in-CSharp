@@ -24,7 +24,7 @@ namespace MartinZottmann.Game.Entities
 
         public override void Update(double delta_time, RenderContext render_context)
         {
-            var i = randomNumber.Next(0, graphic.Mesh().VerticesLength - 1);
+            var i = Random.Next(0, graphic.Mesh().VerticesLength - 1);
             var bo = graphic.VertexArrayObject.BufferObjects[0];
             (bo as BufferObject<VertexP3C4>).Write(i, GetStar());
 
@@ -43,13 +43,13 @@ namespace MartinZottmann.Game.Entities
         protected VertexP3C4 GetStar()
         {
             return new VertexP3C4(
-                randomNumber.Next(-1000, 1000),
-                randomNumber.Next(-1000, 1000),
-                randomNumber.Next(-1000, 1000),
-                (float)randomNumber.NextDouble(),
-                (float)randomNumber.NextDouble(),
-                (float)randomNumber.NextDouble(),
-                (float)randomNumber.NextDouble()
+                Random.Next(-1000, 1000),
+                Random.Next(-1000, 1000),
+                Random.Next(-1000, 1000),
+                (float)Random.NextDouble(),
+                (float)Random.NextDouble(),
+                (float)Random.NextDouble(),
+                (float)Random.NextDouble()
             );
         }
     }

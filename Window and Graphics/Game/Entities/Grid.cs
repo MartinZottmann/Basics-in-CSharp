@@ -12,8 +12,6 @@ namespace MartinZottmann.Game.Entities
         public Grid(ResourceManager resources)
             : base(resources)
         {
-            color = Color.LightGray;
-
             var program = Resources.Programs["normal"];
 
             var amount = 360;

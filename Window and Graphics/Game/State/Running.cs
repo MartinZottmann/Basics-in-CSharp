@@ -147,7 +147,17 @@ namespace MartinZottmann.Game.State
 
             Add(new Textured(resources));
 
-            Add(new Ship(resources));
+            for (int i = 1; i <= 5; i++)
+                Add(
+                    new Ship(resources)
+                    {
+                        Position = new Vector3d(
+                            (MartinZottmann.Game.Entities.Entity.Random.NextDouble() - 0.5) * 100.0,
+                            0.0,
+                            (MartinZottmann.Game.Entities.Entity.Random.NextDouble() - 0.5) * 100.0
+                        )
+                    }
+                );
 
             //Add(new Explosion(resources));
         }
@@ -258,6 +268,15 @@ namespace MartinZottmann.Game.State
                 Projection = camera.ProjectionMatrix(),
                 View = camera.ViewMatrix()
             };
+
+            foreach (Entities.Entity entity in entities)
+                if (entity is Ship)
+                    if ((entity as Ship).Velocity.LengthSquared < 0.01)
+                        (entity as Ship).Target = new Vector3d(
+                            (MartinZottmann.Game.Entities.Entity.Random.NextDouble() - 0.5) * 100.0,
+                            0.0,
+                            (MartinZottmann.Game.Entities.Entity.Random.NextDouble() - 0.5) * 100.0
+                        );
 
             var collisions = DetectCollisions();
 

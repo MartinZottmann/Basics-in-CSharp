@@ -29,9 +29,9 @@ namespace MartinZottmann.Game.Entities
             : base(resources)
         {
             Position = new Vector3d(
-                (randomNumber.NextDouble() - 0.5) * 100.0,
-                (randomNumber.NextDouble() - 0.5) * 100.0,
-                (randomNumber.NextDouble() - 0.5) * 100.0
+                (Random.NextDouble() - 0.5) * 100.0,
+                (Random.NextDouble() - 0.5) * 100.0,
+                (Random.NextDouble() - 0.5) * 100.0
             );
 
             particle_verticies = new VertexP3C4[num_particles];
@@ -78,8 +78,8 @@ namespace MartinZottmann.Game.Entities
 
         protected VertexP3C4 GetParticleVertex()
         {
-            var i = (float)(randomNumber.NextDouble() / 2 + 0.5);
-            var j = (float)(randomNumber.NextDouble() / 2 + 0.5);
+            var i = (float)(Random.NextDouble() / 2 + 0.5);
+            var j = (float)(Random.NextDouble() / 2 + 0.5);
             return new VertexP3C4(
                 0,
                 0,
@@ -87,7 +87,7 @@ namespace MartinZottmann.Game.Entities
                 System.Math.Max(i, j),
                 System.Math.Min(i, j),
                 0,
-                (float)randomNumber.NextDouble()
+                (float)Random.NextDouble()
             );
         }
 
@@ -95,12 +95,12 @@ namespace MartinZottmann.Game.Entities
         {
             var particle = new Particle();
             particle.Age = 0;
-            particle.Direction.X = (float)(randomNumber.NextDouble() - 0.5);
-            particle.Direction.Y = (float)(randomNumber.NextDouble() - 0.5);
-            particle.Direction.Z = (float)(randomNumber.NextDouble() - 0.5);
+            particle.Direction.X = (float)(Random.NextDouble() - 0.5);
+            particle.Direction.Y = (float)(Random.NextDouble() - 0.5);
+            particle.Direction.Z = (float)(Random.NextDouble() - 0.5);
             particle.Direction.Normalize();
-            particle.Direction *= (float)(randomNumber.NextDouble() / 2);
-            particle.MaxAge = (float)(randomNumber.NextDouble() * 2);
+            particle.Direction *= (float)(Random.NextDouble() / 2);
+            particle.MaxAge = (float)(Random.NextDouble() * 2);
             return particle;
         }
     }

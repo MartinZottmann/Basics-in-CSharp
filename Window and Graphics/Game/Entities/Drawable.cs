@@ -11,7 +11,7 @@ namespace MartinZottmann.Game.Entities
 
         public Quaterniond Orientation = Quaterniond.Identity;
 
-        public Vector3d Forward = -Vector3d.UnitZ;
+        public Vector3d Forward = Vector3d.UnitZ;
 
         public Vector3d ForwardRelative { get { return Vector3d.Transform(Forward, Orientation); } }
 
