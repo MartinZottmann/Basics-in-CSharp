@@ -25,6 +25,7 @@ namespace MartinZottmann.Game.Entities
 
             BoundingBox.Max = new Vector3d(0.5, 1.5, 0.5);
             BoundingBox.Min = new Vector3d(-0.5, -1.5, -0.5);
+            BoundingSphere = shape.BoundingSphere;
         }
 
         public override void Render(double delta_time, RenderContext render_context)
