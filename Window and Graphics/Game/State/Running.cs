@@ -14,7 +14,7 @@ namespace MartinZottmann.Game.State
 {
     class Running : GameState
     {
-        protected List<Entities.Entity> entities = new List<Entities.Entity>();
+        protected World world;
 
         protected List<Entities.Physical> selection = new List<Entities.Physical>();
 
@@ -77,7 +77,9 @@ namespace MartinZottmann.Game.State
 
             Window.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
-            Add(new Entities.GUI.FPSCounter(resources));
+            world = new World(resources);
+
+            world.AddChild(new Entities.GUI.FPSCounter(resources));
 
             cursor = new Cursor(resources);
             Window.Mouse.ButtonUp += (s, e) =>
@@ -94,7 +96,7 @@ namespace MartinZottmann.Game.State
                     var g_max = Double.MinValue;
                     var g_s_min = Double.MaxValue;
                     var g_s_max = Double.MinValue;
-                    foreach (Entities.Entity entity in entities)
+                    foreach (Entities.Entity entity in world.Children)
                     {
                         if (entity is Physical)
                         {
@@ -136,19 +138,19 @@ namespace MartinZottmann.Game.State
                         if (entity is INavigation)
                             (entity as INavigation).Target = cursor.Position;
             };
-            Add(cursor);
+            world.AddChild(cursor);
 
-            Add(new Grid(resources));
+            world.AddChild(new Grid(resources));
 
-            Add(new Starfield(resources));
+            world.AddChild(new Starfield(resources));
 
-            for (int i = 1; i <= 10; i++)
-                Add(new Asteroid(resources));
+            for (int i = 1; i <= 100; i++)
+                world.AddChild(new Asteroid(resources));
 
-            Add(new Textured(resources));
+            world.AddChild(new Textured(resources));
 
             for (int i = 1; i <= 5; i++)
-                Add(
+                world.AddChild(
                     new Ship(resources)
                     {
                         Position = new Vector3d(
@@ -166,7 +168,7 @@ namespace MartinZottmann.Game.State
         {
             cursor = null;
 
-            entities.Clear();
+            world.Dispose();
 
             resources.Dispose();
         }
@@ -179,7 +181,7 @@ namespace MartinZottmann.Game.State
 
         protected void Add(Entities.Entity entity)
         {
-            entities.Add(entity);
+            world.AddChild(entity);
         }
 
         public override void Update(double delta_time)
@@ -269,7 +271,7 @@ namespace MartinZottmann.Game.State
                 View = camera.ViewMatrix()
             };
 
-            foreach (Entities.Entity entity in entities)
+            foreach (Entities.Entity entity in world.Children)
                 if (entity is Ship)
                     if ((entity as Ship).Velocity.LengthSquared < 0.01)
                         (entity as Ship).Target = new Vector3d(
@@ -278,122 +280,7 @@ namespace MartinZottmann.Game.State
                             (MartinZottmann.Game.Entities.Entity.Random.NextDouble() - 0.5) * 100.0
                         );
 
-            var collisions = DetectCollisions();
-
-            foreach (Entities.Entity entity in entities)
-                if (entity is Physical)
-                    (entity as Physical).UpdateVelocity(delta_time);
-
-            ApplyImpusles(collisions, delta_time);
-
-            foreach (Entities.Entity entity in entities)
-                if (entity is Physical)
-                    (entity as Physical).UpdatePosition(delta_time);
-
-            foreach (Entities.Entity entity in entities)
-            {
-                entity.Update(delta_time, render_context);
-
-                entity.Reposition(100, 100, 100);
-            }
-        }
-
-        protected List<Collision> DetectCollisions()
-        {
-            var collisions = new List<Collision>();
-
-            foreach (Entities.Entity a in entities)
-            {
-                if (!(a is Physical))
-                    continue;
-
-                foreach (Entities.Entity b in entities)
-                {
-                    if (a == b)
-                        continue;
-
-                    if (!(b is Physical))
-                        continue;
-
-                    Vector3d hit_a;
-                    Vector3d hit_b;
-                    double penetration_depth;
-
-                    var i = a as Physical;
-                    var j = b as Physical;
-
-                    if (!i.BoundingBox.Intersect(ref i.Position, ref j.BoundingBox, ref j.Position))
-                        continue;
-
-                    var s = i.BoundingSphere;
-                    s.Origin += i.Position;
-                    var t = j.BoundingSphere;
-                    t.Origin += j.Position;
-
-                    if (s.Intersect(ref t, out hit_a, out hit_b, out penetration_depth))
-                        collisions.Add(
-                            new Collision()
-                            {
-                                HitPoint = i.Position + hit_a,
-                                Normal = (i.Position - j.Position).Normalized() * penetration_depth,
-                                Object0 = i,
-                                Object1 = j,
-                                PenetrationDepth = penetration_depth
-                            }
-                        );
-                }
-            }
-
-            return collisions;
-        }
-
-        protected void ApplyImpusles(List<Collision> collisions, double delta_time)
-        {
-            foreach (var collision in collisions)
-            {
-                var r0 = collision.HitPoint - collision.Object0.Position;
-                var r1 = collision.HitPoint - collision.Object1.Position;
-                var v0 = collision.Object0.Velocity + Vector3d.Cross(collision.Object0.AngularVelocity, r0);
-                var v1 = collision.Object1.Velocity + Vector3d.Cross(collision.Object1.AngularVelocity, r1);
-                var dv = v0 - v1;
-
-                if (-Vector3d.Dot(dv, collision.Normal) < -0.01)
-                    return;
-
-                #region NORMAL Impulse
-                var e = 0.0;
-                var normDiv = Vector3d.Dot(collision.Normal, collision.Normal) * (
-                    (collision.Object0.InverseMass + collision.Object1.InverseMass)
-                    + Vector3d.Dot(
-                        collision.Normal,
-                        Vector3d.Cross(Vector3d.Cross(r0, collision.Normal) * collision.Object0.InverseInertiaWorld, r0)
-                        + Vector3d.Cross(Vector3d.Cross(r1, collision.Normal) * collision.Object1.InverseInertiaWorld, r1)
-                    )
-                );
-                var jn = -1 * (1 + e) * Vector3d.Dot(dv, collision.Normal) / normDiv;
-                jn += (collision.PenetrationDepth * 1.5);
-                var Pn = collision.Normal * jn;
-
-                collision.Object0.AddImpulse(r0, Pn);
-                collision.Object1.AddImpulse(r1, -1 * Pn);
-                #endregion
-
-                #region TANGENT Impulse
-                var tangent = dv - (Vector3d.Dot(dv, collision.Normal) * collision.Normal);
-                tangent.Normalize();
-                var k_tangent = collision.Object0.InverseMass
-                    + collision.Object1.InverseMass
-                    + Vector3d.Dot(
-                        tangent,
-                        Vector3d.Cross(Vector3d.Cross(r0, tangent) * collision.Object0.InverseInertiaWorld, r0)
-                        + Vector3d.Cross(Vector3d.Cross(r1, tangent) * collision.Object1.InverseInertiaWorld, r1)
-                    );
-                var Pt = -1 * Vector3d.Dot(dv, tangent) / k_tangent * tangent;
-
-                collision.Object0.AddImpulse(r0, Pt);
-                collision.Object1.AddImpulse(r1, -1 * Pt);
-                #endregion
-            }
+            world.Update(delta_time, render_context);
         }
 
         public override void Render(double delta_time)
@@ -401,23 +288,9 @@ namespace MartinZottmann.Game.State
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Viewport(0, 0, Window.Width, Window.Height);
 
-            foreach (Entities.Entity entity in entities)
-                entity.Render(delta_time, render_context);
+            world.Render(delta_time, render_context);
 
             Window.SwapBuffers();
         }
-    }
-
-    public struct Collision
-    {
-        public Vector3d HitPoint;
-
-        public Vector3d Normal;
-
-        public Physical Object0;
-
-        public Physical Object1;
-
-        public double PenetrationDepth;
     }
 }

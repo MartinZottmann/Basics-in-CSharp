@@ -4,6 +4,7 @@ using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System.Diagnostics;
 
 namespace MartinZottmann.Game.Entities
 {
@@ -65,11 +66,6 @@ namespace MartinZottmann.Game.Entities
 
         public Physical(ResourceManager resources) : base(resources) { }
 
-        public override void Update(double delta_time, RenderContext render_context)
-        {
-
-        }
-
         public virtual void UpdateVelocity(double delta_time)
         {
             Velocity += Force * InverseMass * delta_time;
@@ -125,6 +121,54 @@ namespace MartinZottmann.Game.Entities
         {
             Velocity += force * InverseMass;
             AngularVelocity += Vector3d.Cross(point, force) * InverseInertiaWorld;
+        }
+
+        public virtual void OnCollision(Collision collision)
+        {
+            Debug.Assert(this == collision.Object0);
+
+            var r0 = collision.HitPoint - collision.Object0.Position;
+            var r1 = collision.HitPoint - collision.Object1.Position;
+            var v0 = collision.Object0.Velocity + Vector3d.Cross(collision.Object0.AngularVelocity, r0);
+            var v1 = collision.Object1.Velocity + Vector3d.Cross(collision.Object1.AngularVelocity, r1);
+            var dv = v0 - v1;
+
+            if (-Vector3d.Dot(dv, collision.Normal) < -0.01)
+                return;
+
+            #region NORMAL Impulse
+            var e = 0.0;
+            var normDiv = Vector3d.Dot(collision.Normal, collision.Normal) * (
+                (collision.Object0.InverseMass + collision.Object1.InverseMass)
+                + Vector3d.Dot(
+                    collision.Normal,
+                    Vector3d.Cross(Vector3d.Cross(r0, collision.Normal) * collision.Object0.InverseInertiaWorld, r0)
+                    + Vector3d.Cross(Vector3d.Cross(r1, collision.Normal) * collision.Object1.InverseInertiaWorld, r1)
+                )
+            );
+            var jn = -1 * (1 + e) * Vector3d.Dot(dv, collision.Normal) / normDiv;
+            jn += (collision.PenetrationDepth * 1.5);
+            var Pn = collision.Normal * jn;
+
+            collision.Object0.AddImpulse(r0, Pn);
+            collision.Object1.AddImpulse(r1, -1 * Pn);
+            #endregion
+
+            #region TANGENT Impulse
+            var tangent = dv - (Vector3d.Dot(dv, collision.Normal) * collision.Normal);
+            tangent.Normalize();
+            var k_tangent = collision.Object0.InverseMass
+                + collision.Object1.InverseMass
+                + Vector3d.Dot(
+                    tangent,
+                    Vector3d.Cross(Vector3d.Cross(r0, tangent) * collision.Object0.InverseInertiaWorld, r0)
+                    + Vector3d.Cross(Vector3d.Cross(r1, tangent) * collision.Object1.InverseInertiaWorld, r1)
+                );
+            var Pt = -1 * Vector3d.Dot(dv, tangent) / k_tangent * tangent;
+
+            collision.Object0.AddImpulse(r0, Pt);
+            collision.Object1.AddImpulse(r1, -1 * Pt);
+            #endregion
         }
 
         public Vector3d PointVelocity(Vector3d point)

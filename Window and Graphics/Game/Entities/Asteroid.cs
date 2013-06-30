@@ -64,5 +64,23 @@ namespace MartinZottmann.Game.Entities
 
             base.Render(delta_time, render_context);
         }
+
+        protected Explosion explosion;
+
+        public override void OnCollision(Collision collision)
+        {
+            base.OnCollision(collision);
+
+            if (explosion != null && explosion.Destroyed)
+                explosion = null;
+            if (explosion == null)
+            {
+                explosion = new Explosion(Resources);
+                collision.Parent.AddChild(explosion);
+            }
+            explosion.Position = collision.HitPoint;
+            explosion.Age = 0.0;
+            explosion.MaxAge = Explosion.Random.NextDouble() / 2;
+        }
     }
 }

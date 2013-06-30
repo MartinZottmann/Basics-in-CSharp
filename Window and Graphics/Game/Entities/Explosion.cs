@@ -17,13 +17,17 @@ namespace MartinZottmann.Game.Entities
 
     public class Explosion : Drawable
     {
-        const int num_particles = 1000;
+        const int num_particles = 100;
 
         protected VertexP3C4[] particle_verticies;
 
         protected Particle[] particles;
 
         protected BufferObject<VertexP3C4> buffer_object;
+
+        public double Age = 0.0;
+
+        public double MaxAge = System.Double.MaxValue;
 
         public Explosion(ResourceManager resources)
             : base(resources)
@@ -52,6 +56,14 @@ namespace MartinZottmann.Game.Entities
 
         public override void Update(double delta_time, RenderContext render_context)
         {
+            Age += delta_time;
+
+            if (Age >= MaxAge)
+                Destroyed = true;
+
+            if (Destroyed)
+                return;
+
             for (var i = 0; i < num_particles; i++)
             {
                 particle_verticies[i].Position += particles[i].Direction;
@@ -69,6 +81,9 @@ namespace MartinZottmann.Game.Entities
 
         public override void Render(double delta_time, RenderContext render_context)
         {
+            if (Destroyed)
+                return;
+
             render_context.Model = Model;
             graphic.Program.UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
 
@@ -94,13 +109,13 @@ namespace MartinZottmann.Game.Entities
         protected Particle GetParticle()
         {
             var particle = new Particle();
-            particle.Age = 0;
+            particle.Age = 0.0;
             particle.Direction.X = (float)(Random.NextDouble() - 0.5);
             particle.Direction.Y = (float)(Random.NextDouble() - 0.5);
             particle.Direction.Z = (float)(Random.NextDouble() - 0.5);
             particle.Direction.Normalize();
             particle.Direction *= (float)(Random.NextDouble() / 2);
-            particle.MaxAge = (float)(Random.NextDouble() * 2);
+            particle.MaxAge = Random.NextDouble() * 2;
             return particle;
         }
     }

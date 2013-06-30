@@ -100,6 +100,7 @@
     <Compile Include="Game\Entities\Helper\INavigation.cs" />
     <Compile Include="Game\Entities\Ship\Floor.cs" />
     <Compile Include="Game\Entities\Starfield.cs" />
+    <Compile Include="Game\Entities\World.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Game\Entities\Physical.cs" />
     <Compile Include="Game\Entities\Textured.cs" />
