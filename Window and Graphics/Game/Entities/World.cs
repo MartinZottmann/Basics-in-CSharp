@@ -13,14 +13,6 @@ namespace MartinZottmann.Game.Entities
         {
             children.RemoveAll(s => s.Destroyed);
 
-            //children.ForEach(s => s.Update(delta_time, render_context));
-            foreach (var child in children)
-            {
-                child.Update(delta_time, render_context);
-
-                child.Reposition(100, 100, 100);
-            }
-
             var collisions = DetectCollisions();
 
             foreach (var child in children)
@@ -32,6 +24,14 @@ namespace MartinZottmann.Game.Entities
             foreach (var child in children)
                 if (child is Physical)
                     (child as Physical).UpdatePosition(delta_time);
+
+            //children.ForEach(s => s.Update(delta_time, render_context));
+            foreach (var child in children)
+            {
+                child.Update(delta_time, render_context);
+
+                child.Reposition(100, 100, 100);
+            }
         }
 
         public override void Render(double delta_time, RenderContext render_context)

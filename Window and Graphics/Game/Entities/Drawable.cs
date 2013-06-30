@@ -19,7 +19,7 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d UpRelative { get { return Vector3d.Transform(Up, Orientation); } }
 
-        public Vector3d Right = Vector3d.UnitX;
+        public Vector3d Right = -Vector3d.UnitX;
 
         public Vector3d RightRelative { get { return Vector3d.Transform(Right, Orientation); } }
 
