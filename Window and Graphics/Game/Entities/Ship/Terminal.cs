@@ -6,13 +6,13 @@ using OpenTK;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Floor : Physical
+    class Terminal : Physical
     {
-        public Floor(ResourceManager resources)
+        public Terminal(ResourceManager resources)
             : base(resources)
         {
             var shape = new CubeHardNormals();
-            shape.Translate(Matrix4.CreateScale(0.5f) * Matrix4.CreateTranslation(new Vector3(0, -1, 0)));
+            shape.Translate(Matrix4.CreateScale(0.25f, 0.5f, 0.25f) * Matrix4.CreateTranslation(new Vector3(0, 0, 0)));
 
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Mesh(shape);

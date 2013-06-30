@@ -99,6 +99,7 @@
     <Compile Include="Game\Entities\GUI\FPSCounter.cs" />
     <Compile Include="Game\Entities\Helper\INavigation.cs" />
     <Compile Include="Game\Entities\Ship\Floor.cs" />
+    <Compile Include="Game\Entities\Ship\Terminal.cs" />
     <Compile Include="Game\Entities\Starfield.cs" />
     <Compile Include="Game\Entities\World.cs" />
     <Compile Include="Game\Game.cs" />

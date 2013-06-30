@@ -76,7 +76,6 @@ namespace MartinZottmann.Game.Entities
             if (children.Count == 0)
                 return;
 
-            render_context.Model = Matrix4d.Identity;
             render_context = render_context.Push();
             children.ForEach(s => s.Render(delta_time, render_context));
             render_context = render_context.Pop();
