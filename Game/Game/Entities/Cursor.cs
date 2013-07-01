@@ -1,4 +1,5 @@
 ﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
