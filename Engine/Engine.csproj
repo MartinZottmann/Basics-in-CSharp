@@ -53,17 +53,27 @@
     <Compile Include="Graphics\Shapes\Sphere.cs" />
     <Compile Include="Graphics\SubBuffer.cs" />
     <Compile Include="Graphics\Vertex.cs" />
+    <Compile Include="Graphics\Wavefront\FaceInfo.cs" />
+    <Compile Include="Graphics\Wavefront\MtlFile.cs" />
+    <Compile Include="Graphics\Wavefront\MtlInfo.cs" />
+    <Compile Include="Graphics\Wavefront\MtlLoader.cs" />
+    <Compile Include="Graphics\Wavefront\ObjFile.cs" />
+    <Compile Include="Graphics\Wavefront\ObjLoader.cs" />
+    <Compile Include="Graphics\Wavefront\TextureMapFile.cs" />
+    <Compile Include="Graphics\Wavefront\TextureMapLoader.cs" />
     <Compile Include="IBindable.cs" />
     <Compile Include="Physics\AABB3d.cs" />
     <Compile Include="Physics\Plane3d.cs" />
     <Compile Include="Physics\Ray3d.cs" />
     <Compile Include="Physics\Sphere3d.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Entities.cs" />
     <Compile Include="Resources\Programs.cs" />
     <Compile Include="Resources\Resource.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="Resources\Shaders.cs" />
     <Compile Include="Resources\Textures.cs" />
+    <Compile Include="Resources\WavefrontObjFiles.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

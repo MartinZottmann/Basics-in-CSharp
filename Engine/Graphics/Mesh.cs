@@ -8,6 +8,12 @@ namespace MartinZottmann.Engine.Graphics
         int VerticesLength { get; }
 
         int IndicesLength { get; }
+
+        AABB3d BoundingBox { get; }
+
+        Sphere3d BoundingSphere { get; }
+
+        void Translate(Matrix4 matrix);
     }
 
     public class Mesh<V, I> : IMesh, IVertices<V>, IIndices<I>
@@ -25,28 +31,6 @@ namespace MartinZottmann.Engine.Graphics
         public I[] Indices { get { return indices; } set { indices = value; } }
 
         public int IndicesLength { get { return indices == null ? 0 : indices.Length; } }
-
-        public Mesh() { }
-
-        public Mesh(V[] vertices)
-        {
-            this.vertices = vertices;
-        }
-
-        public Mesh(V[] vertices, I[] indices)
-        {
-            this.vertices = vertices;
-            this.indices = indices;
-        }
-
-        public void Translate(Matrix4 matrix)
-        {
-            if (vertices == null)
-                return;
-
-            for (var i = 0; i < vertices.Length; i++)
-                vertices[i].Transform(matrix);
-        }
 
         public AABB3d BoundingBox
         {
@@ -77,6 +61,28 @@ namespace MartinZottmann.Engine.Graphics
 
                 return new Sphere3d(Vector3d.Zero, r);
             }
+        }
+
+        public Mesh() { }
+
+        public Mesh(V[] vertices)
+        {
+            this.vertices = vertices;
+        }
+
+        public Mesh(V[] vertices, I[] indices)
+        {
+            this.vertices = vertices;
+            this.indices = indices;
+        }
+
+        public void Translate(Matrix4 matrix)
+        {
+            if (vertices == null)
+                return;
+
+            for (var i = 0; i < vertices.Length; i++)
+                vertices[i].Transform(matrix);
         }
     }
 }

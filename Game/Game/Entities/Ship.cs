@@ -14,9 +14,9 @@ namespace MartinZottmann.Game.Entities
         {
             Streering = new Steering(this);
 
-            AddChild(new Floor(resources) { Position = new Vector3d(0, 0, -1) });
-            AddChild(new Floor(resources));
-            AddChild(new Floor(resources) { Position = new Vector3d(0, 0, 1) });
+            AddChild(new Floor(resources) { Position = new Vector3d(0, -1, -1) });
+            AddChild(new Floor(resources) { Position = new Vector3d(0, -1, 0) });
+            AddChild(new Floor(resources) { Position = new Vector3d(0, -1, 1) });
             AddChild(new Terminal(resources) { Position = new Vector3d(0, 0, -1) });
 
             foreach (var child in children)

@@ -1,6 +1,5 @@
 ﻿using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.OpenGL;
-using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
 
@@ -11,19 +10,16 @@ namespace MartinZottmann.Game.Entities
         public Floor(ResourceManager resources)
             : base(resources)
         {
-            var shape = new CubeHardNormals();
-            shape.Translate(Matrix4.CreateScale(0.5f) * Matrix4.CreateTranslation(new Vector3(0, -1, 0)));
+            graphic = Resources.Entities.Load("Resources/Models/cube.obj", Matrix4.CreateScale(0.5f, 0.5f, 0.5f));
+            var shape = graphic.Mesh();
 
-            graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Mesh(shape);
             graphic.Program = Resources.Programs["standard_cube"];
             graphic.Texture = new Texture("Resources/Textures/debug-256.png", false, OpenTK.Graphics.OpenGL.TextureTarget.TextureCubeMap);
 
             graphic.Program.UniformLocations["in_Texture"].Set(0);
             graphic.Program.UniformLocations["in_LightPosition"].Set(new Vector3(10, 10, 10));
 
-            BoundingBox.Max = new Vector3d(0.5, 1.5, 0.5);
-            BoundingBox.Min = new Vector3d(-0.5, -1.5, -0.5);
+            BoundingBox = shape.BoundingBox;
             BoundingSphere = shape.BoundingSphere;
         }
 
