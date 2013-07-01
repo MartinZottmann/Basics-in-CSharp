@@ -260,7 +260,6 @@ namespace MartinZottmann.Game.State
                 foreach (var entity in selection)
                     entity.AngularVelocity = Vector3d.Zero;
 
-
             camera.Update(delta_time);
 
             render_context = new RenderContext()
