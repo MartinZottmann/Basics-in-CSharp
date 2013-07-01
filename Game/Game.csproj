@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MartinZottmann</RootNamespace>
-    <AssemblyName>Window and Graphics</AssemblyName>
+    <AssemblyName>Game</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -32,17 +32,17 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -54,39 +54,8 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="res\Shaders\directional_light.fs.glsl" />
-    <None Include="res\Shaders\directional_light.vs.glsl" />
-    <None Include="res\Shaders\normal.fs.glsl" />
-    <None Include="res\Shaders\normal.vs.glsl" />
-    <None Include="res\Shaders\phong.fs.glsl" />
-    <None Include="res\Shaders\phong.vs.glsl" />
-    <None Include="res\Shaders\plain_texture.fs.glsl" />
-    <None Include="res\Shaders\plain_texture.vs.glsl" />
-    <None Include="res\Shaders\point_light.fs.glsl" />
-    <None Include="res\Shaders\point_light.vs.glsl" />
-    <None Include="res\Shaders\point_light_2.fs.glsl" />
-    <None Include="res\Shaders\point_light_2.vs.glsl" />
-    <None Include="res\Shaders\standard.fs.glsl" />
-    <None Include="res\Shaders\standard.vs.glsl" />
-    <None Include="res\Shaders\standard_cube.fs.glsl" />
-    <None Include="res\Shaders\standard_cube.vs.glsl" />
-    <None Include="res\textures\pointer.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Engine\Graphics\Camera.cs" />
-    <Compile Include="Engine\Graphics\RenderContext.cs" />
-    <Compile Include="Engine\Graphics\Shapes\Quad.cs" />
-    <Compile Include="Engine\Graphics\Shapes\Sphere.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Engine\Physics\AABB3d.cs" />
-    <Compile Include="Engine\Physics\Plane3d.cs" />
-    <Compile Include="Engine\Physics\Ray3d.cs" />
-    <Compile Include="Engine\Physics\Sphere3d.cs" />
-    <Compile Include="Engine\Resources\ResourceManager.cs" />
-    <Compile Include="Engine\Resources\Programs.cs" />
-    <Compile Include="Engine\Resources\Shaders.cs" />
-    <Compile Include="Engine\Resources\Textures.cs" />
     <Compile Include="Game\AI\Base.cs" />
     <Compile Include="Game\AI\Steering.cs" />
     <Compile Include="Game\Entities\Cursor.cs">
@@ -108,26 +77,6 @@
     <Compile Include="Game\Entities\Ship.cs" />
     <Compile Include="Game\State\GameState.cs" />
     <Compile Include="Game\State\Running.cs" />
-    <Compile Include="Engine\Bind.cs" />
-    <Compile Include="Engine\Graphics\Color.cs" />
-    <Compile Include="Engine\Graphics\IIndices.cs" />
-    <Compile Include="Engine\Graphics\IVertices.cs" />
-    <Compile Include="Engine\Graphics\Mesh.cs" />
-    <Compile Include="Engine\Graphics\OpenGL\Entity.cs" />
-    <Compile Include="Engine\IBindable.cs" />
-    <Compile Include="Engine\Graphics\OpenGL\Info.cs" />
-    <Compile Include="Engine\Graphics\OpenGL\Program.cs" />
-    <Compile Include="Engine\Graphics\OpenGL\Shader.cs" />
-    <Compile Include="Engine\Graphics\OpenGL\Texture.cs" />
-    <Compile Include="Engine\Resources\Resource.cs" />
-    <Compile Include="Engine\Graphics\Shapes\CubeHardNormals.cs" />
-    <Compile Include="Engine\Graphics\Shapes\CubeSoftNormals.cs" />
-    <Compile Include="Engine\Graphics\SubBuffer.cs" />
-    <Compile Include="Engine\Graphics\OpenGL\UniformBlockIndex.cs" />
-    <Compile Include="Engine\Graphics\OpenGL\UniformLocation.cs" />
-    <Compile Include="Engine\Graphics\Vertex.cs" />
-    <Compile Include="Engine\Graphics\OpenGL\VertexArrayObject.cs" />
-    <Compile Include="Engine\Graphics\OpenGL\BufferObject.cs" />
     <Compile Include="Game\Window.cs" />
     <Compile Include="Game\Entities\Asteroid.cs" />
     <Compile Include="Math\Polygon.cs" />
@@ -156,18 +105,18 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="res\textures\debug-256.png" />
-    <Content Include="res\textures\debug-512.png" />
-    <Content Include="res\textures\rainbow-45deg-128.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Library\MartinZottmann\OpenTK\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.csproj">
+      <Project>{3c4ae9ee-3d4d-4f2a-aaf9-5fa10120f462}</Project>
+      <Name>Engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

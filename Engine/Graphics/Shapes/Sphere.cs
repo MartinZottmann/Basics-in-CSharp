@@ -2,7 +2,7 @@
 
 namespace MartinZottmann.Engine.Graphics.Shapes
 {
-    class Sphere : Mesh<VertexP3N3, uint>
+    public class Sphere : Mesh<VertexP3N3, uint>
     {
         public Sphere()
         {
