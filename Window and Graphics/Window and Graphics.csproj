@@ -163,7 +163,7 @@
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\MartinZottmann\OpenTK\OpenTK.dll</HintPath>
+      <HintPath>..\Library\MartinZottmann\OpenTK\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -171,8 +171,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>mkdir "$(TargetDir)res"
-xcopy "$(ProjectDir)res" "$(TargetDir)res" /E /I /F /Y</PreBuildEvent>
+    <PreBuildEvent>mkdir "$(SolutionDir)Resources"
+xcopy "$(SolutionDir)Resources" "$(TargetDir)Resources" /E /I /F /Y</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

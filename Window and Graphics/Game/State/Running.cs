@@ -32,7 +32,7 @@ namespace MartinZottmann.Game.State
             resources = new ResourceManager();
 
             var shaders = new Dictionary<string, List<Shader>>();
-            foreach (var filename in Directory.GetFiles("res/Shaders/", "*.glsl"))
+            foreach (var filename in Directory.GetFiles("Resources/Shaders/", "*.glsl"))
             {
                 System.Console.WriteLine(filename);
                 var chunks = filename.Split(new char[] { '/', '.' });
@@ -62,7 +62,7 @@ namespace MartinZottmann.Game.State
                 resources.Programs.Load(shader.Key, shader.Value.ToArray());
             }
 
-            foreach (var filename in Directory.GetFiles("res/textures/", "*.png"))
+            foreach (var filename in Directory.GetFiles("Resources/Textures/", "*.png"))
                 resources.Textures.Load(filename, true, TextureTarget.Texture2D);
 
             camera = new Camera(Window);

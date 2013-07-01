@@ -34,7 +34,7 @@ namespace MartinZottmann.Game.Entities
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Mesh(shape);
             graphic.Program = Resources.Programs["standard_cube"];
-            var texture = new Texture("res/textures/debug-256.png", false, OpenTK.Graphics.OpenGL.TextureTarget.TextureCubeMap);
+            var texture = new Texture("Resources/Textures/debug-256.png", false, OpenTK.Graphics.OpenGL.TextureTarget.TextureCubeMap);
             graphic.Texture = texture;
 
             graphic.Program.UniformLocations["in_Texture"].Set(0);

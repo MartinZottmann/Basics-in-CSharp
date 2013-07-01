@@ -18,7 +18,7 @@ namespace MartinZottmann.Game.Entities
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Mesh(shape);
             graphic.Program = Resources.Programs["plain_texture"];
-            graphic.Texture = Resources.Textures["res/textures/pointer.png"];
+            graphic.Texture = Resources.Textures["Resources/Textures/pointer.png"];
 
             graphic.Program.UniformLocations["Texture"].Set(0);
 
