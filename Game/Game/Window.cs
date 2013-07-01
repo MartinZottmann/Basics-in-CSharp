@@ -18,6 +18,10 @@ namespace MartinZottmann.Game
 
         public Thread game_thread;
 
+        protected bool request_context = false;
+
+        protected Object request_context_lock = new Object();
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -114,9 +118,38 @@ namespace MartinZottmann.Game
                 game.Render(render_time.Elapsed.TotalSeconds);
                 render_time.Reset();
                 render_time.Start();
+
+                if (request_context)
+                {
+                    Context.MakeCurrent(null);
+                    lock (request_context_lock)
+                    {
+                        Monitor.Pulse(request_context_lock);
+                        Monitor.Wait(request_context_lock);
+                    }
+                    MakeCurrent();
+                }
             }
 
             Context.MakeCurrent(null);
+        }
+
+        public void RequestContext()
+        {
+            request_context = true;
+
+            lock (request_context_lock)
+                Monitor.Wait(request_context_lock);
+            MakeCurrent();
+        }
+
+        public void ReleaseContext()
+        {
+            request_context = false;
+
+            Context.MakeCurrent(null);
+            lock (request_context_lock)
+                Monitor.Pulse(request_context_lock);
         }
 
         protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
@@ -142,7 +175,9 @@ namespace MartinZottmann.Game
         {
             Bitmap bmp = new Bitmap(ClientSize.Width, ClientSize.Height);
             System.Drawing.Imaging.BitmapData data = bmp.LockBits(ClientRectangle, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            RequestContext();
             GL.ReadPixels(0, 0, ClientSize.Width, ClientSize.Height, PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
+            ReleaseContext();
             bmp.UnlockBits(data);
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
