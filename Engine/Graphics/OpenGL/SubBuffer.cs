@@ -2,7 +2,7 @@
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MartinZottmann.Engine.Graphics
+namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     class SubBuffer<T> where T : struct
     {

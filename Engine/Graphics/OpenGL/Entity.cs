@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using MartinZottmann.Engine.Graphics.Mesh;
+using OpenTK.Graphics.OpenGL;
 using System;
 
 namespace MartinZottmann.Engine.Graphics.OpenGL

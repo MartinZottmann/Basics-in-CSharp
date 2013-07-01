@@ -1,4 +1,4 @@
-﻿namespace MartinZottmann.Engine.Graphics
+﻿namespace MartinZottmann.Engine.Graphics.Mesh
 {
     public interface IIndices<I> where I : struct
     {

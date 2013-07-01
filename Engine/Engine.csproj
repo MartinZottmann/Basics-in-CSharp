@@ -34,9 +34,14 @@
     <Compile Include="Bind.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\Color.cs" />
-    <Compile Include="Graphics\IIndices.cs" />
-    <Compile Include="Graphics\IVertices.cs" />
-    <Compile Include="Graphics\Mesh.cs" />
+    <Compile Include="Graphics\Mesh\IIndices.cs" />
+    <Compile Include="Graphics\Mesh\IMesh.cs" />
+    <Compile Include="Graphics\Mesh\IVertex.cs" />
+    <Compile Include="Graphics\Mesh\IVertices.cs" />
+    <Compile Include="Graphics\Mesh\Mesh.cs" />
+    <Compile Include="Graphics\Mesh\VertexP3C4.cs" />
+    <Compile Include="Graphics\Mesh\VertexP3N3.cs" />
+    <Compile Include="Graphics\Mesh\VertexP3N3T2.cs" />
     <Compile Include="Graphics\OpenGL\BufferObject.cs" />
     <Compile Include="Graphics\OpenGL\Entity.cs" />
     <Compile Include="Graphics\OpenGL\Info.cs" />
@@ -51,8 +56,7 @@
     <Compile Include="Graphics\Shapes\CubeSoftNormals.cs" />
     <Compile Include="Graphics\Shapes\Quad.cs" />
     <Compile Include="Graphics\Shapes\Sphere.cs" />
-    <Compile Include="Graphics\SubBuffer.cs" />
-    <Compile Include="Graphics\Vertex.cs" />
+    <Compile Include="Graphics\OpenGL\SubBuffer.cs" />
     <Compile Include="Graphics\Wavefront\FaceInfo.cs" />
     <Compile Include="Graphics\Wavefront\MtlFile.cs" />
     <Compile Include="Graphics\Wavefront\MtlInfo.cs" />

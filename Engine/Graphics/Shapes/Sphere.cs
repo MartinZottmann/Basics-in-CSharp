@@ -1,4 +1,4 @@
-﻿using OpenTK;
+﻿using MartinZottmann.Engine.Graphics.Mesh;
 
 namespace MartinZottmann.Engine.Graphics.Shapes
 {

@@ -1,4 +1,6 @@
-﻿namespace MartinZottmann.Engine.Graphics.Shapes
+﻿using MartinZottmann.Engine.Graphics.Mesh;
+
+namespace MartinZottmann.Engine.Graphics.Shapes
 {
     public class CubeHardNormals : Mesh<VertexP3N3T2, uint>
     {
