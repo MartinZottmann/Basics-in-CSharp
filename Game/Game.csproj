@@ -79,10 +79,8 @@
     <Compile Include="Game\State\Running.cs" />
     <Compile Include="Game\Window.cs" />
     <Compile Include="Game\Entities\Asteroid.cs" />
-    <Compile Include="Math\Polygon.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game\Entities\Entity.cs" />
-    <Compile Include="Math\Quad.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
