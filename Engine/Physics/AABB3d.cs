@@ -31,22 +31,23 @@ namespace MartinZottmann.Engine.Physics
             return true;
         }
 
-        public bool Intersect(Vector3d point, Vector3d position)
+        public bool Intersect(ref Vector3d point, ref Vector3d position)
         {
-            Vector3d.Add(ref point, ref position, out point);
-            return point.X >= Min.X && point.X <= Max.X
-                && point.Y >= Min.Y && point.Y <= Max.Y
-                && point.Z >= Min.Z && point.Z <= Max.Z;
+            Vector3d point_world;
+            Vector3d.Add(ref point, ref position, out point_world);
+            return point_world.X >= Min.X && point_world.X <= Max.X
+                && point_world.Y >= Min.Y && point_world.Y <= Max.Y
+                && point_world.Z >= Min.Z && point_world.Z <= Max.Z;
         }
 
-        public bool Intersect(ref Ray3d r, Vector3d position)
+        public bool Intersect(ref Ray3d r, ref Vector3d position)
         {
             double distance_min;
             double distance_max;
-            return Intersect(ref r, position, out distance_min, out distance_max);
+            return Intersect(ref r, ref position, out distance_min, out distance_max);
         }
 
-        public bool Intersect(ref Ray3d r, Vector3d position, out double distance_min, out double distance_max)
+        public bool Intersect(ref Ray3d r, ref Vector3d position, out double distance_min, out double distance_max)
         {
             distance_min = Double.MinValue;
             distance_max = Double.MaxValue;

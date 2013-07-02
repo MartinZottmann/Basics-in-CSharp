@@ -85,51 +85,13 @@ namespace MartinZottmann.Game.State
             {
                 if (e.Button == MouseButton.Left)
                 {
-                    foreach (var entity in selection)
-                        entity.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 127);
+                    selection.ForEach(t => t.Mark = default(OpenTK.Graphics.Color4));
                     selection.Clear();
-
-                    Entities.Physical g_entity = null;
-                    Entities.Physical s_entity = null;
-                    var g_min = Double.MaxValue;
-                    var g_max = Double.MinValue;
-                    var g_s_min = Double.MaxValue;
-                    var g_s_max = Double.MinValue;
-                    foreach (Entities.Entity entity in world.Children)
-                    {
-                        if (entity is Physical)
-                        {
-                            double l_min;
-                            double l_max;
-                            if ((entity as Physical).BoundingBox.Intersect(ref cursor.Ray, entity.Position, out l_min, out l_max))
-                                if (l_min < g_min)
-                                {
-                                    g_entity = (entity as Physical);
-                                    g_min = l_min;
-                                    g_max = l_max;
-                                }
-
-                            double l_s_min;
-                            double l_s_max;
-                            if ((entity as Physical).BoundingSphere.Intersect(ref cursor.Ray, entity.Position, out l_s_min, out l_s_max))
-                                if (l_s_min < g_s_min)
-                                {
-                                    s_entity = (entity as Physical);
-                                    g_s_min = l_s_min;
-                                    g_s_max = l_s_max;
-                                }
-                        }
-                    }
-                    if (g_entity != null)
-                    {
-                        //selection.Add(g_entity);
-                        g_entity.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255);
-                    }
-                    if (s_entity != null)
-                    {
-                        selection.Add(s_entity);
-                        s_entity.Mark = new OpenTK.Graphics.Color4(255, 0, 255, 255);
-                    }
+                    var position = Vector3d.Zero;
+                    foreach (var hit in world.Intersect(ref cursor.Ray, ref position))
+                        selection.Add(hit.Value);
+                    //Console.WriteLine("{0}\t{1}", hit.Key, hit.Value);
+                    selection.ForEach(t =>t.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255));
                 }
 
                 if (e.Button == MouseButton.Right)

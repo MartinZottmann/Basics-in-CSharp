@@ -33,7 +33,7 @@ namespace MartinZottmann.Game.Entities
             graphic.Program.UniformLocations["in_ModelView"].Set(render_context.ViewModel);
             graphic.Program.UniformLocations["in_ModelViewProjection"].Set(render_context.ProjectionViewModel);
             graphic.Program.UniformLocations["in_NormalView"].Set(render_context.Normal);
-            graphic.Draw();
+            base.Render(delta_time, render_context);
         }
     }
 }

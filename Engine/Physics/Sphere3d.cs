@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System;
 
 namespace MartinZottmann.Engine.Physics
 {
@@ -25,7 +26,7 @@ namespace MartinZottmann.Engine.Physics
             return distance <= Radius + s.Radius;
         }
 
-        public bool Intersect(ref Ray3d r, Vector3d position)
+        public bool Intersect(ref Ray3d r, ref Vector3d position)
         {
             var A = Vector3d.Dot(r.Direction, r.Direction);
             var p = r.Origin - (Origin + position);
@@ -35,11 +36,11 @@ namespace MartinZottmann.Engine.Physics
             return discrim >= 0;
         }
 
-        public bool Intersect(ref Ray3d r, Vector3d position, out double distance_near, out double distance_far)
+        public bool Intersect(ref Ray3d r, ref Vector3d position, out double distance_near, out double distance_far)
         {
             Vector3d hit_near;
             Vector3d hit_far;
-            if (Intersect(ref r, position, out hit_near, out hit_far))
+            if (Intersect(ref r, ref position, out hit_near, out hit_far))
             {
                 distance_near = hit_near.Length;
                 distance_far = hit_far.Length;
@@ -47,13 +48,13 @@ namespace MartinZottmann.Engine.Physics
             }
             else
             {
-                distance_near = System.Double.MaxValue;
-                distance_far = System.Double.MinValue;
+                distance_near = Double.MaxValue;
+                distance_far = Double.MinValue;
                 return false;
             }
         }
 
-        public bool Intersect(ref Ray3d r, Vector3d position, out Vector3d hit_near, out Vector3d hit_far)
+        public bool Intersect(ref Ray3d r, ref Vector3d position, out Vector3d hit_near, out Vector3d hit_far)
         {
             var A = Vector3d.Dot(r.Direction, r.Direction);
             var p = r.Origin - (Origin + position);
@@ -62,7 +63,7 @@ namespace MartinZottmann.Engine.Physics
             var discrim = B * B - 4 * (A * C);
             if (discrim >= 0)
             {
-                var disc_root = System.Math.Sqrt(discrim);
+                var disc_root = Math.Sqrt(discrim);
                 hit_near = r.Direction * (-B - disc_root) / 2 * A;
                 hit_far = r.Direction * (-B + disc_root) / 2 * A;
                 return true;

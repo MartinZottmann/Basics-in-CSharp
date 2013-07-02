@@ -76,7 +76,6 @@ namespace MartinZottmann.Game.Entities.GUI
             render_context.Model = Model;
             Resources.Programs["plain_texture"].UniformLocations["PVM"].Set(render_context.Model * render_context.Projection);
             Resources.Programs["plain_texture"].UniformLocations["Texture"].Set(0);
-
             graphic.Draw();
         }
     }

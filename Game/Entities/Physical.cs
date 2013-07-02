@@ -4,6 +4,7 @@ using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace MartinZottmann.Game.Entities
@@ -174,6 +175,31 @@ namespace MartinZottmann.Game.Entities
         public Vector3d PointVelocity(Vector3d point)
         {
             return Vector3d.Cross(AngularVelocity, point) + Velocity;
+        }
+
+        public virtual SortedList<double, Physical> Intersect(ref Ray3d ray, ref Vector3d position)
+        {
+            Vector3d position_world;
+            Vector3d.Add(ref Position, ref position, out position_world);
+            var hits = new SortedList<double, Physical>();
+
+            if (!BoundingBox.Intersect(ref ray, ref position_world))
+                return hits;
+
+            double min;
+            double max;
+
+            if (!BoundingSphere.Intersect(ref ray, ref position_world, out min, out max))
+                return hits;
+
+            hits.Add(min, this);
+
+            foreach (var child in children)
+                if (child is Physical)
+                    foreach (var hit in (child as Physical).Intersect(ref ray, ref position_world))
+                        hits.Add(hit.Key, hit.Value);
+
+            return hits;
         }
 
 #if DEBUG
