@@ -12,15 +12,21 @@ namespace MartinZottmann.Game
 {
     public class Window : GameWindow
     {
-        public MartinZottmann.Game.Game game;
+        public Game game;
 
-        public Window(GraphicsMode mode) : base(800, 600, mode, "Test") { }
+        public Window(GraphicsMode mode) : base(800, 600, mode, "Codename Void") { }
 
         public Thread game_thread;
 
         protected bool request_context = false;
 
         protected Object request_context_lock = new Object();
+
+        public override void Dispose()
+        {
+            game.Dispose();
+            base.Dispose();
+        }
 
         protected override void OnLoad(EventArgs e)
         {

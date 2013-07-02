@@ -3,6 +3,7 @@ using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.Helper;
+using MartinZottmann.Game.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
@@ -25,6 +26,12 @@ namespace MartinZottmann.Game.State
         protected Cursor cursor;
 
         protected RenderContext render_context;
+
+        protected FileSystem file_system;
+
+        protected Ship ship;
+
+        protected string ship_filepath;
 
         public Running(GameWindow window)
             : base(window)
@@ -65,15 +72,7 @@ namespace MartinZottmann.Game.State
             foreach (var filename in Directory.GetFiles("Resources/Textures/", "*.png"))
                 resources.Textures.Load(filename, true, TextureTarget.Texture2D);
 
-            camera = new Camera(Window);
-            //camera.MouseLook = true;
-            camera.Position.X = 100;
-            camera.Position.Y = 100;
-            camera.Position.Z = 100;
-            camera.Direction.X = -1;
-            camera.Direction.Y = -1;
-            camera.Direction.Z = -1;
-            camera.Direction.NormalizeFast();
+            camera = new Camera(Window) { Position = new Vector3d(10, 10, 10), Direction = new Vector3d(-1, -1, -1) };
 
             Window.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
@@ -144,33 +143,26 @@ namespace MartinZottmann.Game.State
 
             world.AddChild(new Starfield(resources));
 
-            for (int i = 1; i <= 100; i++)
-                world.AddChild(new Asteroid(resources));
-
-            world.AddChild(new Textured(resources));
-
-            for (int i = 1; i <= 5; i++)
-                world.AddChild(
-                    new Ship(resources)
-                    {
-                        Position = new Vector3d(
-                            (MartinZottmann.Game.Entities.Entity.Random.NextDouble() - 0.5) * 100.0,
-                            0.0,
-                            (MartinZottmann.Game.Entities.Entity.Random.NextDouble() - 0.5) * 100.0
-                        )
-                    }
-                );
-
-            //Add(new Explosion(resources));
+            file_system = new FileSystem();
+            ship_filepath = "ship.save";
+            try
+            {
+                ship = file_system.Load<Ship>(ship_filepath);
+            }
+            catch
+            {
+                ship = new Ship(resources) { Position = new Vector3d(5, 5, 5), Target = new Vector3d(5, 5, 5) };
+            }
+            world.AddChild(ship);
         }
 
         public override void Dispose()
         {
-            cursor = null;
-
+            file_system.Save(ship_filepath, ship);
             world.Dispose();
-
+            selection.Clear();
             resources.Dispose();
+            cursor.Dispose();
         }
 
         protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
@@ -269,15 +261,6 @@ namespace MartinZottmann.Game.State
                 Projection = camera.ProjectionMatrix(),
                 View = camera.ViewMatrix()
             };
-
-            foreach (Entities.Entity entity in world.Children)
-                if (entity is Ship)
-                    if ((entity as Ship).Velocity.LengthSquared < 0.01)
-                        (entity as Ship).Target = new Vector3d(
-                            (MartinZottmann.Game.Entities.Entity.Random.NextDouble() - 0.5) * 100.0,
-                            0.0,
-                            (MartinZottmann.Game.Entities.Entity.Random.NextDouble() - 0.5) * 100.0
-                        );
 
             world.Update(delta_time, render_context);
         }

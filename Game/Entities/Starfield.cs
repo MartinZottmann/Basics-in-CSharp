@@ -6,7 +6,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Starfield : Drawable
+    public class Starfield : Drawable
     {
         const int num_stars = 100000;
 

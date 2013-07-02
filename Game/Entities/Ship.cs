@@ -2,10 +2,12 @@
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.AI;
 using OpenTK;
+using System;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Ship : Physical
+    [Serializable]
+    public class Ship : Physical
     {
         public Steering Streering;
 

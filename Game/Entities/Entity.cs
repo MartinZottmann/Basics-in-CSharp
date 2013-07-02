@@ -3,11 +3,12 @@ using MartinZottmann.Engine.Resources;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Runtime.Serialization;
 
 namespace MartinZottmann.Game.Entities
 {
-    public abstract class Entity : IDisposable
+    [Serializable]
+    public abstract class Entity : IDisposable, ISerializable
     {
         public static Random Random = new Random();
 
@@ -26,9 +27,24 @@ namespace MartinZottmann.Game.Entities
             Resources = resources;
         }
 
+        public Entity(SerializationInfo info, StreamingContext context)
+        {
+            Destroyed = (bool)info.GetValue("Destroyed", typeof(bool));
+            Position = (Vector3d)info.GetValue("Position", typeof(Vector3d));
+            children = (List<Entity>)info.GetValue("children", typeof(List<Entity>));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Destroyed", Destroyed, typeof(bool));
+            info.AddValue("Position", Position, typeof(Vector3d));
+            info.AddValue("children", children, typeof(List<Entity>));
+        }
+
         public virtual void Dispose()
         {
-            // @todo
+            foreach (var child in Children)
+                child.Dispose();
         }
 
         public void AddChild(Entity child)

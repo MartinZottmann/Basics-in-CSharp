@@ -2,10 +2,12 @@
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
+using System;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Floor : Physical
+    [Serializable]
+    public class Floor : Physical
     {
         public Floor(ResourceManager resources)
             : base(resources)

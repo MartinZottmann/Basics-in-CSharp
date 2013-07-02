@@ -1,10 +1,12 @@
 ﻿using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
+using System;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Terminal : Physical
+    [Serializable]
+    public class Terminal : Physical
     {
         public Terminal(ResourceManager resources)
             : base(resources)
