@@ -77,6 +77,8 @@
     <Compile Include="Entities\Textured.cs" />
     <Compile Include="Entities\Ship.cs" />
     <Compile Include="IO\FileSystem.cs" />
+    <Compile Include="IO\ISaveable.cs" />
+    <Compile Include="IO\SaveObject.cs" />
     <Compile Include="State\GameState.cs" />
     <Compile Include="State\Running.cs" />
     <Compile Include="Window.cs" />

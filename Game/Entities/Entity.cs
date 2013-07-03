@@ -1,14 +1,16 @@
 ﻿using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.IO;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace MartinZottmann.Game.Entities
 {
-    [Serializable]
-    public abstract class Entity : IDisposable, ISerializable
+    using SaveTuple = Tuple<string, SaveObject>;
+    using SaveList = List<Tuple<string, SaveObject>>;
+
+    public abstract class Entity : IDisposable, ISaveable
     {
         public static Random Random = new Random();
 
@@ -25,20 +27,6 @@ namespace MartinZottmann.Game.Entities
         public Entity(ResourceManager resources)
         {
             Resources = resources;
-        }
-
-        public Entity(SerializationInfo info, StreamingContext context)
-        {
-            Destroyed = (bool)info.GetValue("Destroyed", typeof(bool));
-            Position = (Vector3d)info.GetValue("Position", typeof(Vector3d));
-            children = (List<Entity>)info.GetValue("children", typeof(List<Entity>));
-        }
-
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("Destroyed", Destroyed, typeof(bool));
-            info.AddValue("Position", Position, typeof(Vector3d));
-            info.AddValue("children", children, typeof(List<Entity>));
         }
 
         public virtual void Dispose()
@@ -95,6 +83,31 @@ namespace MartinZottmann.Game.Entities
             render_context = render_context.Push();
             children.ForEach(s => s.Render(delta_time, render_context));
             render_context = render_context.Pop();
+        }
+
+        public virtual SaveObject Save()
+        {
+            var status = new SaveObject();
+
+            status.Add("Destroyed", Destroyed);
+            status.Add("Position", Position);
+            var children_status = new SaveList();
+            children.ForEach(s => children_status.Add(new SaveTuple(s.GetType().FullName, s.Save())));
+            status.Add("children", children_status);
+
+            return status;
+        }
+
+        public virtual void Load(SaveObject status)
+        {
+            status.TryGetValue<bool>("Destroyed", ref Destroyed);
+            status.TryGetValue<Vector3d>("Position", ref Position);
+            SaveList children_status = new SaveList();
+            if (status.TryGetValue<SaveList>("children", ref children_status))
+                foreach (var child_status in children_status)
+                    children
+                        .FindAll(s => s.GetType().IsEquivalentTo(Type.GetType(child_status.Item1)))
+                        .ForEach(s => s.Load(child_status.Item2));
         }
     }
 }

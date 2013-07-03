@@ -31,7 +31,7 @@ namespace MartinZottmann.Game.State
 
         protected Ship ship;
 
-        protected string ship_filepath;
+        protected string savegame_filepath;
 
         public Running(GameWindow window)
             : base(window)
@@ -111,17 +111,17 @@ namespace MartinZottmann.Game.State
 
             world.AddChild(new Starfield(resources));
 
+            world.AddChild(new Ship(resources) { Position = new Vector3d(5, 5, 5), Target = new Vector3d(5, 5, 5) });
+
             file_system = new FileSystem();
-            ship_filepath = "ship.save";
-            ship = File.Exists(ship_filepath)
-                ? file_system.Load<Ship>(ship_filepath)
-                : new Ship(resources) { Position = new Vector3d(5, 5, 5), Target = new Vector3d(5, 5, 5) };
-            world.AddChild(ship);
+            savegame_filepath = "world.save";
+            if(File.Exists(savegame_filepath))
+                world.Load(file_system.Load<SaveObject>(savegame_filepath));
         }
 
         public override void Dispose()
         {
-            file_system.Save(ship_filepath, ship);
+            file_system.Save(savegame_filepath, world.Save());
             world.Dispose();
             selection.Clear();
             resources.Dispose();

@@ -5,7 +5,6 @@ using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
-using System.Runtime.Serialization;
 
 namespace MartinZottmann.Game.Entities
 {
