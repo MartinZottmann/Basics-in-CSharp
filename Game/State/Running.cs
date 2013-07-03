@@ -80,6 +80,8 @@ namespace MartinZottmann.Game.State
 
             world.AddChild(new Entities.GUI.FPSCounter(resources));
 
+            world.AddChild(new Entities.GUI.Debugger(resources));
+
             cursor = new Cursor(resources);
             Window.Mouse.ButtonUp += (s, e) =>
             {
@@ -87,15 +89,17 @@ namespace MartinZottmann.Game.State
                 {
                     selection.ForEach(t => t.Mark = default(OpenTK.Graphics.Color4));
                     selection.Clear();
-                    var position = Vector3d.Zero;
-                    foreach (var hit in world.Intersect(ref cursor.Ray, ref position))
+                    foreach (var hit in world.Intersect(ref cursor.Ray))
                     {
                         selection.Add((Physical)hit.Object1);
-                        Console.WriteLine("{0}", hit);
+                        if (hit.Parent == null)
+                            Console.WriteLine("{0}", hit.Object1);
+                        else
+                            Console.WriteLine("{0} > {1}", hit.Parent, hit.Object1);
                     }
+                    Console.WriteLine();
                     selection.ForEach(t => t.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255));
                 }
-
                 if (e.Button == MouseButton.Right)
                     foreach (var entity in selection)
                         if (entity is INavigation)
@@ -109,14 +113,9 @@ namespace MartinZottmann.Game.State
 
             file_system = new FileSystem();
             ship_filepath = "ship.save";
-            try
-            {
-                ship = file_system.Load<Ship>(ship_filepath);
-            }
-            catch
-            {
-                ship = new Ship(resources) { Position = new Vector3d(5, 5, 5), Target = new Vector3d(5, 5, 5) };
-            }
+            ship = File.Exists(ship_filepath)
+                ? file_system.Load<Ship>(ship_filepath)
+                : new Ship(resources) { Position = new Vector3d(5, 5, 5), Target = new Vector3d(5, 5, 5) };
             world.AddChild(ship);
         }
 

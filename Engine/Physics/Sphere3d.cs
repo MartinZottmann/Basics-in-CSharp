@@ -22,6 +22,13 @@ namespace MartinZottmann.Engine.Physics
             return copy;
         }
 
+        public Sphere3d At(ref Matrix4d model_world)
+        {
+            var copy = this;
+            Vector3d.Transform(ref copy.Origin, ref model_world, out copy.Origin);
+            return copy;
+        }
+
         public Collision Collides(object @object)
         {
             throw new NotImplementedException();

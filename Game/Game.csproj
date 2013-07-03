@@ -64,6 +64,7 @@
     <Compile Include="Entities\Drawable.cs" />
     <Compile Include="Entities\Explosion.cs" />
     <Compile Include="Entities\Grid.cs" />
+    <Compile Include="Entities\GUI\Debugger.cs" />
     <Compile Include="Entities\GUI\Entity.cs" />
     <Compile Include="Entities\GUI\FPSCounter.cs" />
     <Compile Include="Entities\Helper\INavigation.cs" />

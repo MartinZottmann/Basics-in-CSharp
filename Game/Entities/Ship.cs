@@ -1,20 +1,25 @@
 ﻿using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.AI;
+using MartinZottmann.Game.Entities.Helper;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using System;
+using System.Runtime.Serialization;
 
 namespace MartinZottmann.Game.Entities
 {
     [Serializable]
-    public class Ship : Physical
+    public class Ship : Physical, INavigation
     {
-        public Steering Streering;
+        public Vector3d Target { get; set; }
+
+        public Steering<Ship> Streering;
 
         public Ship(ResourceManager resources)
             : base(resources)
         {
-            Streering = new Steering(this);
+            Streering = new Steering<Ship>(this);
 
             AddChild(new Floor(resources) { Position = new Vector3d(0, -1, -1) });
             AddChild(new Floor(resources) { Position = new Vector3d(0, -1, 0) });
@@ -27,15 +32,10 @@ namespace MartinZottmann.Game.Entities
                     continue;
                 var s = child as Physical;
 
-                BoundingBox.Max.X = System.Math.Max(BoundingBox.Max.X, s.BoundingBox.Max.X + child.Position.X);
-                BoundingBox.Max.Y = System.Math.Max(BoundingBox.Max.Y, s.BoundingBox.Max.Y + child.Position.Y);
-                BoundingBox.Max.Z = System.Math.Max(BoundingBox.Max.Z, s.BoundingBox.Max.Z + child.Position.Z);
-                BoundingBox.Min.X = System.Math.Min(BoundingBox.Min.X, s.BoundingBox.Min.X + child.Position.X);
-                BoundingBox.Min.Y = System.Math.Min(BoundingBox.Min.Y, s.BoundingBox.Min.Y + child.Position.Y);
-                BoundingBox.Min.Z = System.Math.Min(BoundingBox.Min.Z, s.BoundingBox.Min.Z + child.Position.Z);
-
                 BoundingSphere.Radius = System.Math.Max(BoundingSphere.Radius, s.Position.Length + s.BoundingSphere.Radius);
             }
+            BoundingBox.Max = new Vector3d(BoundingSphere.Radius);
+            BoundingBox.Min = new Vector3d(-BoundingSphere.Radius);
         }
 
         public override void Update(double delta_time, RenderContext render_context)
@@ -44,5 +44,44 @@ namespace MartinZottmann.Game.Entities
 
             base.Update(delta_time, render_context);
         }
+
+#if DEBUG
+        public override void RenderHelpers(double delta_time, RenderContext render_context)
+        {
+            base.RenderHelpers(delta_time, render_context);
+            RenderTarget(delta_time, render_context);
+        }
+
+        public virtual void RenderTarget(double delta_time, RenderContext render_context)
+        {
+            if (Target.Equals(Vector3d.Zero))
+                return;
+
+            var P = render_context.Projection;
+            var V = render_context.View;
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.LoadMatrix(ref P);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+            GL.LoadMatrix(ref V);
+
+            GL.LineWidth(1);
+            GL.Begin(BeginMode.Lines);
+            {
+                GL.Color4(0.0f, 1.0f, 1.0f, 0.5f);
+                GL.Vertex3(Position);
+                GL.Vertex3(Target);
+
+                GL.Vertex3(Target - Vector3d.UnitX);
+                GL.Vertex3(Target + Vector3d.UnitX);
+                GL.Vertex3(Target - Vector3d.UnitY);
+                GL.Vertex3(Target + Vector3d.UnitY);
+                GL.Vertex3(Target - Vector3d.UnitZ);
+                GL.Vertex3(Target + Vector3d.UnitZ);
+            }
+            GL.End();
+        }
+#endif
     }
 }

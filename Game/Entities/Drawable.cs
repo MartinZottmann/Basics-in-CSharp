@@ -1,4 +1,5 @@
 ﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -38,7 +39,36 @@ namespace MartinZottmann.Game.Entities
 
         protected Engine.Graphics.OpenGL.Entity graphic;
 
-        public Drawable(ResourceManager resources) : base(resources) { }
+#if DEBUG
+        protected Engine.Graphics.OpenGL.Entity orientation_graphic;
+#endif
+
+        public Drawable(ResourceManager resources) : base(resources) {
+#if DEBUG
+            var forward = new Color4(1.0f, 0.0f, 0.0f, 0.5f);
+            var up = new Color4(0.0f, 1.0f, 0.0f, 0.5f);
+            var right= new Color4(0.0f, 0.0f, 1.0f, 0.5f);
+            orientation_graphic = new Engine.Graphics.OpenGL.Entity();
+            orientation_graphic.Mesh(
+                new Mesh<VertexP3C4, uint>()
+                {
+                    Vertices = new VertexP3C4[] {
+                        new VertexP3C4(Vector3.Zero, forward),
+                        new VertexP3C4((Vector3)Forward, forward),
+                        new VertexP3C4(Vector3.Zero, up),
+                        new VertexP3C4((Vector3)Up, up),
+                        new VertexP3C4(Vector3.Zero, right),
+                        new VertexP3C4((Vector3)Right, right),
+                    },
+                    Indices = new uint[] {
+                        0, 1, 2, 3, 4, 5
+                    }
+                }
+            );
+            orientation_graphic.Mode = BeginMode.Lines;
+            orientation_graphic.Program = Resources.Programs["normal"];
+#endif
+        }
 
         public override void Update(double delta_time, RenderContext render_context)
         {
@@ -66,34 +96,8 @@ namespace MartinZottmann.Game.Entities
 
         public virtual void RenderOrientation(double delta_time, RenderContext render_context)
         {
-            var P = render_context.Projection;
-            var V = render_context.View;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref P);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref V);
-
             GL.LineWidth(5);
-            GL.Begin(BeginMode.Lines);
-            {
-                GL.Color4(1.0f, 0.0f, 0.0f, 0.5f);
-                GL.Vertex3(Position);
-                GL.Vertex3(Position + ForwardRelative);
-
-                GL.Color4(0.0f, 1.0f, 0.0f, 0.5f);
-                GL.Vertex3(Position);
-                GL.Vertex3(Position + UpRelative);
-
-                GL.Color4(0.0f, 0.0f, 1.0f, 0.5f);
-                GL.Vertex3(Position);
-                GL.Vertex3(Position + RightRelative);
-            }
-            GL.End();
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
+            orientation_graphic.Draw();
         }
 #endif
     }

@@ -9,11 +9,9 @@ using System.Diagnostics;
 
 namespace MartinZottmann.Game.Entities
 {
-    public class Physical : Drawable, INavigation
+    public class Physical : Drawable
     {
         public OpenTK.Graphics.Color4 Mark { get; set; }
-
-        public Vector3d Target { get; set; }
 
         public double thrust = 10.0;
 
@@ -179,16 +177,15 @@ namespace MartinZottmann.Game.Entities
             return Vector3d.Cross(AngularVelocity, point) + Velocity;
         }
 
-        public virtual SortedSet<Collision> Intersect(ref Ray3d ray, ref Vector3d position)
+        public virtual SortedSet<Collision> Intersect(ref Ray3d ray, ref Matrix4d model_parent)
         {
-            Vector3d position_world;
-            Vector3d.Add(ref Position, ref position, out position_world);
+            Matrix4d model_world = Model * model_parent;
             var hits = new SortedSet<Collision>();
 
-            if (!BoundingBox.Intersect(ref ray, ref position_world))
-                return hits;
+            //if (!BoundingBox.Intersect(ref ray, ref position_world))
+            //    return hits;
 
-            var collision = BoundingSphere.At(ref position_world).Collides(ref ray);
+            var collision = BoundingSphere.At(ref model_world).Collides(ref ray);
             if (collision == null)
                 return hits;
 
@@ -205,7 +202,7 @@ namespace MartinZottmann.Game.Entities
 
             foreach (var child in children)
                 if (child is Physical)
-                    foreach (var hit in (child as Physical).Intersect(ref ray, ref position_world))
+                    foreach (var hit in (child as Physical).Intersect(ref ray, ref model_world))
                     {
                         hit.Parent = this;
                         hits.Add(hit);
@@ -218,44 +215,9 @@ namespace MartinZottmann.Game.Entities
         public override void RenderHelpers(double delta_time, RenderContext render_context)
         {
             base.RenderHelpers(delta_time, render_context);
-            RenderTarget(delta_time, render_context);
             RenderVelocity(delta_time, render_context);
             RenderAngularVelocity(delta_time, render_context);
             RenderBoundingBox(delta_time, render_context);
-        }
-
-        public virtual void RenderTarget(double delta_time, RenderContext render_context)
-        {
-            if (Target.Equals(Vector3d.Zero))
-                return;
-
-            var P = render_context.Projection;
-            var V = render_context.View;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref P);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref V);
-
-            GL.LineWidth(1);
-            GL.Begin(BeginMode.Lines);
-            {
-                GL.Color4(0.0f, 1.0f, 1.0f, 0.5f);
-                GL.Vertex3(Position);
-                GL.Vertex3(Target);
-
-                GL.Vertex3(Target - Vector3d.UnitX);
-                GL.Vertex3(Target + Vector3d.UnitX);
-                GL.Vertex3(Target - Vector3d.UnitY);
-                GL.Vertex3(Target + Vector3d.UnitY);
-                GL.Vertex3(Target - Vector3d.UnitZ);
-                GL.Vertex3(Target + Vector3d.UnitZ);
-            }
-            GL.End();
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
         }
 
         public virtual void RenderVelocity(double delta_time, RenderContext render_context)
@@ -263,8 +225,10 @@ namespace MartinZottmann.Game.Entities
             var P = render_context.Projection;
             var V = render_context.View;
             GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
             GL.LoadMatrix(ref P);
             GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
             GL.LoadMatrix(ref V);
 
             GL.LineWidth(1);
@@ -274,7 +238,6 @@ namespace MartinZottmann.Game.Entities
                 GL.Color4(1.0f, 1.0f, 0.0f, 0.5f);
                 GL.Vertex3(Position);
                 GL.Vertex3(Position + Velocity);
-
                 GL.Vertex3(Position + Velocity - Vector3d.UnitX);
                 GL.Vertex3(Position + Velocity + Vector3d.UnitX);
                 GL.Vertex3(Position + Velocity - Vector3d.UnitY);
@@ -312,20 +275,17 @@ namespace MartinZottmann.Game.Entities
                 #endregion
             }
             GL.End();
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
         }
 
         public virtual void RenderAngularVelocity(double delta_time, RenderContext render_context)
         {
             var P = render_context.Projection;
-            var V = render_context.View;
+            var V = render_context.ViewModel;
             GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
             GL.LoadMatrix(ref P);
             GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
             GL.LoadMatrix(ref V);
 
             GL.LineWidth(5);
@@ -333,49 +293,42 @@ namespace MartinZottmann.Game.Entities
             {
                 var angular_velocity_x = new Vector3d(AngularVelocity.X, 0, 0);
                 angular_velocity_x = Vector3d.Cross(angular_velocity_x, Up);
-                Vector3d.Transform(ref angular_velocity_x, ref Orientation, out angular_velocity_x);
 
                 var angular_velocity_y = new Vector3d(0, AngularVelocity.Y, 0);
                 angular_velocity_y = Vector3d.Cross(angular_velocity_y, Forward);
-                Vector3d.Transform(ref angular_velocity_y, ref Orientation, out angular_velocity_y);
 
                 var angular_velocity_z = new Vector3d(0, 0, AngularVelocity.Z);
                 angular_velocity_z = Vector3d.Cross(angular_velocity_z, Right);
-                Vector3d.Transform(ref angular_velocity_z, ref Orientation, out angular_velocity_z);
 
                 GL.Color4(1.0f, 0.0f, 0.0f, 0.5f);
 
-                GL.Vertex3(Position + ForwardRelative);
-                GL.Vertex3(Position + ForwardRelative + angular_velocity_y);
+                GL.Vertex3(Forward);
+                GL.Vertex3(Forward + angular_velocity_y);
 
                 GL.Color4(0.0f, 1.0f, 0.0f, 0.5f);
 
-                GL.Vertex3(Position + UpRelative);
-                GL.Vertex3(Position + UpRelative + angular_velocity_x);
+                GL.Vertex3(Up);
+                GL.Vertex3(Up + angular_velocity_x);
 
                 GL.Color4(0.0f, 0.0f, 1.0f, 0.5f);
 
-                GL.Vertex3(Position + RightRelative);
-                GL.Vertex3(Position + RightRelative + angular_velocity_z);
+                GL.Vertex3(Right);
+                GL.Vertex3(Right + angular_velocity_z);
             }
             GL.End();
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
         }
 
         public virtual void RenderBoundingBox(double delta_time, RenderContext render_context)
         {
             var P = render_context.Projection;
-            var V = render_context.View;
+            var V = render_context.ViewModel;
             GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
             GL.LoadMatrix(ref P);
             GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
             GL.LoadMatrix(ref V);
 
-            GL.Translate(Position);
             GL.LineWidth(1);
             GL.Begin(BeginMode.Lines);
             {
@@ -408,11 +361,6 @@ namespace MartinZottmann.Game.Entities
                 GL.Vertex3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Max.Z);
             }
             GL.End();
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
         }
 #endif
     }

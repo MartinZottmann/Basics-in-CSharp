@@ -26,7 +26,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                     g.DrawString(text, font, textBrush, 0, 0);
                     g.Save();
                 }
-                Init(img, mipmapped, TextureTarget.Texture2D);
+                Init(img, mipmapped, TextureTarget.Texture2D, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
             }
         }
 
@@ -35,7 +35,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             using (var img = new Bitmap(1, 1))
             using (var g = System.Drawing.Graphics.FromImage(img))
             {
-                g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 size = g.MeasureString(text, font);
             }
 
@@ -49,7 +49,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                     g.DrawString(text, font, textBrush, 0, 0);
                     g.Save();
                 }
-                Init(img, mipmapped, TextureTarget.Texture2D);
+                Init(img, mipmapped, TextureTarget.Texture2D, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
             }
         }
 
@@ -64,7 +64,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             Init(bmp, mipmapped, target);
         }
 
-        protected void Init(Bitmap bmp, bool mipmapped, TextureTarget target)
+        protected void Init(Bitmap bmp, bool mipmapped, TextureTarget target, TextureMinFilter min_filter = TextureMinFilter.Nearest, TextureMagFilter mag_filter = TextureMagFilter.Nearest)
         {
             switch (target)
             {
@@ -116,18 +116,10 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 }
                 bmp.UnlockBits(bmp_data);
 
-                //GL.TexParameter(target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                //GL.TexParameter(target, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
                 if (mipmapped)
-                {
                     GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-                    GL.TexParameter(target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-                }
-                else
-                {
-                    GL.TexParameter(target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-                }
-                GL.TexParameter(target, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+                GL.TexParameter(target, TextureParameterName.TextureMinFilter, (int)min_filter);
+                GL.TexParameter(target, TextureParameterName.TextureMagFilter, (int)mag_filter);
 
                 GL.TexParameter(target, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
                 GL.TexParameter(target, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);

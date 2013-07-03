@@ -2,13 +2,13 @@
 
 namespace MartinZottmann.Game.AI
 {
-    public abstract class Base
+    public abstract class Base<T>
     {
-        public Entity Entity;
+        public T Subject;
 
-        public Base(Entity entity)
+        public Base(T subject)
         {
-            Entity = entity;
+            Subject = subject;
         }
 
         public virtual void Update(double delta_time) { }

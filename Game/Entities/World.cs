@@ -6,19 +6,18 @@ using System.Collections.Generic;
 
 namespace MartinZottmann.Game.Entities
 {
-    class World : Entity
+    public class World : Entity
     {
         public World(ResourceManager resources) : base(resources) { }
 
-        public virtual SortedSet<Collision> Intersect(ref Ray3d ray, ref Vector3d position)
+        public virtual SortedSet<Collision> Intersect(ref Ray3d ray)
         {
-            Vector3d position_world;
-            Vector3d.Add(ref Position, ref position, out position_world);
+            Matrix4d world_model = Matrix4d.Identity;
             var hits = new SortedSet<Collision>();
 
             foreach (var child in children)
                 if (child is Physical)
-                    foreach (var hit in (child as Physical).Intersect(ref ray, ref position_world))
+                    foreach (var hit in (child as Physical).Intersect(ref ray, ref world_model))
                         hits.Add(hit);
 
             return hits;

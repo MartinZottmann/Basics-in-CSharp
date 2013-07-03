@@ -34,7 +34,7 @@ namespace MartinZottmann.Game.Entities
             children = (List<Entity>)info.GetValue("children", typeof(List<Entity>));
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Destroyed", Destroyed, typeof(bool));
             info.AddValue("Position", Position, typeof(Vector3d));

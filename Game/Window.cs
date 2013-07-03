@@ -47,22 +47,12 @@ namespace MartinZottmann.Game
             Console.WriteLine("{0}: {1}", GetPName.Samples, info);
 
             // Initialize OpenGL properties
-            GL.AlphaFunc(AlphaFunction.Greater, 0.1f);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
             GL.ClearColor(System.Drawing.Color.Black);
             GL.DepthFunc(DepthFunction.Less);
-            GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.CullFace);
             GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.LineSmooth);
-            GL.Enable(EnableCap.PointSmooth);
-            GL.Enable(EnableCap.PolygonSmooth);
-            GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
-            GL.Hint(HintTarget.PointSmoothHint, HintMode.Nicest);
-            GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
-            GL.Hint(HintTarget.TextureCompressionHint, HintMode.Nicest);
-            GL.ShadeModel(ShadingModel.Smooth);
 
             Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
@@ -113,7 +103,6 @@ namespace MartinZottmann.Game
                 var delta_time = update_time.Elapsed.TotalSeconds;
                 update_time.Reset();
                 update_time.Start();
-                Console.WriteLine(GC.GetTotalMemory(false));
                 while (delta_time >= target_delta_time)
                 {
                     game.Update(target_delta_time);

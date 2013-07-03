@@ -52,7 +52,7 @@ namespace MartinZottmann.Game.Entities
             graphic.Mode = BeginMode.Points;
             graphic.Program = Resources.Programs["normal"];
 
-            buffer_object = graphic.VertexArrayObject.BufferObjects[0] as BufferObject<VertexP3C4>;
+            buffer_object = (BufferObject<VertexP3C4>)graphic.VertexArrayObject.BufferObjects[0];
         }
 
         public override void Update(double delta_time, RenderContext render_context)
