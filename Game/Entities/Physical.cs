@@ -128,10 +128,12 @@ namespace MartinZottmann.Game.Entities
         {
             Debug.Assert(this == collision.Object0);
 
-            var r0 = collision.HitPoint - collision.Object0.Position;
-            var r1 = collision.HitPoint - collision.Object1.Position;
-            var v0 = collision.Object0.Velocity + Vector3d.Cross(collision.Object0.AngularVelocity, r0);
-            var v1 = collision.Object1.Velocity + Vector3d.Cross(collision.Object1.AngularVelocity, r1);
+            var o0 = collision.Object0 as Physical;
+            var o1 = collision.Object1 as Physical;
+            var r0 = collision.HitPoint - o0.Position;
+            var r1 = collision.HitPoint - o1.Position;
+            var v0 = o0.Velocity + Vector3d.Cross(o0.AngularVelocity, r0);
+            var v1 = o1.Velocity + Vector3d.Cross(o1.AngularVelocity, r1);
             var dv = v0 - v1;
 
             if (-Vector3d.Dot(dv, collision.Normal) < -0.01)
@@ -140,35 +142,35 @@ namespace MartinZottmann.Game.Entities
             #region NORMAL Impulse
             var e = 0.0;
             var normDiv = Vector3d.Dot(collision.Normal, collision.Normal) * (
-                (collision.Object0.InverseMass + collision.Object1.InverseMass)
+                (o0.InverseMass + o1.InverseMass)
                 + Vector3d.Dot(
                     collision.Normal,
-                    Vector3d.Cross(Vector3d.Cross(r0, collision.Normal) * collision.Object0.InverseInertiaWorld, r0)
-                    + Vector3d.Cross(Vector3d.Cross(r1, collision.Normal) * collision.Object1.InverseInertiaWorld, r1)
+                    Vector3d.Cross(Vector3d.Cross(r0, collision.Normal) * o0.InverseInertiaWorld, r0)
+                    + Vector3d.Cross(Vector3d.Cross(r1, collision.Normal) * o1.InverseInertiaWorld, r1)
                 )
             );
             var jn = -1 * (1 + e) * Vector3d.Dot(dv, collision.Normal) / normDiv;
             jn += (collision.PenetrationDepth * 1.5);
             var Pn = collision.Normal * jn;
 
-            collision.Object0.AddImpulse(r0, Pn);
-            collision.Object1.AddImpulse(r1, -1 * Pn);
+            o0.AddImpulse(r0, Pn);
+            o1.AddImpulse(r1, -1 * Pn);
             #endregion
 
             #region TANGENT Impulse
             var tangent = dv - (Vector3d.Dot(dv, collision.Normal) * collision.Normal);
             tangent.Normalize();
-            var k_tangent = collision.Object0.InverseMass
-                + collision.Object1.InverseMass
+            var k_tangent = o0.InverseMass
+                + o1.InverseMass
                 + Vector3d.Dot(
                     tangent,
-                    Vector3d.Cross(Vector3d.Cross(r0, tangent) * collision.Object0.InverseInertiaWorld, r0)
-                    + Vector3d.Cross(Vector3d.Cross(r1, tangent) * collision.Object1.InverseInertiaWorld, r1)
+                    Vector3d.Cross(Vector3d.Cross(r0, tangent) * o0.InverseInertiaWorld, r0)
+                    + Vector3d.Cross(Vector3d.Cross(r1, tangent) * o1.InverseInertiaWorld, r1)
                 );
             var Pt = -1 * Vector3d.Dot(dv, tangent) / k_tangent * tangent;
 
-            collision.Object0.AddImpulse(r0, Pt);
-            collision.Object1.AddImpulse(r1, -1 * Pt);
+            o0.AddImpulse(r0, Pt);
+            o1.AddImpulse(r1, -1 * Pt);
             #endregion
         }
 
@@ -177,27 +179,37 @@ namespace MartinZottmann.Game.Entities
             return Vector3d.Cross(AngularVelocity, point) + Velocity;
         }
 
-        public virtual SortedList<double, Physical> Intersect(ref Ray3d ray, ref Vector3d position)
+        public virtual SortedSet<Collision> Intersect(ref Ray3d ray, ref Vector3d position)
         {
             Vector3d position_world;
             Vector3d.Add(ref Position, ref position, out position_world);
-            var hits = new SortedList<double, Physical>();
+            var hits = new SortedSet<Collision>();
 
             if (!BoundingBox.Intersect(ref ray, ref position_world))
                 return hits;
 
-            double min;
-            double max;
-
-            if (!BoundingSphere.Intersect(ref ray, ref position_world, out min, out max))
+            var collision = BoundingSphere.At(ref position_world).Collides(ref ray);
+            if (collision == null)
                 return hits;
 
-            hits.Add(min, this);
+            hits.Add(
+                new Collision()
+                {
+                    HitPoint = collision.HitPoint,
+                    Normal = collision.Normal,
+                    Object0 = ray,
+                    Object1 = this,
+                    PenetrationDepth = collision.PenetrationDepth
+                }
+            );
 
             foreach (var child in children)
                 if (child is Physical)
                     foreach (var hit in (child as Physical).Intersect(ref ray, ref position_world))
-                        hits.Add(hit.Key, hit.Value);
+                    {
+                        hit.Parent = this;
+                        hits.Add(hit);
+                    }
 
             return hits;
         }

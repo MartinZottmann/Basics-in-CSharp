@@ -3,7 +3,7 @@ using System;
 
 namespace MartinZottmann.Engine.Physics
 {
-    public struct Sphere3d
+    public struct Sphere3d : ICollidable, ICollidable<Ray3d>, ICollidable<Sphere3d>
     {
         public Vector3d Origin;
 
@@ -15,65 +15,72 @@ namespace MartinZottmann.Engine.Physics
             Radius = radius;
         }
 
-        public bool Intersect(ref Sphere3d s, out Vector3d hit, out Vector3d hit_s, out double penetration_depth)
+        public Sphere3d At(ref Vector3d position_world)
         {
-            var relative = Origin - s.Origin;
-            var distance = relative.Length;
-            hit = -relative / distance * Radius;
-            hit_s = relative / distance * s.Radius;
-            penetration_depth = Radius + s.Radius - distance;
-
-            return distance <= Radius + s.Radius;
+            var copy = this;
+            Vector3d.Add(ref copy.Origin, ref position_world, out copy.Origin);
+            return copy;
         }
 
-        public bool Intersect(ref Ray3d r, ref Vector3d position)
+        public Collision Collides(object @object)
         {
-            var A = Vector3d.Dot(r.Direction, r.Direction);
-            var p = r.Origin - (Origin + position);
-            var B = Vector3d.Dot(r.Direction, p) * 2;
-            var C = Vector3d.Dot(p, p) - Radius * Radius;
-            var discrim = B * B - 4 * (A * C);
-            return discrim >= 0;
+            throw new NotImplementedException();
         }
 
-        public bool Intersect(ref Ray3d r, ref Vector3d position, out double distance_near, out double distance_far)
+        public Collision Collides(Ray3d @object)
         {
-            Vector3d hit_near;
-            Vector3d hit_far;
-            if (Intersect(ref r, ref position, out hit_near, out hit_far))
-            {
-                distance_near = hit_near.Length;
-                distance_far = hit_far.Length;
-                return true;
-            }
-            else
-            {
-                distance_near = Double.MaxValue;
-                distance_far = Double.MinValue;
-                return false;
-            }
+            return Collides(ref @object);
         }
 
-        public bool Intersect(ref Ray3d r, ref Vector3d position, out Vector3d hit_near, out Vector3d hit_far)
+        public Collision Collides(ref Ray3d @object)
         {
-            var A = Vector3d.Dot(r.Direction, r.Direction);
-            var p = r.Origin - (Origin + position);
-            var B = Vector3d.Dot(r.Direction, p) * 2;
+            var A = Vector3d.Dot(@object.Direction, @object.Direction);
+            var p = @object.Origin - Origin;
+            var B = Vector3d.Dot(@object.Direction, p) * 2;
             var C = Vector3d.Dot(p, p) - Radius * Radius;
             var discrim = B * B - 4 * (A * C);
             if (discrim >= 0)
             {
                 var disc_root = Math.Sqrt(discrim);
-                hit_near = r.Direction * (-B - disc_root) / 2 * A;
-                hit_far = r.Direction * (-B + disc_root) / 2 * A;
-                return true;
+                return new Collision()
+                {
+                    HitPoint = @object.Direction * (-B - disc_root) / 2 * A,
+                    //HitPoint1 = @object.Direction * (-B + disc_root) / 2 * A,
+                    Normal = Vector3d.Zero, // @todo
+                    Object0 = this,
+                    Object1 = @object,
+                    PenetrationDepth = 0.0 // @todo
+                };
             }
-            else
+
+            return null;
+        }
+
+        public Collision Collides(Sphere3d @object)
+        {
+            return Collides(ref @object);
+        }
+
+        public Collision Collides(ref Sphere3d @object)
+        {
+            var relative = Origin - @object.Origin;
+            var distance = relative.Length;
+            if (distance <= Radius + @object.Radius)
             {
-                hit_near = Vector3d.Zero;
-                hit_far = Vector3d.Zero;
-                return false;
+                relative /= distance;
+                var penetration_depth = Radius + @object.Radius - distance;
+                return new Collision()
+                {
+                    HitPoint = -relative * Radius,
+                    //HitPoint1 = relative * Radius,
+                    Normal = relative * penetration_depth,
+                    Object0 = this,
+                    Object1 = @object,
+                    PenetrationDepth = penetration_depth
+                };
             }
+
+            return null;
         }
     }
 }

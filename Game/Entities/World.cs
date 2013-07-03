@@ -10,16 +10,16 @@ namespace MartinZottmann.Game.Entities
     {
         public World(ResourceManager resources) : base(resources) { }
 
-        public virtual SortedList<double, Physical> Intersect(ref Ray3d ray, ref Vector3d position)
+        public virtual SortedSet<Collision> Intersect(ref Ray3d ray, ref Vector3d position)
         {
             Vector3d position_world;
             Vector3d.Add(ref Position, ref position, out position_world);
-            var hits = new SortedList<double, Physical>();
+            var hits = new SortedSet<Collision>();
 
             foreach (var child in children)
                 if (child is Physical)
                     foreach (var hit in (child as Physical).Intersect(ref ray, ref position_world))
-                        hits.Add(hit.Key, hit.Value);
+                        hits.Add(hit);
 
             return hits;
         }
@@ -59,46 +59,40 @@ namespace MartinZottmann.Game.Entities
         {
             var collisions = new List<Collision>();
 
-            foreach (Entities.Entity a in children)
+            foreach (Entities.Entity e0 in children)
             {
-                if (!(a is Physical))
+                if (!(e0 is Physical))
                     continue;
 
-                foreach (Entities.Entity b in children)
+                foreach (Entities.Entity e1 in children)
                 {
-                    if (a == b)
+                    if (e0 == e1)
                         continue;
 
-                    if (!(b is Physical))
+                    if (!(e1 is Physical))
                         continue;
 
-                    Vector3d hit_a;
-                    Vector3d hit_b;
-                    double penetration_depth;
+                    var o0 = (Physical)e0;
+                    var o1 = (Physical)e1;
 
-                    var i = a as Physical;
-                    var j = b as Physical;
-
-                    if (!i.BoundingBox.Intersect(ref i.Position, ref j.BoundingBox, ref j.Position))
+                    if (!o0.BoundingBox.Intersect(ref o0.Position, ref o1.BoundingBox, ref o1.Position))
                         continue;
 
-                    var s = i.BoundingSphere;
-                    s.Origin += i.Position;
-                    var t = j.BoundingSphere;
-                    t.Origin += j.Position;
+                    var collision = o0.BoundingSphere.At(ref o0.Position).Collides(o1.BoundingSphere.At(ref o1.Position));
+                    if (collision == null)
+                        continue;
 
-                    if (s.Intersect(ref t, out hit_a, out hit_b, out penetration_depth))
-                        collisions.Add(
-                            new Collision()
-                            {
-                                HitPoint = i.Position + hit_a,
-                                Normal = (i.Position - j.Position).Normalized() * penetration_depth,
-                                Object0 = i,
-                                Object1 = j,
-                                Parent = this,
-                                PenetrationDepth = penetration_depth
-                            }
-                        );
+                    collisions.Add(
+                        new Collision()
+                        {
+                            HitPoint = collision.HitPoint,
+                            Normal = collision.Normal,
+                            Object0 = o0,
+                            Object1 = o1,
+                            Parent = this,
+                            PenetrationDepth = collision.PenetrationDepth
+                        }
+                    );
                 }
             }
 
@@ -108,22 +102,7 @@ namespace MartinZottmann.Game.Entities
         protected void ApplyImpusles(List<Collision> collisions, double delta_time)
         {
             foreach (var collision in collisions)
-                collision.Object0.OnCollision(collision);
+                (collision.Object0 as Physical).OnCollision(collision);
         }
-    }
-
-    public struct Collision
-    {
-        public Vector3d HitPoint;
-
-        public Vector3d Normal;
-
-        public Physical Object0;
-
-        public Physical Object1;
-
-        public Entity Parent;
-
-        public double PenetrationDepth;
     }
 }

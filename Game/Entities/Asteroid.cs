@@ -1,6 +1,7 @@
 ﻿using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Graphics.Shapes;
+using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
 
@@ -76,7 +77,7 @@ namespace MartinZottmann.Game.Entities
             if (explosion == null)
             {
                 explosion = new Explosion(Resources);
-                collision.Parent.AddChild(explosion);
+                ((Entity)collision.Parent).AddChild(explosion);
             }
             explosion.Position = collision.HitPoint;
             explosion.Age = 0.0;

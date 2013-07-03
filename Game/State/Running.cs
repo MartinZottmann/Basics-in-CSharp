@@ -89,9 +89,11 @@ namespace MartinZottmann.Game.State
                     selection.Clear();
                     var position = Vector3d.Zero;
                     foreach (var hit in world.Intersect(ref cursor.Ray, ref position))
-                        selection.Add(hit.Value);
-                    //Console.WriteLine("{0}\t{1}", hit.Key, hit.Value);
-                    selection.ForEach(t =>t.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255));
+                    {
+                        selection.Add((Physical)hit.Object1);
+                        Console.WriteLine("{0}", hit);
+                    }
+                    selection.ForEach(t => t.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255));
                 }
 
                 if (e.Button == MouseButton.Right)

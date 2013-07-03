@@ -67,6 +67,8 @@
     <Compile Include="Graphics\Wavefront\TextureMapLoader.cs" />
     <Compile Include="IBindable.cs" />
     <Compile Include="Physics\AABB3d.cs" />
+    <Compile Include="Physics\Collision.cs" />
+    <Compile Include="Physics\ICollidable.cs" />
     <Compile Include="Physics\Plane3d.cs" />
     <Compile Include="Physics\Ray3d.cs" />
     <Compile Include="Physics\Sphere3d.cs" />
