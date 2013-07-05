@@ -188,6 +188,16 @@ namespace MartinZottmann.Game.Entities
             if (collision == null)
                 return hits;
 
+            foreach (var child in children)
+                if (child is Physical)
+                    foreach (var hit in ((Physical)child).Intersect(ref ray, ref model_world))
+                    {
+                        hit.Parent = this;
+                        hits.Add(hit);
+                    }
+
+            var best = hits.Min;
+            hits.Clear();
             hits.Add(
                 new Collision()
                 {
@@ -198,14 +208,8 @@ namespace MartinZottmann.Game.Entities
                     PenetrationDepth = collision.PenetrationDepth
                 }
             );
-
-            foreach (var child in children)
-                if (child is Physical)
-                    foreach (var hit in (child as Physical).Intersect(ref ray, ref model_world))
-                    {
-                        hit.Parent = this;
-                        hits.Add(hit);
-                    }
+            if (best != null)
+                hits.Add(best);
 
             return hits;
         }
