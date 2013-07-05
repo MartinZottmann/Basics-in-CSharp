@@ -1,12 +1,10 @@
 ﻿using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
-using System;
 
-namespace MartinZottmann.Game.Entities
+namespace MartinZottmann.Game.Entities.Ships.Components
 {
-    [Serializable]
-    public class Terminal : Physical
+    public class Terminal : Component
     {
         public Terminal(ResourceManager resources)
             : base(resources)

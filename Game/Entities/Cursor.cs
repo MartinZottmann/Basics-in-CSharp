@@ -2,6 +2,7 @@
 using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -84,6 +85,11 @@ namespace MartinZottmann.Game.Entities
 
             GL.LineWidth(1);
             base.Render(delta_time, render_context);
+        }
+
+        public override SaveValue SaveValue()
+        {
+            return null;
         }
     }
 }

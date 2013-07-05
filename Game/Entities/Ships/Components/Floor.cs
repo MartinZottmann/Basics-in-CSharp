@@ -1,14 +1,10 @@
 ﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using System;
 
-namespace MartinZottmann.Game.Entities
+namespace MartinZottmann.Game.Entities.Ships.Components
 {
-    [Serializable]
-    public class Floor : Physical
+    public class Floor : Component
     {
         public Floor(ResourceManager resources)
             : base(resources)
@@ -16,8 +12,8 @@ namespace MartinZottmann.Game.Entities
             graphic = Resources.Entities.Load("Resources/Models/cube.obj", Matrix4.CreateScale(0.5f, 0.5f, 0.5f));
             var shape = graphic.Mesh();
 
-            graphic.Program = Resources.Programs["standard_cube"];
-            graphic.Texture = new Texture("Resources/Textures/debug-256.png", false, TextureTarget.TextureCubeMap);
+            graphic.Program = Resources.Programs["standard"];
+            graphic.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
 
             graphic.Program.UniformLocations["in_Texture"].Set(0);
             graphic.Program.UniformLocations["in_LightPosition"].Set(new Vector3(10, 10, 10));

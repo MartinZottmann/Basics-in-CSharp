@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace MartinZottmann.Game.Entities
 {
-    public class Physical : Drawable
+    public abstract class Physical : Drawable
     {
         public OpenTK.Graphics.Color4 Mark { get; set; }
 

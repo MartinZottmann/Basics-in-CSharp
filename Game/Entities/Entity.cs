@@ -7,9 +7,6 @@ using System.Collections.Generic;
 
 namespace MartinZottmann.Game.Entities
 {
-    using SaveTuple = Tuple<string, SaveObject>;
-    using SaveList = List<Tuple<string, SaveObject>>;
-
     public abstract class Entity : IDisposable, ISaveable
     {
         public static Random Random = new Random();
@@ -85,29 +82,39 @@ namespace MartinZottmann.Game.Entities
             render_context = render_context.Pop();
         }
 
-        public virtual SaveObject Save()
+        public virtual SaveValue SaveValue()
         {
-            var status = new SaveObject();
+            var status = new SaveValue(1);
 
             status.Add("Destroyed", Destroyed);
             status.Add("Position", Position);
             var children_status = new SaveList();
-            children.ForEach(s => children_status.Add(new SaveTuple(s.GetType().FullName, s.Save())));
+            children.ForEach(s => children_status.TryAdd(s));
             status.Add("children", children_status);
 
             return status;
         }
 
-        public virtual void Load(SaveObject status)
+        public virtual void Load(SaveValue status)
         {
             status.TryGetValue<bool>("Destroyed", ref Destroyed);
             status.TryGetValue<Vector3d>("Position", ref Position);
             SaveList children_status = new SaveList();
             if (status.TryGetValue<SaveList>("children", ref children_status))
                 foreach (var child_status in children_status)
-                    children
-                        .FindAll(s => s.GetType().IsEquivalentTo(Type.GetType(child_status.Item1)))
-                        .ForEach(s => s.Load(child_status.Item2));
+                {
+                    var child = (Entity)System.Activator.CreateInstance(
+                        child_status.Key.Type,
+                        new object[] { Resources }
+                    );
+                    child.Load(child_status.Value);
+                    AddChild(child);
+                }
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} (Position: {1})", this.GetType().FullName, Position);
         }
     }
 }

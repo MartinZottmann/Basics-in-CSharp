@@ -17,7 +17,12 @@ namespace MartinZottmann.Game.IO
         public T Load<T>(string filepath)
         {
             using (var stream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                return (T)Formatter.Deserialize(stream);
+                return Load<T>(stream);
+        }
+
+        public T Load<T>(Stream stream)
+        {
+            return (T)Formatter.Deserialize(stream);
         }
     }
 }

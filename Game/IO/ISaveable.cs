@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace MartinZottmann.Game.IO
+﻿namespace MartinZottmann.Game.IO
 {
     public interface ISaveable
     {
-        SaveObject Save();
+        SaveValue SaveValue();
 
-        void Load(SaveObject status);
+        void Load(SaveValue status);
     }
 }

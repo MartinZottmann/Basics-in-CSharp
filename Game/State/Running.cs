@@ -3,6 +3,7 @@ using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.Helper;
+using MartinZottmann.Game.Entities.Ships;
 using MartinZottmann.Game.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -28,8 +29,6 @@ namespace MartinZottmann.Game.State
         protected RenderContext render_context;
 
         protected FileSystem file_system;
-
-        protected Ship ship;
 
         protected string savegame_filepath;
 
@@ -107,21 +106,26 @@ namespace MartinZottmann.Game.State
             };
             world.AddChild(cursor);
 
+            file_system = new FileSystem();
+            savegame_filepath = "world.save";
+            if (File.Exists(savegame_filepath))
+                using (var stream = new FileStream(savegame_filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    if (stream.Length != 0)
+                    {
+                        world.Load(file_system.Load<SaveValue>(stream));
+                        return;
+                    }
+
             world.AddChild(new Grid(resources));
 
             world.AddChild(new Starfield(resources));
 
             world.AddChild(new Ship(resources) { Position = new Vector3d(5, 5, 5), Target = new Vector3d(5, 5, 5) });
-
-            file_system = new FileSystem();
-            savegame_filepath = "world.save";
-            if(File.Exists(savegame_filepath))
-                world.Load(file_system.Load<SaveObject>(savegame_filepath));
         }
 
         public override void Dispose()
         {
-            file_system.Save(savegame_filepath, world.Save());
+            file_system.Save(savegame_filepath, world.SaveValue());
             world.Dispose();
             selection.Clear();
             resources.Dispose();

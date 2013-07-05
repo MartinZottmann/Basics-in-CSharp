@@ -2,11 +2,12 @@
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.AI;
 using MartinZottmann.Game.Entities.Helper;
+using MartinZottmann.Game.Entities.Ships.Components;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MartinZottmann.Game.Entities
+namespace MartinZottmann.Game.Entities.Ships
 {
     [Serializable]
     public class Ship : Physical, INavigation

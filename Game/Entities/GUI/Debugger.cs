@@ -27,12 +27,12 @@ namespace MartinZottmann.Game.Entities.GUI
         {
             if (graphic.Texture != null)
                 graphic.Texture.Dispose();
-            graphic.Texture = new Texture(String.Format("Memory: {0}", GC.GetTotalMemory(false)), new Font("Courier", 25, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.LightGray, Color.Black, false, size);
+            graphic.Texture = new Texture(String.Format("Memory: {0}", GC.GetTotalMemory(false)), new Font("Courier", 25, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.LightGray, Color.FromArgb(127, 255, 255, 255), false, size);
         }
 
         public override void Render(double delta_time, RenderContext render_context)
         {
-            //GL.DepthMask(false);
+            GL.DepthMask(false);
 
             double yMax = render_context.Camera.Near * Math.Tan(0.5 * render_context.Camera.Fov);
             double yMin = -yMax;
@@ -47,7 +47,7 @@ namespace MartinZottmann.Game.Entities.GUI
             Resources.Programs["plain_texture"].UniformLocations["Texture"].Set(0);
             graphic.Draw();
 
-            //GL.DepthMask(true);
+            GL.DepthMask(true);
         }
     }
 }
