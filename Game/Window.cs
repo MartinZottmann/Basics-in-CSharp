@@ -98,22 +98,8 @@ namespace MartinZottmann.Game
             Stopwatch render_time = new Stopwatch();
             render_time.Start();
 
-            while (!IsExiting)
+            while (Exists && !IsExiting)
             {
-                var delta_time = update_time.Elapsed.TotalSeconds;
-                update_time.Reset();
-                update_time.Start();
-                while (delta_time >= target_delta_time)
-                {
-                    game.Update(target_delta_time);
-                    delta_time -= target_delta_time;
-                }
-                game.Update(delta_time);
-
-                game.Render(render_time.Elapsed.TotalSeconds);
-                render_time.Reset();
-                render_time.Start();
-
                 if (request_context)
                 {
                     Context.MakeCurrent(null);
@@ -124,6 +110,22 @@ namespace MartinZottmann.Game
                     }
                     MakeCurrent();
                 }
+
+                var delta_time = update_time.Elapsed.TotalSeconds;
+                //update_time.Reset();
+                //update_time.Start();
+                update_time.Restart();
+                while (delta_time >= target_delta_time)
+                {
+                    game.Update(target_delta_time);
+                    delta_time -= target_delta_time;
+                }
+                game.Update(delta_time);
+
+                game.Render(render_time.Elapsed.TotalSeconds);
+                //render_time.Reset();
+                //render_time.Start();
+                render_time.Restart();
             }
 
             Context.MakeCurrent(null);

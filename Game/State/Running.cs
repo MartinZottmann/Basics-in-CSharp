@@ -33,7 +33,7 @@ namespace MartinZottmann.Game.State
 
         protected string savegame_filepath;
 
-        public Running(GameWindow window)
+        public Running(Window window)
             : base(window)
         {
             resources = new ResourceManager();
@@ -112,19 +112,23 @@ namespace MartinZottmann.Game.State
 
             file_system = new FileSystem();
             savegame_filepath = "world.save";
-            if (File.Exists(savegame_filepath))
-                using (var stream = new FileStream(savegame_filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    if (stream.Length != 0)
-                    {
-                        world.Load(file_system.Load<SaveValue>(stream));
-                        return;
-                    }
+            //if (File.Exists(savegame_filepath))
+            //    using (var stream = new FileStream(savegame_filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            //        if (stream.Length != 0)
+            //        {
+            //            world.Load(file_system.Load<SaveValue>(stream));
+            //            return;
+            //        }
 
             world.AddChild(new Grid(resources));
 
             world.AddChild(new Starfield(resources));
 
             world.AddChild(new Ship(resources) { Position = new Vector3d(5, 5, 5), Target = new Vector3d(5, 5, 5) });
+
+            world.AddChild(new Ship(resources) { Position = new Vector3d(0, 5, 5), Target = new Vector3d(0, 5, 5) });
+
+            world.AddChild(new Ship(resources) { Position = new Vector3d(-5, 5, 5), Target = new Vector3d(-5, 5, 5) });
         }
 
         public override void Dispose()
@@ -142,6 +146,21 @@ namespace MartinZottmann.Game.State
                 render_context.Debug = !render_context.Debug;
             if (e.Key == Key.F10)
                 camera.MouseLook = !camera.MouseLook;
+            if (e.Key == Key.Plus)
+            {
+                Window.RequestContext();
+                world.AddChild(new Asteroid(resources));
+                Window.ReleaseContext();
+            }
+            if (e.Key == Key.Minus)
+                foreach (var child in world.Children)
+                    if (child is Asteroid)
+                    {
+                        Window.RequestContext();
+                        world.RemoveChild(child);
+                        Window.ReleaseContext();
+                        break;
+                    }
         }
 
         protected void Add(Entities.Entity entity)
@@ -238,7 +257,14 @@ namespace MartinZottmann.Game.State
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Viewport(0, 0, Window.Width, Window.Height);
 
+            render_context.alpha_cutoff = 0.35f;
             world.Render(delta_time, render_context);
+            GL.Accum(AccumOp.Load, 0.5f);
+
+            render_context.alpha_cutoff = 0.65f;
+            world.Render(delta_time, render_context);
+            GL.Accum(AccumOp.Accum, 0.5f);
+            GL.Accum(AccumOp.Return, 1f);
 
             Window.SwapBuffers();
         }

@@ -2,6 +2,7 @@
 
 uniform sampler2D in_Texture;
 uniform vec3 in_LightPosition;
+uniform float alpha_cutoff;
 
 in vec2 UV;
 in vec3 Position_worldspace;
@@ -32,4 +33,7 @@ void main() {
     color = MaterialAmbientColor
         + MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance * distance)
         + MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, 5) / (distance * distance);
+
+    if(color.a < alpha_cutoff)
+        discard;
 }

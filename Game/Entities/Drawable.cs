@@ -3,6 +3,7 @@ using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System;
 using Color4 = MartinZottmann.Engine.Graphics.Color4;
 
 namespace MartinZottmann.Game.Entities
@@ -83,7 +84,14 @@ namespace MartinZottmann.Game.Entities
             render_context.Model = Model;
 
             if (graphic != null)
+            {
+                foreach (var s in graphic.Program.UniformLocations)
+                    switch (s.Key)
+                    {
+                        case "alpha_cutoff": s.Value.Set(render_context.alpha_cutoff); break;
+                    }
                 graphic.Draw();
+            }
 
             base.Render(delta_time, render_context);
 #if DEBUG

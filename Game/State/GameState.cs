@@ -5,9 +5,9 @@ namespace MartinZottmann.Game.State
 {
     public abstract class GameState : IDisposable
     {
-        protected GameWindow Window { get; set; }
+        protected Window Window { get; set; }
 
-        public GameState(GameWindow window)
+        public GameState(Window window)
         {
             Window = window;
         }
