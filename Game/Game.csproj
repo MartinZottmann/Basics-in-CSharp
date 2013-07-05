@@ -67,6 +67,7 @@
     <Compile Include="Entities\GUI\Debugger.cs" />
     <Compile Include="Entities\GUI\Entity.cs" />
     <Compile Include="Entities\GUI\FPSCounter.cs" />
+    <Compile Include="Entities\GUI\Screen.cs" />
     <Compile Include="Entities\Helper\INavigation.cs" />
     <Compile Include="Entities\Ships\Components\Component.cs" />
     <Compile Include="Entities\Ships\Components\Floor.cs" />

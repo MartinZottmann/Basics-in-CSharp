@@ -49,8 +49,6 @@ namespace MartinZottmann.Game.Entities.GUI
 
         public override void Render(double delta_time, RenderContext render_context)
         {
-            GL.DepthMask(false);
-
             double yMax = render_context.Camera.Near * Math.Tan(0.5 * render_context.Camera.Fov);
             double yMin = -yMax;
             double xMin = yMin * render_context.Camera.Aspect;
@@ -60,11 +58,7 @@ namespace MartinZottmann.Game.Entities.GUI
             Orientation = new Quaterniond(Vector3d.UnitY, 0.95);
 
             render_context.Model = Model;
-            Resources.Programs["plain_texture"].UniformLocations["PVM"].Set(render_context.Model * render_context.Projection);
-            Resources.Programs["plain_texture"].UniformLocations["Texture"].Set(0);
-            graphic.Draw();
-
-            GL.DepthMask(true);
+            base.Render(delta_time, render_context);
         }
     }
 }

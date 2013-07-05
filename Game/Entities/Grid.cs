@@ -51,7 +51,6 @@ namespace MartinZottmann.Game.Entities
         public override void Render(double delta_time, RenderContext render_context)
         {
             render_context.Model = Model;
-            Resources.Programs["normal"].UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
 
             GL.LineWidth(1);
             circle.Draw();

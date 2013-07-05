@@ -89,6 +89,17 @@ namespace MartinZottmann.Game.Entities
                     switch (s.Key)
                     {
                         case "alpha_cutoff": s.Value.Set(render_context.alpha_cutoff); break;
+                        case "in_LightPosition": s.Value.Set(new Vector3d(10, 10, 10)); break;
+                        case "in_Model": s.Value.Set(render_context.Model); break;
+                        case "in_View": s.Value.Set(render_context.View); break;
+                        case "in_ModelView": s.Value.Set(render_context.ViewModel); break;
+                        case "PVM":
+                        case "in_ModelViewProjection":
+                            s.Value.Set(render_context.ProjectionViewModel);
+                            break;
+                        case "in_NormalView": s.Value.Set(render_context.Normal); break;
+                        case "in_Texture": s.Value.Set(0); break;
+                        default: throw new NotImplementedException(s.Key);
                     }
                 graphic.Draw();
             }
@@ -109,7 +120,6 @@ namespace MartinZottmann.Game.Entities
         public virtual void RenderOrientation(double delta_time, RenderContext render_context)
         {
             GL.LineWidth(5);
-            orientation_graphic.Program.UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
             orientation_graphic.Draw();
         }
 #endif

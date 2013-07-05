@@ -20,8 +20,6 @@ namespace MartinZottmann.Game.Entities
             graphic.Program = Resources.Programs["plain_texture"];
             graphic.Texture = Resources.Textures["Resources/Textures/pointer.png"];
 
-            graphic.Program.UniformLocations["Texture"].Set(0);
-
             BoundingBox = shape.BoundingBox;
             BoundingSphere = shape.BoundingSphere;
         }
@@ -29,7 +27,6 @@ namespace MartinZottmann.Game.Entities
         public override void Render(double delta_time, RenderContext render_context)
         {
             render_context.Model = Model;
-            graphic.Program.UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
             base.Render(delta_time, render_context);
         }
     }

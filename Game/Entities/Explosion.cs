@@ -86,7 +86,6 @@ namespace MartinZottmann.Game.Entities
                 return;
 
             render_context.Model = Model;
-            graphic.Program.UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
 
             GL.PointSize(2);
             base.Render(delta_time, render_context);

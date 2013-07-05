@@ -35,7 +35,6 @@ namespace MartinZottmann.Game.Entities
         public override void Render(double delta_time, RenderContext render_context)
         {
             render_context.Model = Model;
-            graphic.Program.UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
 
             GL.PointSize(1);
             base.Render(delta_time, render_context);

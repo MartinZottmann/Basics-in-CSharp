@@ -1,6 +1,7 @@
 ﻿using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities;
+using MartinZottmann.Game.Entities.GUI;
 using MartinZottmann.Game.Entities.Helper;
 using MartinZottmann.Game.Entities.Ships;
 using MartinZottmann.Game.Graphics;
@@ -27,9 +28,13 @@ namespace MartinZottmann.Game.State
 
         protected Cursor cursor;
 
-        protected RenderContext render_context = new RenderContext();
+        protected RenderContext world_render_context = new RenderContext();
 
         protected FileSystem file_system;
+
+        protected Screen screen;
+
+        protected RenderContext screen_render_context = new RenderContext();
 
         protected string savegame_filepath;
 
@@ -74,16 +79,12 @@ namespace MartinZottmann.Game.State
 
             camera = new Camera(Window) { Position = new Vector3d(10, 10, 10), Direction = new Vector3d(-1, -1, -1) };
 
-            render_context.Window = Window;
-            render_context.Camera = camera;
+            world_render_context.Window = Window;
+            world_render_context.Camera = camera;
 
             Window.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
             world = new World(resources);
-
-            world.AddChild(new Entities.GUI.FPSCounter(resources));
-
-            world.AddChild(new Entities.GUI.Debugger(resources));
 
             cursor = new Cursor(resources);
             Window.Mouse.ButtonUp += (s, e) =>
@@ -121,14 +122,21 @@ namespace MartinZottmann.Game.State
             //        }
 
             world.AddChild(new Grid(resources));
-
             world.AddChild(new Starfield(resources));
-
             world.AddChild(new Ship(resources) { Position = new Vector3d(5, 5, 5), Target = new Vector3d(5, 5, 5) });
-
             world.AddChild(new Ship(resources) { Position = new Vector3d(0, 5, 5), Target = new Vector3d(0, 5, 5) });
-
             world.AddChild(new Ship(resources) { Position = new Vector3d(-5, 5, 5), Target = new Vector3d(-5, 5, 5) });
+
+            screen = new Screen(resources);
+            screen.AddChild(new Entities.GUI.FPSCounter(resources));
+            screen.AddChild(new Entities.GUI.Debugger(resources));
+
+            var screen_camera = new Camera(Window);
+            screen_render_context.Window = Window;
+            screen_render_context.Camera = screen_camera;
+            screen_render_context.Projection = screen_camera.ProjectionMatrix();
+            screen_render_context.View = screen_camera.ViewMatrix();
+            screen_render_context.Model = Matrix4d.Identity;
         }
 
         public override void Dispose()
@@ -143,7 +151,7 @@ namespace MartinZottmann.Game.State
         protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
         {
             if (e.Key == Key.F3)
-                render_context.Debug = !render_context.Debug;
+                world_render_context.Debug = !world_render_context.Debug;
             if (e.Key == Key.F10)
                 camera.MouseLook = !camera.MouseLook;
             if (e.Key == Key.Plus)
@@ -161,11 +169,6 @@ namespace MartinZottmann.Game.State
                         Window.ReleaseContext();
                         break;
                     }
-        }
-
-        protected void Add(Entities.Entity entity)
-        {
-            world.AddChild(entity);
         }
 
         public override void Update(double delta_time)
@@ -245,11 +248,13 @@ namespace MartinZottmann.Game.State
                     entity.AngularVelocity = Vector3d.Zero;
 
             camera.Update(delta_time);
-            render_context.Projection = camera.ProjectionMatrix();
-            render_context.View = camera.ViewMatrix();
-            render_context.Model = Matrix4d.Identity;
+            world_render_context.Projection = camera.ProjectionMatrix();
+            world_render_context.View = camera.ViewMatrix();
+            world_render_context.Model = Matrix4d.Identity;
 
-            world.Update(delta_time, render_context);
+            world.Update(delta_time, world_render_context);
+
+            screen.Update(delta_time, screen_render_context);
         }
 
         public override void Render(double delta_time)
@@ -257,14 +262,16 @@ namespace MartinZottmann.Game.State
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Viewport(0, 0, Window.Width, Window.Height);
 
-            render_context.alpha_cutoff = 0.35f;
-            world.Render(delta_time, render_context);
+            world_render_context.alpha_cutoff = 0.35f;
+            world.Render(delta_time, world_render_context);
             GL.Accum(AccumOp.Load, 0.5f);
 
-            render_context.alpha_cutoff = 0.65f;
-            world.Render(delta_time, render_context);
+            world_render_context.alpha_cutoff = 0.65f;
+            world.Render(delta_time, world_render_context);
             GL.Accum(AccumOp.Accum, 0.5f);
             GL.Accum(AccumOp.Return, 1f);
+
+            screen.Render(delta_time, screen_render_context);
 
             Window.SwapBuffers();
         }
