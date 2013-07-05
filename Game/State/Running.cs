@@ -1,9 +1,9 @@
-﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Graphics.OpenGL;
+﻿using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.Helper;
 using MartinZottmann.Game.Entities.Ships;
+using MartinZottmann.Game.Graphics;
 using MartinZottmann.Game.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -11,6 +11,7 @@ using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Camera = MartinZottmann.Engine.Graphics.Camera;
 
 namespace MartinZottmann.Game.State
 {
@@ -26,7 +27,7 @@ namespace MartinZottmann.Game.State
 
         protected Cursor cursor;
 
-        protected RenderContext render_context;
+        protected RenderContext render_context = new RenderContext();
 
         protected FileSystem file_system;
 
@@ -72,6 +73,9 @@ namespace MartinZottmann.Game.State
                 resources.Textures.Load(filename, true, TextureTarget.Texture2D);
 
             camera = new Camera(Window) { Position = new Vector3d(10, 10, 10), Direction = new Vector3d(-1, -1, -1) };
+
+            render_context.Window = Window;
+            render_context.Camera = camera;
 
             Window.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
@@ -134,6 +138,8 @@ namespace MartinZottmann.Game.State
 
         protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
         {
+            if (e.Key == Key.F3)
+                render_context.Debug = !render_context.Debug;
             if (e.Key == Key.F10)
                 camera.MouseLook = !camera.MouseLook;
         }
@@ -220,14 +226,9 @@ namespace MartinZottmann.Game.State
                     entity.AngularVelocity = Vector3d.Zero;
 
             camera.Update(delta_time);
-
-            render_context = new RenderContext()
-            {
-                Window = Window,
-                Camera = camera,
-                Projection = camera.ProjectionMatrix(),
-                View = camera.ViewMatrix()
-            };
+            render_context.Projection = camera.ProjectionMatrix();
+            render_context.View = camera.ViewMatrix();
+            render_context.Model = Matrix4d.Identity;
 
             world.Update(delta_time, render_context);
         }

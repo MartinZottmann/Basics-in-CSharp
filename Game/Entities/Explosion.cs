@@ -1,7 +1,7 @@
-﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Graphics.Mesh;
+﻿using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 

@@ -4,6 +4,7 @@ using MartinZottmann.Game.IO;
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using RenderContext = MartinZottmann.Game.Graphics.RenderContext;
 
 namespace MartinZottmann.Game.Entities
 {

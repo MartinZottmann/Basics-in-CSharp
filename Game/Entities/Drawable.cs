@@ -1,8 +1,9 @@
-﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Graphics.Mesh;
+﻿using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Color4 = MartinZottmann.Engine.Graphics.Color4;
 
 namespace MartinZottmann.Game.Entities
 {
@@ -43,11 +44,13 @@ namespace MartinZottmann.Game.Entities
         protected Engine.Graphics.OpenGL.Entity orientation_graphic;
 #endif
 
-        public Drawable(ResourceManager resources) : base(resources) {
+        public Drawable(ResourceManager resources)
+            : base(resources)
+        {
 #if DEBUG
             var forward = new Color4(1.0f, 0.0f, 0.0f, 0.5f);
             var up = new Color4(0.0f, 1.0f, 0.0f, 0.5f);
-            var right= new Color4(0.0f, 0.0f, 1.0f, 0.5f);
+            var right = new Color4(0.0f, 0.0f, 1.0f, 0.5f);
             orientation_graphic = new Engine.Graphics.OpenGL.Entity();
             orientation_graphic.Mesh(
                 new Mesh<VertexP3C4, uint>()
@@ -84,7 +87,8 @@ namespace MartinZottmann.Game.Entities
 
             base.Render(delta_time, render_context);
 #if DEBUG
-            RenderHelpers(delta_time, render_context);
+            if (render_context.Debug)
+                RenderHelpers(delta_time, render_context);
 #endif
         }
 

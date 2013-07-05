@@ -1,6 +1,6 @@
-﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Physics;
+﻿using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System.Collections.Generic;
@@ -233,6 +233,8 @@ namespace MartinZottmann.Game.Entities
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             GL.LoadMatrix(ref V);
+            var velocity = Velocity * InverseOrientationMatrix;
+            var force = Force * InverseOrientationMatrix;
 
             GL.LineWidth(1);
             GL.Begin(BeginMode.Lines);
@@ -240,27 +242,27 @@ namespace MartinZottmann.Game.Entities
                 #region Velocity
                 GL.Color4(1.0f, 1.0f, 0.0f, 0.5f);
                 GL.Vertex3(Vector3d.Zero);
-                GL.Vertex3(Velocity);
+                GL.Vertex3(velocity);
 
-                GL.Vertex3(Velocity - Vector3d.UnitX);
-                GL.Vertex3(Velocity + Vector3d.UnitX);
-                GL.Vertex3(Velocity - Vector3d.UnitY);
-                GL.Vertex3(Velocity + Vector3d.UnitY);
-                GL.Vertex3(Velocity - Vector3d.UnitZ);
-                GL.Vertex3(Velocity + Vector3d.UnitZ);
+                GL.Vertex3(velocity - Vector3d.UnitX);
+                GL.Vertex3(velocity + Vector3d.UnitX);
+                GL.Vertex3(velocity - Vector3d.UnitY);
+                GL.Vertex3(velocity + Vector3d.UnitY);
+                GL.Vertex3(velocity - Vector3d.UnitZ);
+                GL.Vertex3(velocity + Vector3d.UnitZ);
                 #endregion
 
                 #region Force
                 GL.Color4(1.0f, 0.75f, 0.0f, 0.5f);
-                GL.Vertex3(Velocity);
-                GL.Vertex3(Velocity + Force);
+                GL.Vertex3(velocity);
+                GL.Vertex3(velocity + force);
 
-                GL.Vertex3(Velocity + Force - Vector3d.UnitX);
-                GL.Vertex3(Velocity + Force + Vector3d.UnitX);
-                GL.Vertex3(Velocity + Force - Vector3d.UnitY);
-                GL.Vertex3(Velocity + Force + Vector3d.UnitY);
-                GL.Vertex3(Velocity + Force - Vector3d.UnitZ);
-                GL.Vertex3(Velocity + Force + Vector3d.UnitZ);
+                GL.Vertex3(velocity + force - Vector3d.UnitX);
+                GL.Vertex3(velocity + force + Vector3d.UnitX);
+                GL.Vertex3(velocity + force - Vector3d.UnitY);
+                GL.Vertex3(velocity + force + Vector3d.UnitY);
+                GL.Vertex3(velocity + force - Vector3d.UnitZ);
+                GL.Vertex3(velocity + force + Vector3d.UnitZ);
                 #endregion
 
                 //#region Contact to circle

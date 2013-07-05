@@ -2,9 +2,11 @@
 
 namespace MartinZottmann.Engine.Graphics
 {
-    public class RenderContext
+    public class RenderContext : RenderContext<RenderContext> { }
+
+    public class RenderContext<T> where T : RenderContext<T>, new()
     {
-        public RenderContext Parent;
+        public T Parent;
 
         public GameWindow Window;
 
@@ -66,11 +68,11 @@ namespace MartinZottmann.Engine.Graphics
         /// </summary>
         public Matrix4d Normal { get { return Matrix4d.Transpose(Matrix4d.Invert(Model * View)); } }
 
-        public RenderContext Push()
+        public virtual T Push()
         {
-            return new RenderContext()
+            return new T()
             {
-                Parent =  this,
+                Parent = (T)this,
                 Window = Window,
                 Camera = Camera,
                 Projection = Matrix4d.Identity,
@@ -79,7 +81,7 @@ namespace MartinZottmann.Engine.Graphics
             };
         }
 
-        public RenderContext Pop()
+        public virtual T Pop()
         {
             return Parent;
         }

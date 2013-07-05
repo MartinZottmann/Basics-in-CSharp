@@ -1,6 +1,6 @@
-﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Physics;
+﻿using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Graphics;
 using OpenTK;
 using System.Collections.Generic;
 

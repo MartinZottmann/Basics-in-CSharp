@@ -1,6 +1,6 @@
-﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Graphics.Shapes;
+﻿using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Graphics;
 using OpenTK;
 
 namespace MartinZottmann.Game.Entities

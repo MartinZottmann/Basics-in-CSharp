@@ -77,6 +77,7 @@
     <Compile Include="Entities\Physical.cs" />
     <Compile Include="Entities\Textured.cs" />
     <Compile Include="Entities\Ships\Ship.cs" />
+    <Compile Include="Graphics\RenderContext.cs" />
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="IO\ISaveable.cs" />
     <Compile Include="IO\SaveKey.cs" />

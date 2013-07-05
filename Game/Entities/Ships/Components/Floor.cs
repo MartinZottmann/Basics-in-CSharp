@@ -1,5 +1,5 @@
-﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Resources;
+﻿using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Graphics;
 using OpenTK;
 
 namespace MartinZottmann.Game.Entities.Ships.Components

@@ -1,8 +1,8 @@
-﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Resources;
+﻿using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.AI;
 using MartinZottmann.Game.Entities.Helper;
 using MartinZottmann.Game.Entities.Ships.Components;
+using MartinZottmann.Game.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
