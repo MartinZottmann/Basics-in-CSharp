@@ -97,6 +97,7 @@ namespace MartinZottmann.Game.Entities
         public virtual void RenderOrientation(double delta_time, RenderContext render_context)
         {
             GL.LineWidth(5);
+            orientation_graphic.Program.UniformLocations["PVM"].Set(render_context.ProjectionViewModel);
             orientation_graphic.Draw();
         }
 #endif

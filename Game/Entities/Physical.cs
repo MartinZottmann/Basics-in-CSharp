@@ -222,7 +222,7 @@ namespace MartinZottmann.Game.Entities
         public virtual void RenderVelocity(double delta_time, RenderContext render_context)
         {
             var P = render_context.Projection;
-            var V = render_context.View;
+            var V = render_context.ViewModel;
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.LoadMatrix(ref P);
@@ -235,43 +235,44 @@ namespace MartinZottmann.Game.Entities
             {
                 #region Velocity
                 GL.Color4(1.0f, 1.0f, 0.0f, 0.5f);
-                GL.Vertex3(Position);
-                GL.Vertex3(Position + Velocity);
-                GL.Vertex3(Position + Velocity - Vector3d.UnitX);
-                GL.Vertex3(Position + Velocity + Vector3d.UnitX);
-                GL.Vertex3(Position + Velocity - Vector3d.UnitY);
-                GL.Vertex3(Position + Velocity + Vector3d.UnitY);
-                GL.Vertex3(Position + Velocity - Vector3d.UnitZ);
-                GL.Vertex3(Position + Velocity + Vector3d.UnitZ);
+                GL.Vertex3(Vector3d.Zero);
+                GL.Vertex3(Velocity);
+
+                GL.Vertex3(Velocity - Vector3d.UnitX);
+                GL.Vertex3(Velocity + Vector3d.UnitX);
+                GL.Vertex3(Velocity - Vector3d.UnitY);
+                GL.Vertex3(Velocity + Vector3d.UnitY);
+                GL.Vertex3(Velocity - Vector3d.UnitZ);
+                GL.Vertex3(Velocity + Vector3d.UnitZ);
                 #endregion
 
                 #region Force
                 GL.Color4(1.0f, 0.75f, 0.0f, 0.5f);
-                GL.Vertex3(Position + Velocity);
-                GL.Vertex3(Position + Velocity + Force);
+                GL.Vertex3(Velocity);
+                GL.Vertex3(Velocity + Force);
 
-                GL.Vertex3(Position + Velocity + Force - Vector3d.UnitX);
-                GL.Vertex3(Position + Velocity + Force + Vector3d.UnitX);
-                GL.Vertex3(Position + Velocity + Force - Vector3d.UnitY);
-                GL.Vertex3(Position + Velocity + Force + Vector3d.UnitY);
-                GL.Vertex3(Position + Velocity + Force - Vector3d.UnitZ);
-                GL.Vertex3(Position + Velocity + Force + Vector3d.UnitZ);
+                GL.Vertex3(Velocity + Force - Vector3d.UnitX);
+                GL.Vertex3(Velocity + Force + Vector3d.UnitX);
+                GL.Vertex3(Velocity + Force - Vector3d.UnitY);
+                GL.Vertex3(Velocity + Force + Vector3d.UnitY);
+                GL.Vertex3(Velocity + Force - Vector3d.UnitZ);
+                GL.Vertex3(Velocity + Force + Vector3d.UnitZ);
                 #endregion
 
-                #region Contact to circle
-                GL.Color4(1.0f, 1.0f, 1.0f, 0.2f);
-                GL.Vertex3(Position);
-                var position_on_y = new Vector3d(Position.X, 0, Position.Z);
-                GL.Vertex3(position_on_y);
+                //#region Contact to circle
+                //GL.Color4(1.0f, 1.0f, 1.0f, 0.2f);
+                //GL.Vertex3(Position);
+                //var position_on_y = new Vector3d(Position.X, 0, Position.Z);
+                //GL.Vertex3(position_on_y);
 
-                double radius = 100;
-                Vector3d center = Vector3d.Zero;
-                Vector3d difference = position_on_y - center;
-                Vector3d contact = center + difference / difference.Length * radius;
+                //double radius = 100;
+                //Vector3d center = Vector3d.Zero;
+                //Vector3d difference = position_on_y - center;
+                //Vector3d contact = center + difference / difference.Length * radius;
 
-                GL.Vertex3(position_on_y);
-                GL.Vertex3(contact);
-                #endregion
+                //GL.Vertex3(position_on_y);
+                //GL.Vertex3(contact);
+                //#endregion
             }
             GL.End();
         }
