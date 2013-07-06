@@ -1,6 +1,9 @@
 #version 330 core
 
+const float bias = 0.005;
+
 uniform sampler2D in_Texture;
+uniform sampler2DShadow in_ShadowTexture;
 uniform vec3 in_LightPosition;
 uniform float alpha_cutoff;
 
@@ -9,6 +12,7 @@ in vec3 Position_worldspace;
 in vec3 Normal_cameraspace;
 in vec3 EyeDirection_cameraspace;
 in vec3 LightDirection_cameraspace;
+in vec4 shadowUV;
 
 out vec4 color;
 
@@ -17,7 +21,7 @@ void main() {
     float LightPower = 50.0f;
 
     vec4 MaterialDiffuseColor = texture2D(in_Texture, UV);
-    vec4 MaterialAmbientColor = vec4(0, 0, 0, 1) * MaterialDiffuseColor;
+    vec4 MaterialAmbientColor = vec4(0.1, 0.1, 0.1, 1) * MaterialDiffuseColor;
     vec4 MaterialSpecularColor = vec4(0.5, 0.5, 0.5, 1);
 
     float distance = length(in_LightPosition - Position_worldspace) / 10;
@@ -30,9 +34,11 @@ void main() {
     vec3 R = reflect(-l, n);
     float cosAlpha = clamp(dot(E, R), 0, 1);
 
+    float visibility = shadow2DProj(in_ShadowTexture, vec4(shadowUV.xy, shadowUV.z - bias, shadowUV.w)).r;
+
     color = MaterialAmbientColor
-        + MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance * distance)
-        + MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, 5) / (distance * distance);
+        + visibility * MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance * distance)
+        + visibility * MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, 5) / (distance * distance);
 
     if(color.a < alpha_cutoff)
         discard;

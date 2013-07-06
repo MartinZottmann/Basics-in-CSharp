@@ -85,23 +85,34 @@ namespace MartinZottmann.Game.Entities
 
             if (graphic != null)
             {
+                var t0 = graphic.Program;
+                var t1 = graphic.Texture;
+                if (render_context.Program != null)
+                {
+                    graphic.Program = render_context.Program;
+                    graphic.Texture = null;
+                }
                 foreach (var s in graphic.Program.UniformLocations)
                     switch (s.Key)
                     {
                         case "alpha_cutoff": s.Value.Set(render_context.alpha_cutoff); break;
-                        case "in_LightPosition": s.Value.Set(new Vector3d(10, 10, 10)); break;
+                        case "in_DepthBiasMVP": break;
+                        case "in_ShadowTexture": break;
+                        case "in_LightPosition": s.Value.Set(new Vector3d(10, 10, 10)); break; // @todo
                         case "in_Model": s.Value.Set(render_context.Model); break;
                         case "in_View": s.Value.Set(render_context.View); break;
                         case "in_ModelView": s.Value.Set(render_context.ViewModel); break;
-                        case "PVM":
-                        case "in_ModelViewProjection":
-                            s.Value.Set(render_context.ProjectionViewModel);
-                            break;
+                        case "in_ModelViewProjection": s.Value.Set(render_context.ProjectionViewModel); break;
                         case "in_NormalView": s.Value.Set(render_context.Normal); break;
-                        case "in_Texture": s.Value.Set(0); break;
+                        case "in_Texture": s.Value.Set(0); break; // @todo
                         default: throw new NotImplementedException(s.Key);
                     }
                 graphic.Draw();
+                if (render_context.Program != null)
+                {
+                    graphic.Program = t0;
+                    graphic.Texture = t1;
+                }
             }
 
             base.Render(delta_time, render_context);

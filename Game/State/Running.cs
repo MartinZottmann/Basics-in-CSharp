@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Engine.Graphics.OpenGL;
+﻿using MartinZottmann.Engine;
+using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.GUI;
@@ -123,9 +124,14 @@ namespace MartinZottmann.Game.State
 
             world.AddChild(new Grid(resources));
             world.AddChild(new Starfield(resources));
-            world.AddChild(new Ship(resources) { Position = new Vector3d(5, 5, 5), Target = new Vector3d(5, 5, 5) });
-            world.AddChild(new Ship(resources) { Position = new Vector3d(0, 5, 5), Target = new Vector3d(0, 5, 5) });
-            world.AddChild(new Ship(resources) { Position = new Vector3d(-5, 5, 5), Target = new Vector3d(-5, 5, 5) });
+            world.AddChild(new Ship(resources) { Position = new Vector3d(5, 0, 0), Target = new Vector3d(5, 0, 0), AngularVelocity = Vector3d.UnitX });
+            world.AddChild(new Ship(resources) { Position = new Vector3d(0, 0, 0), Target = new Vector3d(0, 0, 0), AngularVelocity = Vector3d.UnitY });
+            world.AddChild(new Ship(resources) { Position = new Vector3d(-5, 0, 0), Target = new Vector3d(-5, 0, 0), AngularVelocity = Vector3d.UnitZ });
+            world.AddChild(new Asteroid(resources) { Position = new Vector3d(0, 0, 5), Velocity = Vector3d.Zero, Scale = new Vector3d(2), AngularVelocity = new Vector3d(0.25, 0.5, 0.75) });
+            world.AddChild(new Textured(resources) { Position = new Vector3d(3, -3, 0), Scale = new Vector3d(2), AngularVelocity = Vector3d.UnitY });
+            world.AddChild(new Textured(resources) { Position = new Vector3d(-3, -4, 0), Scale = new Vector3d(2), AngularVelocity = -Vector3d.UnitY });
+            world.AddChild(new Textured(resources) { Position = new Vector3d(0, -14, 0), Scale = new Vector3d(7) });
+            world.AddChild(new Textured(resources) { Position = new Vector3d(-14, 0, 0), Scale = new Vector3d(7), Orientation = new Quaterniond(Vector3d.UnitZ, -1) });
 
             screen = new Screen(resources);
             screen.AddChild(new Entities.GUI.FPSCounter(resources));
@@ -137,6 +143,26 @@ namespace MartinZottmann.Game.State
             screen_render_context.Projection = screen_camera.ProjectionMatrix();
             screen_render_context.View = screen_camera.ViewMatrix();
             screen_render_context.Model = Matrix4d.Identity;
+
+            var texture_target = TextureTarget.Texture2D;
+            world_render_context.DepthTexture = new Texture(texture_target);
+            using (new Bind(world_render_context.DepthTexture))
+            {
+                GL.TexImage2D(texture_target, 0, PixelInternalFormat.DepthComponent, 1024, 1024, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+                GL.TexParameter(texture_target, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(texture_target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                GL.TexParameter(texture_target, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+                GL.TexParameter(texture_target, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+                GL.TexParameter(texture_target, TextureParameterName.TextureCompareMode, (int)TextureCompareMode.CompareRToTexture);
+                GL.TexParameter(texture_target, TextureParameterName.TextureCompareFunc, (int)DepthFunction.Lequal);
+                //GL.TexParameter(texture_target, TextureParameterName.DepthTextureMode, (int)All.Intensity);
+                //GL.TexParameter(texture_target, TextureParameterName.DepthTextureMode, (int)All.Luminance);
+            }
+
+            frame_buffer = new FrameBuffer(FramebufferTarget.Framebuffer);
+            frame_buffer.Texture(FramebufferAttachment.DepthAttachment, world_render_context.DepthTexture, 0);
+            frame_buffer.DrawBuffer(DrawBufferMode.None);
+            frame_buffer.CheckStatus();
         }
 
         public override void Dispose()
@@ -257,21 +283,90 @@ namespace MartinZottmann.Game.State
             screen.Update(delta_time, screen_render_context);
         }
 
+        FrameBuffer frame_buffer;
+
         public override void Render(double delta_time)
         {
+            #region Depth
+            var light = new Vector3d(10, 10, 0);
+            var light_target = new Vector3d(0, 0, 0);
+            var depth_render_context = new RenderContext()
+            {
+                Window = Window,
+                Projection = Matrix4d.CreateOrthographicOffCenter(-10, 10, -10, 10, 0, 30),
+                View = Matrix4d.LookAt(light, light_target, Vector3d.UnitY),
+                Model = Matrix4d.Identity,
+                Program = resources.Programs["depth"]
+            };
+            var depth_bias = Matrix4d.Scale(0.5, 0.5, 0.5) * Matrix4d.CreateTranslation(0.5, 0.5, 0.5); // Map [-1, 1] to [0, 1]
+            var depth_bias_MVP = world_render_context.InvertedView * depth_render_context.ProjectionViewModel * depth_bias;
+            resources.Programs["standard"].UniformLocations["in_DepthBiasMVP"].Set(depth_bias_MVP);
+            resources.Programs["standard"].UniformLocations["in_Texture"].Set(0);
+            resources.Programs["standard"].UniformLocations["in_ShadowTexture"].Set(1);
+            resources.Programs["standard"].UniformLocations["in_LightPosition"].Set(light);
+            //GL.Enable(EnableCap.PolygonOffsetFill);
+            //GL.PolygonOffset(2.0f, 4.0f);
+            //GL.CullFace(CullFaceMode.Front);
+            using (new Bind(frame_buffer))
+            {
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                GL.Viewport(0, 0, 1024, 1024);
+                world.Render(delta_time, depth_render_context);
+            }
+            //GL.CullFace(CullFaceMode.Back);
+            //GL.Disable(EnableCap.PolygonOffsetFill);
+            #endregion
+
+            //#region Shadow
+            //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            //GL.Viewport(0, 0, Window.Width, Window.Height);
+            //using (new Bind(resources.Textures["Resources/Textures/debug-256.png"]))
+            //using (new Bind(world_render_context.DepthTexture))
+            //    world.Render(delta_time, world_render_context);
+            //#endregion
+
+            #region Accumulation
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Viewport(0, 0, Window.Width, Window.Height);
 
             world_render_context.alpha_cutoff = 0.35f;
-            world.Render(delta_time, world_render_context);
+            using (new Bind(resources.Textures["Resources/Textures/debug-256.png"]))
+            using (new Bind(world_render_context.DepthTexture))
+                world.Render(delta_time, world_render_context);
             GL.Accum(AccumOp.Load, 0.5f);
 
             world_render_context.alpha_cutoff = 0.65f;
-            world.Render(delta_time, world_render_context);
+            using (new Bind(resources.Textures["Resources/Textures/debug-256.png"]))
+            using (new Bind(world_render_context.DepthTexture))
+                world.Render(delta_time, world_render_context);
             GL.Accum(AccumOp.Accum, 0.5f);
             GL.Accum(AccumOp.Return, 1f);
 
             screen.Render(delta_time, screen_render_context);
+            #endregion
+
+            #region Debug
+            GL.Viewport(0, 0, Window.Width, Window.Height);
+            var debug_render_context = new RenderContext()
+            {
+                Window = Window,
+                Projection = Matrix4d.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1),
+                View = Matrix4d.Identity,
+                Model = Matrix4d.Scale(0.25) * Matrix4d.CreateTranslation(-0.75, -0.75, 0)
+            };
+            var debug_screen = new MartinZottmann.Engine.Graphics.OpenGL.Entity();
+            var shape = new MartinZottmann.Engine.Graphics.Shapes.Quad();
+            shape.Vertices[0].Texcoord.Y = 0;
+            shape.Vertices[1].Texcoord.Y = 0;
+            shape.Vertices[2].Texcoord.Y = 1;
+            shape.Vertices[3].Texcoord.Y = 1;
+            debug_screen.Mesh(shape);
+            debug_screen.Program = resources.Programs["plain_texture"];
+            debug_screen.Program.UniformLocations["in_ModelViewProjection"].Set(debug_render_context.ProjectionViewModel);
+            debug_screen.Program.UniformLocations["in_Texture"].Set(0);
+            debug_screen.Texture = world_render_context.DepthTexture;
+            debug_screen.Draw();
+            #endregion
 
             Window.SwapBuffers();
         }

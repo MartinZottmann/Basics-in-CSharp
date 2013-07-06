@@ -10,9 +10,6 @@ namespace MartinZottmann.Game
         {
             using (Window game = new Window(new GraphicsMode(new ColorFormat(32), 24, 0, 2, new ColorFormat(32))))
                 game.Run();
-#if DEBUG
-            Console.ReadKey();
-#endif
         }
     }
 }

@@ -29,14 +29,13 @@ namespace MartinZottmann.Game.Entities
                 0, 0, 0, 1
             );
 
-            var shape = new Sphere();
-            shape.Translate(Matrix4.CreateScale((float)scale));
+            Scale = new Vector3d(scale);
 
-            graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Mesh(shape);
-            graphic.Program = Resources.Programs["standard_cube"];
-            var texture = new Texture("Resources/Textures/debug-256.png", false, OpenTK.Graphics.OpenGL.TextureTarget.TextureCubeMap);
-            graphic.Texture = texture;
+            graphic = Resources.Entities.Load("Resources/Models/sphere.obj", Matrix4.CreateScale(0.5f, 0.5f, 0.5f));
+            var shape = graphic.Mesh();
+
+            graphic.Program = Resources.Programs["standard"];
+            graphic.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
 
             BoundingBox = shape.BoundingBox;
             BoundingSphere = shape.BoundingSphere;

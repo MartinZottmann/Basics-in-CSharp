@@ -15,19 +15,19 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             Console.WriteLine(")");
         }
 
-        public static unsafe int[] AttachedShaders(int program)
+        public static unsafe uint[] AttachedShaders(uint program)
         {
             int icount = 0;
             int* count = (int*)&icount;
             GL.GetProgram(program, ProgramParameter.AttachedShaders, count);
 
-            int[] shaders = new int[*count];
+            uint[] shaders = new uint[*count];
             GL.GetAttachedShaders(program, *count, count, shaders);
 
             return shaders;
         }
 
-        public static void ProgramParameters(int program)
+        public static void ProgramParameters(uint program)
         {
             int info;
             bool geometry_shader = false;
@@ -71,7 +71,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             Console.WriteLine(")");
         }
 
-        public static void Shader(int shader)
+        public static void Shader(uint shader)
         {
             int info;
             Console.WriteLine("Shader {0} (", shader);
@@ -83,15 +83,15 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             Console.WriteLine(")");
         }
 
-        public static void Uniform(int program)
+        public static void Uniform(uint program)
         {
             int count, info;
             Console.WriteLine("Uniform {0} (", program);
             GL.GetProgram(program, ProgramParameter.ActiveUniforms, out count);
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
-                Console.WriteLine("\t{0}: {1} (", i, GL.GetActiveUniformName(program, i));
-                GL.GetActiveUniformName(program, i);
+                Console.WriteLine("\t{0}: {1} (", i, GL.GetActiveUniformName((int)program, (int)i));
+                GL.GetActiveUniformName((int)program, (int)i);
                 foreach (ActiveUniformParameter parameter in (ActiveUniformParameter[])Enum.GetValues(typeof(ActiveUniformParameter)))
                 {
                     GL.GetActiveUniforms(program, 1, ref i, parameter, out info);
@@ -100,9 +100,9 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 Console.WriteLine("\t)");
             }
             GL.GetProgram(program, ProgramParameter.ActiveUniformBlocks, out count);
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
-                Console.WriteLine("\t{0}: {1} (", i, GL.GetActiveUniformBlockName(program, i));
+                Console.WriteLine("\t{0}: {1} (", i, GL.GetActiveUniformBlockName((int)program, (int)i));
                 foreach (ActiveUniformBlockParameter parameter in (ActiveUniformBlockParameter[])Enum.GetValues(typeof(ActiveUniformBlockParameter)))
                 {
                     GL.GetActiveUniformBlock(program, i, parameter, out info);
@@ -113,7 +113,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             Console.WriteLine(")");
         }
 
-        public static void Attribue(int program)
+        public static void Attribue(uint program)
         {
             int count;
 
@@ -121,7 +121,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             GL.GetProgram(program, ProgramParameter.ActiveAttributes, out count);
             int buffer_size;
             GL.GetProgram(program, ProgramParameter.ActiveAttributeMaxLength, out buffer_size);
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 int size;
                 int length;

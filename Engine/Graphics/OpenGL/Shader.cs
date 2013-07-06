@@ -6,9 +6,9 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class Shader : IDisposable
     {
-        public int id;
+        public readonly uint Id;
 
-        public ShaderType type;
+        public readonly ShaderType Type;
 
         public Shader(ShaderType type, string filename)
         {
@@ -16,24 +16,25 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             var source = sr.ReadToEnd();
             sr.Close();
 
-            id = GL.CreateShader(type);
+            Id = (uint)GL.CreateShader(type);
+            Type = type;
 
-            GL.ShaderSource(id, source);
-            try { GL.CompileShader(id); }
+            GL.ShaderSource((int)Id, source); // GL.ShaderSource(uint shader, string @string) is missing
+            try { GL.CompileShader(Id); }
             catch (Exception) { }
 #if DEBUG
-            OpenGL.Info.Shader(id);
+            //OpenGL.Info.Shader(Id);
 
             int info;
-            GL.GetShader(id, ShaderParameter.InfoLogLength, out info);
+            GL.GetShader(Id, ShaderParameter.InfoLogLength, out info);
             if (info != 0)
             {
                 string info_log;
-                GL.GetShaderInfoLog(id, out info_log);
+                GL.GetShaderInfoLog((int)Id, out info_log); // GL.GetShaderInfoLog(int shader, out string info) is missing
                 Console.WriteLine(info_log);
             }
 
-            GL.GetShader(id, ShaderParameter.CompileStatus, out info);
+            GL.GetShader(Id, ShaderParameter.CompileStatus, out info);
             if (info != 1)
                 throw new Exception("CompileShader failed");
 #endif
@@ -41,7 +42,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public void Dispose()
         {
-            GL.DeleteShader(id);
+            GL.DeleteShader(Id);
         }
     }
 }

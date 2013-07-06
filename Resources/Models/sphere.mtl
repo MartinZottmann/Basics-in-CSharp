@@ -1,4 +1,4 @@
-# Blender MTL File: 'table.blend'
+# Blender MTL File: 'sphere.blend'
 # Material Count: 1
 
 newmtl Material
@@ -9,4 +9,3 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\D\Dropbox\Codename-Void\Resources\textures\debug-256.png

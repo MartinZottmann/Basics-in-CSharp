@@ -16,7 +16,7 @@ void main() {
     float LightPower = 50.0f;
 
     vec4 MaterialDiffuseColor = texture(in_Texture, UV);
-    vec4 MaterialAmbientColor = vec4(0, 0, 0, 1) * MaterialDiffuseColor;
+    vec4 MaterialAmbientColor = vec4(0.1, 0.1, 0.1, 1) * MaterialDiffuseColor;
     vec4 MaterialSpecularColor = vec4(0.5, 0.5, 0.5, 1);
 
     float distance = length(in_LightPosition - Position_worldspace) / 10;
@@ -32,4 +32,6 @@ void main() {
     color = MaterialAmbientColor
         + MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance * distance)
         + MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, 5) / (distance * distance);
+
+    color.a = 1.0;
 }

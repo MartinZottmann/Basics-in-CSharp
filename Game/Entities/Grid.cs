@@ -53,8 +53,8 @@ namespace MartinZottmann.Game.Entities
             render_context.Model = Model;
 
             GL.LineWidth(1);
-            circle.Draw();
             base.Render(delta_time, render_context);
+            circle.Draw();
         }
     }
 }

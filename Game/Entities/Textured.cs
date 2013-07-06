@@ -17,8 +17,8 @@ namespace MartinZottmann.Game.Entities
 
             graphic = new Engine.Graphics.OpenGL.Entity();
             graphic.Mesh(shape);
-            graphic.Program = Resources.Programs["plain_texture"];
-            graphic.Texture = Resources.Textures["Resources/Textures/pointer.png"];
+            graphic.Program = Resources.Programs["standard"];
+            graphic.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
 
             BoundingBox = shape.BoundingBox;
             BoundingSphere = shape.BoundingSphere;

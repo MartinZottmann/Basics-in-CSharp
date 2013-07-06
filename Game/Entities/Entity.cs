@@ -16,7 +16,7 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d Position = Vector3d.Zero;
 
-        public ResourceManager Resources { get; protected set; }
+        public readonly ResourceManager Resources;
 
         protected List<Entity> children = new List<Entity>();
 

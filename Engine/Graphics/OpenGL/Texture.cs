@@ -1,5 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
@@ -8,13 +9,17 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class Texture : IBindable, IDisposable
     {
-        public int id;
+        public readonly uint Id;
 
-        public TextureTarget target;
+        public readonly TextureTarget Target;
 
-        protected EnableCap gl_texture_capability;
+        protected readonly EnableCap gl_texture_capability;
+
+        // @todo Implement per render contexts.
+        protected static uint bind_stack = 0;
 
         public Texture(String text, Font font, Color textColor, Color backColor, bool mipmapped, SizeF size)
+            : this(TextureTarget.Texture2D)
         {
             using (var img = new Bitmap((int)size.Width, (int)size.Height))
             using (var g = System.Drawing.Graphics.FromImage(img))
@@ -26,11 +31,12 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                     g.DrawString(text, font, textBrush, 0, 0);
                     g.Save();
                 }
-                Init(img, mipmapped, TextureTarget.Texture2D, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
+                Init(img, mipmapped, Target, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
             }
         }
 
         public Texture(String text, Font font, Color textColor, Color backColor, bool mipmapped, out SizeF size)
+            : this(TextureTarget.Texture2D)
         {
             using (var img = new Bitmap(1, 1))
             using (var g = System.Drawing.Graphics.FromImage(img))
@@ -49,24 +55,29 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                     g.DrawString(text, font, textBrush, 0, 0);
                     g.Save();
                 }
-                Init(img, mipmapped, TextureTarget.Texture2D, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
+                Init(img, mipmapped, Target, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
             }
         }
 
         public Texture(string filename, bool mipmapped, TextureTarget target = TextureTarget.Texture2D)
+            : this(target)
         {
             using (var img = new Bitmap(filename))
                 Init(img, mipmapped, target);
         }
 
         public Texture(Bitmap bmp, bool mipmapped = false, TextureTarget target = TextureTarget.Texture2D)
+            : this(target)
         {
             Init(bmp, mipmapped, target);
         }
 
-        protected void Init(Bitmap bmp, bool mipmapped, TextureTarget target, TextureMinFilter min_filter = TextureMinFilter.Nearest, TextureMagFilter mag_filter = TextureMagFilter.Nearest)
+        public Texture(TextureTarget target = TextureTarget.Texture2D)
         {
-            switch (target)
+            Id = (uint)GL.GenTexture();
+            Target = target;
+
+            switch (Target)
             {
                 case TextureTarget.Texture2D:
                     gl_texture_capability = EnableCap.Texture2D;
@@ -77,9 +88,10 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 default:
                     throw new NotImplementedException();
             }
-            id = GL.GenTexture();
-            this.target = target;
+        }
 
+        protected void Init(Bitmap bmp, bool mipmapped, TextureTarget target, TextureMinFilter min_filter = TextureMinFilter.Nearest, TextureMagFilter mag_filter = TextureMagFilter.Nearest)
+        {
             using (new Bind(this))
             {
                 OpenTK.Graphics.OpenGL.PixelInternalFormat bmp_if;
@@ -130,19 +142,21 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         public void Bind()
         {
             GL.Enable(gl_texture_capability);
-            GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(target, id);
+            GL.ActiveTexture((TextureUnit)((uint)TextureUnit.Texture0 + bind_stack));
+            GL.BindTexture(Target, Id);
+            bind_stack++;
         }
 
         public void UnBind()
         {
-            GL.BindTexture(target, 0);
+            GL.BindTexture(Target, 0);
             GL.Disable(gl_texture_capability);
+            bind_stack--;
         }
 
         public void Dispose()
         {
-            GL.DeleteTexture(id);
+            GL.DeleteTexture(Id);
         }
     }
 }

@@ -44,6 +44,7 @@
     <Compile Include="Graphics\Mesh\VertexP3N3T2.cs" />
     <Compile Include="Graphics\OpenGL\BufferObject.cs" />
     <Compile Include="Graphics\OpenGL\Entity.cs" />
+    <Compile Include="Graphics\OpenGL\FrameBuffer.cs" />
     <Compile Include="Graphics\OpenGL\Info.cs" />
     <Compile Include="Graphics\OpenGL\Program.cs" />
     <Compile Include="Graphics\OpenGL\Shader.cs" />

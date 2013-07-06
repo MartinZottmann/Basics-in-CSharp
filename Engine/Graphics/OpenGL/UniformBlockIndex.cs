@@ -1,33 +1,35 @@
 ﻿using OpenTK.Graphics.OpenGL;
-using System.Diagnostics;
+using System;
 
 namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class UniformBlockIndex
     {
-        public Program program;
+        public readonly Program Program;
 
-        public int id;
+        public readonly uint Id;
 
-        public string name;
+        public readonly string Name;
 
-        public UniformBlockIndex(Program program, int id, string name)
+        public UniformBlockIndex(Program program, uint id, string name)
         {
-            this.program = program;
-            this.id = id;
-            this.name = name;
+            Program = program;
+            Id = id;
+            Name = name;
         }
 
         public UniformBlockIndex(Program program, string name)
         {
-            this.program = program;
-            this.name = name;
+            var id = GL.GetUniformBlockIndex(program.Id, name);
+            if (id == -1)
+                throw new Exception(String.Format("GetUniformBlockIndex failed for {0} in program {1}", name, program.Id));
 
-            id = GL.GetUniformBlockIndex(program.id, name);
-            // @todo This seems bugged (Driver problem?)
-            Debug.Assert(id != -1, "GetUniformBlockIndex failed");
+            Program = program;
+            Id = (uint)id;
+            Name = name;
+
             int size;
-            GL.GetActiveUniformBlock(program.id, id, ActiveUniformBlockParameter.UniformBlockDataSize, out size);
+            GL.GetActiveUniformBlock(program.Id, this.Id, ActiveUniformBlockParameter.UniformBlockDataSize, out size);
         }
     }
 }

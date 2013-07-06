@@ -8,7 +8,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public abstract class BufferObject : IBindable, IDisposable
     {
-        protected uint id;
+        public readonly uint Id;
 
         public readonly BufferTarget Target;
 
@@ -18,7 +18,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public BufferObject(BufferTarget target, int stride, int size)
         {
-            GL.GenBuffers(1, out id);
+            Id = (uint)GL.GenBuffer();
             Target = target;
             Stride = stride;
             Size = size;
@@ -72,7 +72,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public override void Bind()
         {
-            GL.BindBuffer(Target, id);
+            GL.BindBuffer(Target, Id);
         }
 
         public override void UnBind()
@@ -82,7 +82,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public override void Dispose()
         {
-            GL.DeleteBuffers(1, ref id);
+            GL.DeleteBuffer(Id);
         }
     }
 }

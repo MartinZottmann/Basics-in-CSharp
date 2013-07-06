@@ -24,6 +24,7 @@ namespace MartinZottmann.Engine.Graphics.Mesh
         public void Transform(Matrix4 matrix)
         {
             Vector3.Transform(ref Position, ref matrix, out Position);
+            Vector3.Transform(ref Normal, ref matrix, out Normal);
         }
 
         public string[] GetAttributeLayout()
