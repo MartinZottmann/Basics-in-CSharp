@@ -34,7 +34,13 @@ void main() {
     vec3 R = reflect(-l, n);
     float cosAlpha = clamp(dot(E, R), 0, 1);
 
-    float visibility = shadow2DProj(in_ShadowTexture, vec4(shadowUV.xy, shadowUV.z - bias, shadowUV.w)).r;
+    //float visibility = textureProj(in_ShadowTexture, vec4(shadowUV.xy, shadowUV.z - bias, shadowUV.w));
+    float visibility = (
+        textureProjOffset(in_ShadowTexture, vec4(shadowUV.xy, shadowUV.z - bias, shadowUV.w), ivec2(-1, 1))
+        + textureProjOffset(in_ShadowTexture, vec4(shadowUV.xy, shadowUV.z - bias, shadowUV.w), ivec2(1, 1))
+        + textureProjOffset(in_ShadowTexture, vec4(shadowUV.xy, shadowUV.z - bias, shadowUV.w), ivec2(-1, -1))
+        + textureProjOffset(in_ShadowTexture, vec4(shadowUV.xy, shadowUV.z - bias, shadowUV.w), ivec2(1, -1))
+    ) / 4.0;
 
     color = MaterialAmbientColor
         + visibility * MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance * distance)

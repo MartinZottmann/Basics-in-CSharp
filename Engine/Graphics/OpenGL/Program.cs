@@ -48,7 +48,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
 #if DEBUG
             //OpenGL.Info.ProgramParameters(Id);
-            //OpenGL.Info.Uniform(id);
+            //OpenGL.Info.Uniform(Id);
 
             int info;
             GL.GetProgram(Id, ProgramParameter.InfoLogLength, out info);
