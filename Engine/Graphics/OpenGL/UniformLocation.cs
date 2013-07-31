@@ -45,19 +45,19 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         public void Set(Vector3 v0)
         {
             using (new Bind(Program))
-                GL.Uniform3((int)Id, v0);
+                GL.Uniform3((int)Id, ref v0);
         }
 
         public void Set(Vector3d v0)
         {
             using (new Bind(Program))
-                GL.Uniform3((int)Id, v0.X, v0.Y, v0.Z);
+                GL.Uniform3((int)Id, (float)v0.X, (float)v0.Y, (float)v0.Z);
         }
 
         public void Set(Vector4 v0)
         {
             using (new Bind(Program))
-                GL.Uniform4((int)Id, v0);
+                GL.Uniform4((int)Id, ref v0);
         }
 
         public void Set(OpenTK.Graphics.Color4 c0)
@@ -88,8 +88,14 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public void Set(Matrix4d m0)
         {
-            using (new Bind(Program))
-                GL.UniformMatrix4((int)Id, false, ref m0);
+            Set(
+                new Matrix4(
+                    (float)m0.M11, (float)m0.M12, (float)m0.M13, (float)m0.M14,
+                    (float)m0.M21, (float)m0.M22, (float)m0.M23, (float)m0.M24,
+                    (float)m0.M31, (float)m0.M32, (float)m0.M33, (float)m0.M34,
+                    (float)m0.M41, (float)m0.M42, (float)m0.M43, (float)m0.M44
+                )
+            );
         }
     }
 }
