@@ -89,7 +89,7 @@ namespace MartinZottmann.Game
 
         protected void Loop()
         {
-            var target_delta_time = 30.0 / 1000.0;
+            const double target_delta_time = 30.0 / 1000.0;
 
             MakeCurrent();
 
