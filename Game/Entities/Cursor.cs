@@ -17,8 +17,8 @@ namespace MartinZottmann.Game.Entities
         public Cursor(ResourceManager resources)
             : base(resources)
         {
-            graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Mesh(
+            Graphic.Model = new Engine.Graphics.OpenGL.Entity();
+            Graphic.Model.Mesh(
                 new Mesh<VertexP3C4, uint>(
                     new VertexP3C4[] {
                         new VertexP3C4(-1, 0, 0, 1, 1, 1, 1),
@@ -29,8 +29,8 @@ namespace MartinZottmann.Game.Entities
                     new uint[] { 0, 1, 2, 3 }
                 )
             );
-            graphic.Mode = BeginMode.LineLoop;
-            graphic.Program = Resources.Programs["normal"];
+            Graphic.Model.Mode = BeginMode.LineLoop;
+            Graphic.Model.Program = Resources.Programs["normal"];
         }
 
         public void Set(RenderContext render_context)

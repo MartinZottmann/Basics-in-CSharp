@@ -9,14 +9,14 @@ namespace MartinZottmann.Game.Entities.Ships.Components
         public Floor(ResourceManager resources)
             : base(resources)
         {
-            graphic = Resources.Entities.Load("Resources/Models/cube.obj", Matrix4.CreateScale(0.5f, 0.5f, 0.5f));
-            var shape = graphic.Mesh();
+            Graphic.Model = Resources.Entities.Load("Resources/Models/cube.obj", Matrix4.CreateScale(0.5f, 0.5f, 0.5f));
+            var shape = Graphic.Model.Mesh();
 
-            graphic.Program = Resources.Programs["standard"];
-            graphic.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
+            Graphic.Model.Program = Resources.Programs["standard"];
+            Graphic.Model.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
 
-            BoundingBox = shape.BoundingBox;
-            BoundingSphere = shape.BoundingSphere;
+            Physic.BoundingBox = shape.BoundingBox;
+            Physic.BoundingSphere = shape.BoundingSphere;
         }
 
         public override void Render(double delta_time, RenderContext render_context)

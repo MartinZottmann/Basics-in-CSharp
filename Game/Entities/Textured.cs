@@ -15,13 +15,13 @@ namespace MartinZottmann.Game.Entities
             var shape = new Quad();
             shape.Translate(Matrix4.CreateScale(2) * Matrix4.CreateRotationX(-MathHelper.PiOver2));
 
-            graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Mesh(shape);
-            graphic.Program = Resources.Programs["standard"];
-            graphic.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
+            Graphic.Model = new Engine.Graphics.OpenGL.Entity();
+            Graphic.Model.Mesh(shape);
+            Graphic.Model.Program = Resources.Programs["standard"];
+            Graphic.Model.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
 
-            BoundingBox = shape.BoundingBox;
-            BoundingSphere = shape.BoundingSphere;
+            Physic.BoundingBox = shape.BoundingBox;
+            Physic.BoundingSphere = shape.BoundingSphere;
         }
 
         public override void Render(double delta_time, RenderContext render_context)

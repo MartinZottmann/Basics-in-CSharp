@@ -18,16 +18,16 @@ namespace MartinZottmann.Game.Entities.GUI
         {
             var shape = new Quad();
             shape.Translate(Matrix4.CreateTranslation(-1, -1, 0) * Matrix4.CreateScale(0.5f * size.Width, 0.5f * size.Height, 0.5f));
-            graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Mesh(shape);
-            graphic.Program = Resources.Programs["plain_texture"];
+            Graphic.Model = new Engine.Graphics.OpenGL.Entity();
+            Graphic.Model.Mesh(shape);
+            Graphic.Model.Program = Resources.Programs["plain_texture"];
         }
 
         public override void Update(double delta_time, RenderContext render_context)
         {
-            if (graphic.Texture != null)
-                graphic.Texture.Dispose();
-            graphic.Texture = new Texture(String.Format("Memory: {0}", GC.GetTotalMemory(false)), new Font("Courier", 25, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.LightGray, Color.FromArgb(127, 255, 255, 255), false, size);
+            if (Graphic.Model.Texture != null)
+                Graphic.Model.Texture.Dispose();
+            Graphic.Model.Texture = new Texture(String.Format("Memory: {0}", GC.GetTotalMemory(false)), new Font("Courier", 25, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.LightGray, Color.FromArgb(127, 255, 255, 255), false, size);
         }
 
         public override void Render(double delta_time, RenderContext render_context)

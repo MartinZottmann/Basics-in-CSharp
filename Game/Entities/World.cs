@@ -17,7 +17,7 @@ namespace MartinZottmann.Game.Entities
 
             foreach (var child in children)
                 if (child is Physical)
-                    foreach (var hit in (child as Physical).Intersect(ref ray, ref world_model))
+                    foreach (var hit in ((Physical)child).Physic.Intersect(ref ray, ref world_model))
                         hits.Add(hit);
 
             return hits;
@@ -68,10 +68,10 @@ namespace MartinZottmann.Game.Entities
                     var o0 = (Physical)e0;
                     var o1 = (Physical)e1;
 
-                    if (!o0.BoundingBox.Intersect(ref o0.Position, ref o1.BoundingBox, ref o1.Position))
+                    if (!o0.Physic.BoundingBox.Intersect(ref o0.Position, ref o1.Physic.BoundingBox, ref o1.Position))
                         continue;
 
-                    var collision = o0.BoundingSphere.At(ref o0.Position).Collides(o1.BoundingSphere.At(ref o1.Position));
+                    var collision = o0.Physic.BoundingSphere.At(ref o0.Position).Collides(o1.Physic.BoundingSphere.At(ref o1.Position));
                     if (collision == null)
                         continue;
 
@@ -95,7 +95,7 @@ namespace MartinZottmann.Game.Entities
         protected void ApplyImpusles(List<Collision> collisions, double delta_time)
         {
             foreach (var collision in collisions)
-                (collision.Object0 as Physical).OnCollision(collision);
+                ((Physical)collision.Object0).Physic.OnCollision(collision);
         }
     }
 }

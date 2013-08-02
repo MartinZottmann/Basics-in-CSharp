@@ -124,12 +124,25 @@ namespace MartinZottmann.Game.State
 
             world.AddChild(new Grid(resources));
             world.AddChild(new Starfield(resources));
-            world.AddChild(new Ship(resources) { Position = new Vector3d(5, 0, 0), Target = new Vector3d(5, 0, 0), AngularVelocity = Vector3d.UnitX });
-            world.AddChild(new Ship(resources) { Position = new Vector3d(0, 0, 0), Target = new Vector3d(0, 0, 0), AngularVelocity = Vector3d.UnitY });
-            world.AddChild(new Ship(resources) { Position = new Vector3d(-5, 0, 0), Target = new Vector3d(-5, 0, 0), AngularVelocity = Vector3d.UnitZ });
-            world.AddChild(new Asteroid(resources) { Position = new Vector3d(0, 0, 5), Velocity = Vector3d.Zero, Scale = new Vector3d(2), AngularVelocity = new Vector3d(0.25, 0.5, 0.75) });
-            world.AddChild(new Textured(resources) { Position = new Vector3d(3, -3, 0), Scale = new Vector3d(2), AngularVelocity = Vector3d.UnitY });
-            world.AddChild(new Textured(resources) { Position = new Vector3d(-3, -4, 0), Scale = new Vector3d(2), AngularVelocity = -Vector3d.UnitY });
+            var s0 = new Ship(resources) { Position = new Vector3d(5, 0, 0), Target = new Vector3d(5, 0, 0) };
+            s0.Physic.AngularVelocity = Vector3d.UnitX;
+            world.AddChild(s0);
+            var s1 = new Ship(resources) { Position = new Vector3d(0, 0, 0), Target = new Vector3d(0, 0, 0) };
+            s1.Physic.AngularVelocity = Vector3d.UnitY;
+            world.AddChild(s1);
+            var s2 = new Ship(resources) { Position = new Vector3d(-5, 0, 0), Target = new Vector3d(-5, 0, 0) };
+            s2.Physic.AngularVelocity = Vector3d.UnitZ;
+            world.AddChild(s2);
+            var a0 = new Asteroid(resources) { Position = new Vector3d(0, 0, 5), Scale = new Vector3d(2) };
+            a0.Physic.Velocity = Vector3d.Zero;
+            a0.Physic.AngularVelocity = new Vector3d(0.25, 0.5, 0.75);
+            world.AddChild(a0);
+            var t0 = new Textured(resources) { Position = new Vector3d(3, -3, 0), Scale = new Vector3d(2) };
+            t0.Physic.AngularVelocity = Vector3d.UnitY;
+            world.AddChild(t0);
+            var t1 = new Textured(resources) { Position = new Vector3d(-3, -4, 0), Scale = new Vector3d(2) };
+            t1.Physic.AngularVelocity = -Vector3d.UnitY;
+            world.AddChild(t1);
             world.AddChild(new Textured(resources) { Position = new Vector3d(0, -14, 0), Scale = new Vector3d(7) });
             world.AddChild(new Textured(resources) { Position = new Vector3d(-14, 0, 0), Scale = new Vector3d(7), Orientation = new Quaterniond(Vector3d.UnitZ, -1) });
 
@@ -236,42 +249,42 @@ namespace MartinZottmann.Game.State
             if (Window.Keyboard[Key.J])
                 foreach (var entity in selection)
                 {
-                    entity.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(10, 0, 0) * delta_time);
-                    entity.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(-10, 0, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(10, 0, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(-10, 0, 0) * delta_time);
                 }
             if (Window.Keyboard[Key.L])
                 foreach (var entity in selection)
                 {
-                    entity.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(-10, 0, 0) * delta_time);
-                    entity.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(10, 0, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(-10, 0, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(10, 0, 0) * delta_time);
                 }
             if (Window.Keyboard[Key.I])
                 foreach (var entity in selection)
                 {
-                    entity.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(0, 10, 0) * delta_time);
-                    entity.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(0, -10, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(0, 10, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(0, -10, 0) * delta_time);
                 }
             if (Window.Keyboard[Key.K])
                 foreach (var entity in selection)
                 {
-                    entity.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(0, -10, 0) * delta_time);
-                    entity.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(0, 10, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(0, 0, -1), new Vector3d(0, -10, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(0, 0, 1), new Vector3d(0, 10, 0) * delta_time);
                 }
             if (Window.Keyboard[Key.U])
                 foreach (var entity in selection)
                 {
-                    entity.AddForceRelative(new Vector3d(-1, 0, 0), new Vector3d(0, -10, 0) * delta_time);
-                    entity.AddForceRelative(new Vector3d(1, 0, 0), new Vector3d(0, 10, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(-1, 0, 0), new Vector3d(0, -10, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(1, 0, 0), new Vector3d(0, 10, 0) * delta_time);
                 }
             if (Window.Keyboard[Key.O])
                 foreach (var entity in selection)
                 {
-                    entity.AddForceRelative(new Vector3d(-1, 0, 0), new Vector3d(0, 10, 0) * delta_time);
-                    entity.AddForceRelative(new Vector3d(1, 0, 0), new Vector3d(0, -10, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(-1, 0, 0), new Vector3d(0, 10, 0) * delta_time);
+                    entity.Physic.AddForceRelative(new Vector3d(1, 0, 0), new Vector3d(0, -10, 0) * delta_time);
                 }
             if (Window.Keyboard[Key.M])
                 foreach (var entity in selection)
-                    entity.AngularVelocity = Vector3d.Zero;
+                    entity.Physic.AngularVelocity = Vector3d.Zero;
 
             camera.Update(delta_time);
             world_render_context.Projection = camera.ProjectionMatrix();

@@ -17,16 +17,16 @@ namespace MartinZottmann.Game.Entities
             for (int i = 0; i < num_stars; i++)
                 vertex_data[i] = GetStar();
 
-            graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Mesh(new Mesh<VertexP3C4, uint>(vertex_data));
-            graphic.Mode = BeginMode.Points;
-            graphic.Program = Resources.Programs["normal"];
+            Graphic.Model = new Engine.Graphics.OpenGL.Entity();
+            Graphic.Model.Mesh(new Mesh<VertexP3C4, uint>(vertex_data));
+            Graphic.Model.Mode = BeginMode.Points;
+            Graphic.Model.Program = Resources.Programs["normal"];
         }
 
         public override void Update(double delta_time, RenderContext render_context)
         {
-            var i = Random.Next(0, graphic.Mesh().VerticesLength - 1);
-            var bo = graphic.VertexArrayObject.BufferObjects[0];
+            var i = Random.Next(0, Graphic.Model.Mesh().VerticesLength - 1);
+            var bo = Graphic.Model.VertexArrayObject.BufferObjects[0];
             (bo as BufferObject<VertexP3C4>).Write(i, GetStar());
 
             base.Update(delta_time, render_context);

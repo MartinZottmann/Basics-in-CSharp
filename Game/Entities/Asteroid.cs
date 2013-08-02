@@ -1,7 +1,4 @@
-﻿using MartinZottmann.Engine.Graphics.OpenGL;
-using MartinZottmann.Engine.Graphics.Shapes;
-using MartinZottmann.Engine.Physics;
-using MartinZottmann.Engine.Resources;
+﻿using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
 
@@ -20,9 +17,9 @@ namespace MartinZottmann.Game.Entities
 
             var scale = Random.NextDouble() * 5 + 1;
 
-            Mass *= scale;
-            var I = 2 * Mass * System.Math.Pow(scale, 2) / 5;
-            Inertia = new Matrix4d(
+            Physic.Mass *= scale;
+            var I = 2 * Physic.Mass * System.Math.Pow(scale, 2) / 5;
+            Physic.Inertia = new Matrix4d(
                 I, 0, 0, 0,
                 0, I, 0, 0,
                 0, 0, I, 0,
@@ -31,16 +28,16 @@ namespace MartinZottmann.Game.Entities
 
             Scale = new Vector3d(scale);
 
-            graphic = Resources.Entities.Load("Resources/Models/sphere.obj", Matrix4.CreateScale(0.5f, 0.5f, 0.5f));
-            var shape = graphic.Mesh();
+            Graphic.Model = Resources.Entities.Load("Resources/Models/sphere.obj", Matrix4.CreateScale(0.5f, 0.5f, 0.5f));
+            var shape = Graphic.Model.Mesh();
 
-            graphic.Program = Resources.Programs["standard"];
-            graphic.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
+            Graphic.Model.Program = Resources.Programs["standard"];
+            Graphic.Model.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
 
-            BoundingBox = shape.BoundingBox;
-            BoundingSphere = shape.BoundingSphere;
+            Physic.BoundingBox = shape.BoundingBox;
+            Physic.BoundingSphere = shape.BoundingSphere;
 
-            AddImpulse(
+            Physic.AddImpulse(
                 Vector3d.Zero,
                 new Vector3d(
                     (Random.NextDouble() - 0.5) * 100.0,
@@ -56,22 +53,23 @@ namespace MartinZottmann.Game.Entities
             base.Render(delta_time, render_context);
         }
 
-        protected Explosion explosion;
+        // @todo
+        //protected Explosion explosion;
 
-        public override void OnCollision(Collision collision)
-        {
-            base.OnCollision(collision);
+        //public override void OnCollision(Collision collision)
+        //{
+        //    base.OnCollision(collision);
 
-            if (explosion != null && explosion.Destroyed)
-                explosion = null;
-            if (explosion == null)
-            {
-                explosion = new Explosion(Resources);
-                ((Entity)collision.Parent).AddChild(explosion);
-            }
-            explosion.Position = collision.HitPoint;
-            explosion.Age = 0.0;
-            explosion.MaxAge = Explosion.Random.NextDouble() / 2;
-        }
+        //    if (explosion != null && explosion.Destroyed)
+        //        explosion = null;
+        //    if (explosion == null)
+        //    {
+        //        explosion = new Explosion(Resources);
+        //        ((Entity)collision.Parent).AddChild(explosion);
+        //    }
+        //    explosion.Position = collision.HitPoint;
+        //    explosion.Age = 0.0;
+        //    explosion.MaxAge = Explosion.Random.NextDouble() / 2;
+        //}
     }
 }

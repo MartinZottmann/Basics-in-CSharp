@@ -29,31 +29,31 @@ namespace MartinZottmann.Game.AI
         protected void Steer(SteeringCommand steering_command, double delta_time)
         {
             if (steering_command.Force.LengthSquared > DistanceEpsilonSquared)
-                Subject.Force += steering_command.Force - Subject.Velocity;
+                Subject.Physic.Force += steering_command.Force - Subject.Physic.Velocity;
 
             if (steering_command.Torque.LengthSquared > DistanceEpsilonSquared)
-                Subject.Torque += steering_command.Torque - Subject.AngularVelocity;
+                Subject.Physic.Torque += steering_command.Torque - Subject.Physic.AngularVelocity;
         }
 
         protected SteeringCommand TurnToVelocity(SteeringCommand steering_command, double delta_time)
         {
-            if (Subject.Velocity.LengthSquared <= DistanceEpsilonSquared)
+            if (Subject.Physic.Velocity.LengthSquared <= DistanceEpsilonSquared)
                 return steering_command;
 
             var max_torque = 1;
-            var target = Subject.Velocity;
+            var target = Subject.Physic.Velocity;
             var actual = Subject.ForwardRelative;
             var direction = Vector3d.Cross(actual, target);
             var distance = 1 - Vector3d.Dot(target, actual) / target.Length / actual.Length;
             if (distance > RotationEpsilon)
             {
-                var deceleration = Subject.AngularVelocity.Length;
-                var velocity_0 = Subject.AngularVelocity.Length;
+                var deceleration = Subject.Physic.AngularVelocity.Length;
+                var velocity_0 = Subject.Physic.AngularVelocity.Length;
                 var slowing_distance = System.Math.Pow(deceleration, 2) / 2 + velocity_0 * delta_time; // / max_torque * entity.Inertia; // slowing_distance = decelertation^2/2 + velocity_0 * delta_time
                 if (distance > slowing_distance)
                     steering_command.Torque = direction.Normalized() * max_torque;
                 else
-                    steering_command.Torque = -1 * Subject.AngularVelocity.Normalized() * max_torque;
+                    steering_command.Torque = -1 * Subject.Physic.AngularVelocity.Normalized() * max_torque;
             }
 
             return steering_command;
@@ -67,19 +67,19 @@ namespace MartinZottmann.Game.AI
         protected SteeringCommand Arrive(Vector3d target, double delta_time)
         {
             var steering_command = new SteeringCommand();
-            var max_force = Subject.thrust;
-            var direction = Seek(target, delta_time) - Subject.Velocity - Subject.Velocity * delta_time;
+            var max_force = Subject.Physic.thrust;
+            var direction = Seek(target, delta_time) - Subject.Physic.Velocity - Subject.Physic.Velocity * delta_time;
             var distance = direction.Length;
 
             if (distance > DistanceEpsilon)
             {
-                var deceleration = Subject.Velocity.Length;
-                var velocity_0 = Subject.Velocity.Length;
+                var deceleration = Subject.Physic.Velocity.Length;
+                var velocity_0 = Subject.Physic.Velocity.Length;
                 var slowing_distance = System.Math.Pow(deceleration, 2) / 2 + velocity_0 * delta_time; // / max_force * entity.Mass; // slowing_distance = decelertation^2/2 + velocity_0 * delta_time
                 if (distance > slowing_distance)
                     steering_command.Force = direction / distance * max_force;
                 else
-                    steering_command.Force = -1 * Subject.Velocity.Normalized() * max_force;
+                    steering_command.Force = -1 * Subject.Physic.Velocity.Normalized() * max_force;
             }
 
             return steering_command;

@@ -47,12 +47,12 @@ namespace MartinZottmann.Game.Entities
                 particles[i] = GetParticle();
             }
 
-            graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Mesh(new Mesh<VertexP3C4, uint>(particle_verticies));
-            graphic.Mode = BeginMode.Points;
-            graphic.Program = Resources.Programs["normal"];
+            Graphic.Model = new Engine.Graphics.OpenGL.Entity();
+            Graphic.Model.Mesh(new Mesh<VertexP3C4, uint>(particle_verticies));
+            Graphic.Model.Mode = BeginMode.Points;
+            Graphic.Model.Program = Resources.Programs["normal"];
 
-            buffer_object = (BufferObject<VertexP3C4>)graphic.VertexArrayObject.BufferObjects[0];
+            buffer_object = (BufferObject<VertexP3C4>)Graphic.Model.VertexArrayObject.BufferObjects[0];
         }
 
         public override void Update(double delta_time, RenderContext render_context)

@@ -2,7 +2,6 @@
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Graphics;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
 
 namespace MartinZottmann.Game.Entities
 {
@@ -42,10 +41,10 @@ namespace MartinZottmann.Game.Entities
                 vertices[4 + 4 * (i + amount) + 2] = new VertexP3C4(i * space, 0, amount * space, 1, 1, 1, 0.5f);
                 vertices[4 + 4 * (i + amount) + 3] = new VertexP3C4(i * space, 0, -amount * space, 1, 1, 1, 0.5f);
             }
-            graphic = new Engine.Graphics.OpenGL.Entity();
-            graphic.Mesh(new Mesh<VertexP3C4, uint>(vertices));
-            graphic.Mode = BeginMode.Lines;
-            graphic.Program = program;
+            Graphic.Model = new Engine.Graphics.OpenGL.Entity();
+            Graphic.Model.Mesh(new Mesh<VertexP3C4, uint>(vertices));
+            Graphic.Model.Mode = BeginMode.Lines;
+            Graphic.Model.Program = program;
         }
 
         public override void Render(double delta_time, RenderContext render_context)

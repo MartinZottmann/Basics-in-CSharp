@@ -58,6 +58,9 @@
   <ItemGroup>
     <Compile Include="AI\Base.cs" />
     <Compile Include="AI\Steering.cs" />
+    <Compile Include="Entities\Components\Abstract.cs" />
+    <Compile Include="Entities\Components\Graphic.cs" />
+    <Compile Include="Entities\Components\Physic.cs" />
     <Compile Include="Entities\Cursor.cs">
       <SubType>Code</SubType>
     </Compile>
