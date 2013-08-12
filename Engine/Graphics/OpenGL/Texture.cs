@@ -22,13 +22,13 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             : this(TextureTarget.Texture2D)
         {
             using (var img = new Bitmap((int)size.Width, (int)size.Height))
-            using (var g = System.Drawing.Graphics.FromImage(img))
             {
-                g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                g.Clear(backColor);
-                using (var textBrush = new SolidBrush(textColor))
+                using (var g = System.Drawing.Graphics.FromImage(img))
                 {
-                    g.DrawString(text, font, textBrush, 0, 0);
+                    g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                    g.Clear(backColor);
+                    using (var textBrush = new SolidBrush(textColor))
+                        g.DrawString(text, font, textBrush, 0, 0);
                     g.Save();
                 }
                 Init(img, mipmapped, Target, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
@@ -46,15 +46,55 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             }
 
             using (var img = new Bitmap((int)size.Width, (int)size.Height))
+            {
+                using (var g = System.Drawing.Graphics.FromImage(img))
+                {
+                    g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                    g.Clear(backColor);
+                    using (var textBrush = new SolidBrush(textColor))
+                        g.DrawString(text, font, textBrush, 0, 0);
+                    g.Save();
+                }
+                Init(img, mipmapped, Target, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
+            }
+        }
+
+        public Texture(Font font, Color textColor, Color backColor, bool mipmapped, out Dictionary<char, float> texture_data)
+            : this(TextureTarget.Texture2D)
+        {
+            var map = new Dictionary<char, SizeF>();
+            texture_data = new Dictionary<char, float>();
+
+            using (var img = new Bitmap(1, 1))
             using (var g = System.Drawing.Graphics.FromImage(img))
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                g.Clear(backColor);
-                using (var textBrush = new SolidBrush(textColor))
+                for (var i = 0; i < 128; i++)
+                    map.Add((char)i, g.MeasureString(((char)i).ToString(), font));
+            }
+
+            var height = 0.0f;
+            var width = 0.0f;
+            foreach (var character in map)
+            {
+                height = Math.Max(height, character.Value.Height);
+                texture_data.Add(character.Key, width);
+                width += character.Value.Width;
+                Console.WriteLine("{0}\t{1}\t{2}", character.Key, character.Value, width);
+            }
+
+            using (var img = new Bitmap((int)width, (int)height))
+            {
+                using (var g = System.Drawing.Graphics.FromImage(img))
                 {
-                    g.DrawString(text, font, textBrush, 0, 0);
+                    g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                    g.Clear(backColor);
+                    using (var textBrush = new SolidBrush(textColor))
+                        foreach (var character in texture_data)
+                            g.DrawString(character.Key.ToString(), font, textBrush, character.Value, 0);
                     g.Save();
                 }
+                img.Save("test.png");
                 Init(img, mipmapped, Target, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
             }
         }
