@@ -1,11 +1,12 @@
 ﻿using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Grid : Drawable
+    class Grid : GameObject
     {
         Engine.Graphics.OpenGL.Entity circle;
 
@@ -41,10 +42,11 @@ namespace MartinZottmann.Game.Entities
                 vertices[4 + 4 * (i + amount) + 2] = new VertexP3C4(i * space, 0, amount * space, 1, 1, 1, 0.5f);
                 vertices[4 + 4 * (i + amount) + 3] = new VertexP3C4(i * space, 0, -amount * space, 1, 1, 1, 0.5f);
             }
-            Graphic.Model = new Engine.Graphics.OpenGL.Entity();
-            Graphic.Model.Mesh(new Mesh<VertexP3C4, uint>(vertices));
-            Graphic.Model.Mode = BeginMode.Lines;
-            Graphic.Model.Program = program;
+            var graphic = AddComponent(new Graphic(this));
+            graphic.Model = new Engine.Graphics.OpenGL.Entity();
+            graphic.Model.Mesh(new Mesh<VertexP3C4, uint>(vertices));
+            graphic.Model.Mode = BeginMode.Lines;
+            graphic.Model.Program = program;
         }
 
         public override void Render(double delta_time, RenderContext render_context)

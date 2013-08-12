@@ -1,23 +1,21 @@
 ﻿using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.AI;
-using MartinZottmann.Game.Entities.Helper;
+using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Entities.Ships.Components;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
-using System;
 
 namespace MartinZottmann.Game.Entities.Ships
 {
-    [Serializable]
-    public class Ship : Physical, INavigation
+    public class Ship : GameObject
     {
-        public Vector3d Target { get; set; }
-
         public Steering<Ship> Streering;
 
         public Ship(ResourceManager resources)
             : base(resources)
         {
+            AddComponent(new Target(this));
+
             Streering = new Steering<Ship>(this);
 
             AddChild(new Floor(resources) { Position = new Vector3d(0, -1, -1) });
@@ -25,16 +23,11 @@ namespace MartinZottmann.Game.Entities.Ships
             AddChild(new Floor(resources) { Position = new Vector3d(0, -1, 1) });
             AddChild(new Terminal(resources) { Position = new Vector3d(0, 0, -1) });
 
-            foreach (var child in children)
-            {
-                if (!(child is Physical))
-                    continue;
-                var s = child as Physical;
-
-                Physic.BoundingSphere.Radius = System.Math.Max(Physic.BoundingSphere.Radius, s.Position.Length + s.Physic.BoundingSphere.Radius);
-            }
-            Physic.BoundingBox.Max = new Vector3d(Physic.BoundingSphere.Radius);
-            Physic.BoundingBox.Min = new Vector3d(-Physic.BoundingSphere.Radius);
+            var physic = AddComponent(new Physic(this));
+            foreach (var child in Children)
+                physic.BoundingSphere.Radius = System.Math.Max(physic.BoundingSphere.Radius, child.Position.Length + child.GetComponent<Physic>().BoundingSphere.Radius);
+            physic.BoundingBox.Max = new Vector3d(physic.BoundingSphere.Radius);
+            physic.BoundingBox.Min = new Vector3d(-physic.BoundingSphere.Radius);
         }
 
         public override void Update(double delta_time, RenderContext render_context)

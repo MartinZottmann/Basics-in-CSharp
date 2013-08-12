@@ -1,50 +1,65 @@
 ﻿using MartinZottmann.Engine.Physics;
-using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
+using System;
 using System.Collections.Generic;
 
 namespace MartinZottmann.Game.Entities
 {
-    public class World : Entity
+    public class World : IDisposable
     {
-        public World(ResourceManager resources) : base(resources) { }
+        public List<GameObject> Children = new List<GameObject>();
+
+        public virtual void Dispose()
+        {
+            foreach (var child in Children)
+                child.Dispose();
+        }
+
+        public void AddChild(GameObject child)
+        {
+            Children.Add(child);
+        }
+
+        public void RemoveChild(GameObject child)
+        {
+            Children.Remove(child);
+        }
 
         public virtual SortedSet<Collision> Intersect(ref Ray3d ray)
         {
             Matrix4d world_model = Matrix4d.Identity;
             var hits = new SortedSet<Collision>();
 
-            foreach (var child in children)
-                if (child is Physical)
-                    foreach (var hit in ((Physical)child).Physic.Intersect(ref ray, ref world_model))
+            foreach (var child in Children)
+                if (child.HasComponent<Physic>())
+                    foreach (var hit in child.GetComponent<Physic>().Intersect(ref ray, ref world_model))
                         hits.Add(hit);
 
             return hits;
         }
 
-        public override void Update(double delta_time, RenderContext render_context)
+        public void Update(double delta_time, RenderContext render_context)
         {
-            children.RemoveAll(s => s.Destroyed);
-
             var collisions = DetectCollisions();
 
-            foreach (var child in children)
-                if (child is Physical)
-                    (child as Physical).UpdateVelocity(delta_time);
+            foreach (var child in Children)
+                if (child.HasComponent<Physic>())
+                    child.GetComponent<Physic>().UpdateVelocity(delta_time);
 
             ApplyImpusles(collisions, delta_time);
 
-            foreach (var child in children)
-                if (child is Physical)
-                    (child as Physical).UpdatePosition(delta_time);
+            foreach (var child in Children)
+                if (child.HasComponent<Physic>())
+                    child.GetComponent<Physic>().UpdatePosition(delta_time);
 
-            children.ForEach(s => s.Update(delta_time, render_context));
+            Children.ForEach(s => s.Update(delta_time, render_context));
         }
 
-        public override void Render(double delta_time, RenderContext render_context)
+        public void Render(double delta_time, RenderContext render_context)
         {
-            foreach (var child in children)
+            foreach (var child in Children)
                 child.Render(delta_time, render_context);
         }
 
@@ -52,26 +67,26 @@ namespace MartinZottmann.Game.Entities
         {
             var collisions = new List<Collision>();
 
-            foreach (Entities.Entity e0 in children)
+            foreach (GameObject e0 in Children)
             {
-                if (!(e0 is Physical))
+                if (!e0.HasComponent<Physic>())
                     continue;
 
-                foreach (Entities.Entity e1 in children)
+                foreach (GameObject e1 in Children)
                 {
                     if (e0 == e1)
                         continue;
 
-                    if (!(e1 is Physical))
+                    if (!e1.HasComponent<Physic>())
                         continue;
 
-                    var o0 = (Physical)e0;
-                    var o1 = (Physical)e1;
+                    var o0 = e0;
+                    var o1 = e1;
 
-                    if (!o0.Physic.BoundingBox.Intersect(ref o0.Position, ref o1.Physic.BoundingBox, ref o1.Position))
+                    if (!o0.GetComponent<Physic>().BoundingBox.Intersect(ref o0.Position, ref o1.GetComponent<Physic>().BoundingBox, ref o1.Position))
                         continue;
 
-                    var collision = o0.Physic.BoundingSphere.At(ref o0.Position).Collides(o1.Physic.BoundingSphere.At(ref o1.Position));
+                    var collision = o0.GetComponent<Physic>().BoundingSphere.At(ref o0.Position).Collides(o1.GetComponent<Physic>().BoundingSphere.At(ref o1.Position));
                     if (collision == null)
                         continue;
 
@@ -95,7 +110,7 @@ namespace MartinZottmann.Game.Entities
         protected void ApplyImpusles(List<Collision> collisions, double delta_time)
         {
             foreach (var collision in collisions)
-                ((Physical)collision.Object0).Physic.OnCollision(collision);
+                ((GameObject)collision.Object0).GetComponent<Physic>().OnCollision(collision);
         }
     }
 }

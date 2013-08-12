@@ -1,10 +1,11 @@
 ﻿using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
 
 namespace MartinZottmann.Game.Entities
 {
-    class Asteroid : Physical
+    public class Asteroid : GameObject
     {
         public Asteroid(ResourceManager resources)
             : base(resources)
@@ -17,9 +18,10 @@ namespace MartinZottmann.Game.Entities
 
             var scale = Random.NextDouble() * 5 + 1;
 
-            Physic.Mass *= scale;
-            var I = 2 * Physic.Mass * System.Math.Pow(scale, 2) / 5;
-            Physic.Inertia = new Matrix4d(
+            var physic = AddComponent(new Physic(this));
+            physic.Mass *= scale;
+            var I = 2 * physic.Mass * System.Math.Pow(scale, 2) / 5;
+            physic.Inertia = new Matrix4d(
                 I, 0, 0, 0,
                 0, I, 0, 0,
                 0, 0, I, 0,
@@ -28,16 +30,17 @@ namespace MartinZottmann.Game.Entities
 
             Scale = new Vector3d(scale);
 
-            Graphic.Model = Resources.Entities.Load("Resources/Models/sphere.obj", Matrix4.CreateScale(0.5f, 0.5f, 0.5f));
-            var shape = Graphic.Model.Mesh();
+            var graphic = AddComponent(new Graphic(this));
+            graphic.Model = Resources.Entities.Load("Resources/Models/sphere.obj", Matrix4.CreateScale(0.5f, 0.5f, 0.5f));
+            var shape = graphic.Model.Mesh();
 
-            Graphic.Model.Program = Resources.Programs["standard"];
-            Graphic.Model.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
+            graphic.Model.Program = Resources.Programs["standard"];
+            graphic.Model.Texture = Resources.Textures["Resources/Textures/debug-256.png"];
 
-            Physic.BoundingBox = shape.BoundingBox;
-            Physic.BoundingSphere = shape.BoundingSphere;
+            physic.BoundingBox = shape.BoundingBox;
+            physic.BoundingSphere = shape.BoundingSphere;
 
-            Physic.AddImpulse(
+            physic.AddImpulse(
                 Vector3d.Zero,
                 new Vector3d(
                     (Random.NextDouble() - 0.5) * 100.0,

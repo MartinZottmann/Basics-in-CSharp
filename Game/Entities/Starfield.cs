@@ -1,12 +1,13 @@
 ﻿using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Entities
 {
-    public class Starfield : Drawable
+    public class Starfield : GameObject
     {
         const int num_stars = 100000;
 
@@ -17,16 +18,18 @@ namespace MartinZottmann.Game.Entities
             for (int i = 0; i < num_stars; i++)
                 vertex_data[i] = GetStar();
 
-            Graphic.Model = new Engine.Graphics.OpenGL.Entity();
-            Graphic.Model.Mesh(new Mesh<VertexP3C4, uint>(vertex_data));
-            Graphic.Model.Mode = BeginMode.Points;
-            Graphic.Model.Program = Resources.Programs["normal"];
+            var graphic = AddComponent(new Graphic(this));
+            graphic.Model = new Engine.Graphics.OpenGL.Entity();
+            graphic.Model.Mesh(new Mesh<VertexP3C4, uint>(vertex_data));
+            graphic.Model.Mode = BeginMode.Points;
+            graphic.Model.Program = Resources.Programs["normal"];
         }
 
         public override void Update(double delta_time, RenderContext render_context)
         {
-            var i = Random.Next(0, Graphic.Model.Mesh().VerticesLength - 1);
-            var bo = Graphic.Model.VertexArrayObject.BufferObjects[0];
+            var graphic = GetComponent<Graphic>();
+            var i = Random.Next(0, graphic.Model.Mesh().VerticesLength - 1);
+            var bo = graphic.Model.VertexArrayObject.BufferObjects[0];
             (bo as BufferObject<VertexP3C4>).Write(i, GetStar());
 
             base.Update(delta_time, render_context);

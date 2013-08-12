@@ -57,7 +57,7 @@ namespace MartinZottmann.Game.Entities.Components
 
         #endregion
 
-        public Physic(Entity entity) : base(entity) { }
+        public Physic(GameObject game_object) : base(game_object) { }
 
         public virtual void UpdateVelocity(double delta_time)
         {
@@ -75,12 +75,12 @@ namespace MartinZottmann.Game.Entities.Components
 
         public virtual void UpdatePosition(double delta_time)
         {
-            Entity.Position += Velocity * delta_time;
+            GameObject.Position += Velocity * delta_time;
 
             Force = Vector3d.Zero;
 
-            Entity.Orientation += 0.5 * new Quaterniond(AngularVelocity * delta_time, 0) * Entity.Orientation;
-            Entity.Orientation.Normalize();
+            GameObject.Orientation += 0.5 * new Quaterniond(AngularVelocity * delta_time, 0) * GameObject.Orientation;
+            GameObject.Orientation.Normalize();
 
             Torque = Vector3d.Zero;
 
@@ -89,7 +89,7 @@ namespace MartinZottmann.Game.Entities.Components
 
         protected void UpdateMatrix()
         {
-            OrientationMatrix = Matrix4d.CreateFromQuaternion(ref Entity.Orientation);
+            OrientationMatrix = Matrix4d.CreateFromQuaternion(ref GameObject.Orientation);
             InverseOrientationMatrix = OrientationMatrix.Inverted();
             InertiaWorld = OrientationMatrix * Inertia * InverseOrientationMatrix;
             InverseInertiaWorld = OrientationMatrix * InverseInertia * InverseOrientationMatrix;
@@ -97,8 +97,8 @@ namespace MartinZottmann.Game.Entities.Components
 
         public void AddForceRelative(Vector3d point, Vector3d force)
         {
-            Vector3d.Transform(ref point, ref Entity.Orientation, out point);
-            Vector3d.Transform(ref force, ref Entity.Orientation, out force);
+            Vector3d.Transform(ref point, ref GameObject.Orientation, out point);
+            Vector3d.Transform(ref force, ref GameObject.Orientation, out force);
 
             Force += force;
             Torque += Vector3d.Cross(point, force);
@@ -123,9 +123,9 @@ namespace MartinZottmann.Game.Entities.Components
 
         public virtual SortedSet<Collision> Intersect(ref Ray3d ray, ref Matrix4d model_parent)
         {
-            var entity = (Physical)Entity;
+            var game_object = GameObject;
 
-            Matrix4d model_world = entity.Model * model_parent;
+            Matrix4d model_world = game_object.Model * model_parent;
             var hits = new SortedSet<Collision>();
 
             //if (!Physic.BoundingBox.Intersect(ref ray, ref position_world))
@@ -135,11 +135,11 @@ namespace MartinZottmann.Game.Entities.Components
             if (collision == null)
                 return hits;
 
-            foreach (var child in entity.Children)
-                if (child is Physical)
-                    foreach (var hit in ((Physical)child).Physic.Intersect(ref ray, ref model_world))
+            foreach (var child in game_object.Children)
+                if (child.HasComponent<Physic>())
+                    foreach (var hit in child.GetComponent<Physic>().Intersect(ref ray, ref model_world))
                     {
-                        hit.Parent = Entity;
+                        hit.Parent = GameObject;
                         hits.Add(hit);
                     }
 
@@ -151,7 +151,7 @@ namespace MartinZottmann.Game.Entities.Components
                     HitPoint = collision.HitPoint,
                     Normal = collision.Normal,
                     Object0 = ray,
-                    Object1 = Entity,
+                    Object1 = GameObject,
                     PenetrationDepth = collision.PenetrationDepth
                 }
             );
@@ -163,14 +163,16 @@ namespace MartinZottmann.Game.Entities.Components
 
         public virtual void OnCollision(Collision collision)
         {
-            Debug.Assert(Entity == collision.Object0);
+            Debug.Assert(GameObject == collision.Object0);
 
-            var o0 = collision.Object0 as Physical;
-            var o1 = collision.Object1 as Physical;
+            var o0 = (GameObject)collision.Object0;
+            var o1 = (GameObject)collision.Object1;
             var r0 = collision.HitPoint - o0.Position;
             var r1 = collision.HitPoint - o1.Position;
-            var v0 = o0.Physic.Velocity + Vector3d.Cross(o0.Physic.AngularVelocity, r0);
-            var v1 = o1.Physic.Velocity + Vector3d.Cross(o1.Physic.AngularVelocity, r1);
+            var p0 = o0.GetComponent<Physic>();
+            var p1 = o1.GetComponent<Physic>();
+            var v0 = p0.Velocity + Vector3d.Cross(p0.AngularVelocity, r0);
+            var v1 = p1.Velocity + Vector3d.Cross(p1.AngularVelocity, r1);
             var dv = v0 - v1;
 
             if (-Vector3d.Dot(dv, collision.Normal) < -0.01)
@@ -179,35 +181,35 @@ namespace MartinZottmann.Game.Entities.Components
             #region NORMAL Impulse
             var e = 0.0;
             var normDiv = Vector3d.Dot(collision.Normal, collision.Normal) * (
-                (o0.Physic.InverseMass + o1.Physic.InverseMass)
+                (p0.InverseMass + p1.InverseMass)
                 + Vector3d.Dot(
                     collision.Normal,
-                    Vector3d.Cross(Vector3d.Cross(r0, collision.Normal) * o0.Physic.InverseInertiaWorld, r0)
-                    + Vector3d.Cross(Vector3d.Cross(r1, collision.Normal) * o1.Physic.InverseInertiaWorld, r1)
+                    Vector3d.Cross(Vector3d.Cross(r0, collision.Normal) * p0.InverseInertiaWorld, r0)
+                    + Vector3d.Cross(Vector3d.Cross(r1, collision.Normal) * p1.InverseInertiaWorld, r1)
                 )
             );
             var jn = -1 * (1 + e) * Vector3d.Dot(dv, collision.Normal) / normDiv;
             jn += (collision.PenetrationDepth * 1.5);
             var Pn = collision.Normal * jn;
 
-            o0.Physic.AddImpulse(r0, Pn);
-            o1.Physic.AddImpulse(r1, -1 * Pn);
+            p0.AddImpulse(r0, Pn);
+            p1.AddImpulse(r1, -1 * Pn);
             #endregion
 
             #region TANGENT Impulse
             var tangent = dv - (Vector3d.Dot(dv, collision.Normal) * collision.Normal);
             tangent.Normalize();
-            var k_tangent = o0.Physic.InverseMass
-                + o1.Physic.InverseMass
+            var k_tangent = p0.InverseMass
+                + p1.InverseMass
                 + Vector3d.Dot(
                     tangent,
-                    Vector3d.Cross(Vector3d.Cross(r0, tangent) * o0.Physic.InverseInertiaWorld, r0)
-                    + Vector3d.Cross(Vector3d.Cross(r1, tangent) * o1.Physic.InverseInertiaWorld, r1)
+                    Vector3d.Cross(Vector3d.Cross(r0, tangent) * p0.InverseInertiaWorld, r0)
+                    + Vector3d.Cross(Vector3d.Cross(r1, tangent) * p1.InverseInertiaWorld, r1)
                 );
             var Pt = -1 * Vector3d.Dot(dv, tangent) / k_tangent * tangent;
 
-            o0.Physic.AddImpulse(r0, Pt);
-            o1.Physic.AddImpulse(r1, -1 * Pt);
+            p0.AddImpulse(r0, Pt);
+            p1.AddImpulse(r1, -1 * Pt);
             #endregion
         }
     }

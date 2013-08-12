@@ -15,20 +15,6 @@ namespace MartinZottmann.Game.Entities
 
         public Vector3d Position = Vector3d.Zero;
 
-        public Quaterniond Orientation = Quaterniond.Identity;
-
-        public Vector3d Forward = -Vector3d.UnitZ;
-
-        public Vector3d ForwardRelative { get { return Vector3d.Transform(Forward, Orientation); } }
-
-        public Vector3d Up = Vector3d.UnitY;
-
-        public Vector3d UpRelative { get { return Vector3d.Transform(Up, Orientation); } }
-
-        public Vector3d Right = Vector3d.UnitX;
-
-        public Vector3d RightRelative { get { return Vector3d.Transform(Right, Orientation); } }
-
         public readonly ResourceManager Resources;
 
         protected List<Entity> children = new List<Entity>();

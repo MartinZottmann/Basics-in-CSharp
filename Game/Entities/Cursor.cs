@@ -1,6 +1,7 @@
 ﻿using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Graphics;
 using MartinZottmann.Game.IO;
 using OpenTK;
@@ -8,7 +9,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Entities
 {
-    public class Cursor : Drawable
+    public class Cursor : GameObject
     {
         public Ray3d Ray;
 
@@ -17,8 +18,9 @@ namespace MartinZottmann.Game.Entities
         public Cursor(ResourceManager resources)
             : base(resources)
         {
-            Graphic.Model = new Engine.Graphics.OpenGL.Entity();
-            Graphic.Model.Mesh(
+            var graphic = AddComponent(new Graphic(this));
+            graphic.Model = new Engine.Graphics.OpenGL.Entity();
+            graphic.Model.Mesh(
                 new Mesh<VertexP3C4, uint>(
                     new VertexP3C4[] {
                         new VertexP3C4(-1, 0, 0, 1, 1, 1, 1),
@@ -29,8 +31,8 @@ namespace MartinZottmann.Game.Entities
                     new uint[] { 0, 1, 2, 3 }
                 )
             );
-            Graphic.Model.Mode = BeginMode.LineLoop;
-            Graphic.Model.Program = Resources.Programs["normal"];
+            graphic.Model.Mode = BeginMode.LineLoop;
+            graphic.Model.Program = Resources.Programs["normal"];
         }
 
         public void Set(RenderContext render_context)

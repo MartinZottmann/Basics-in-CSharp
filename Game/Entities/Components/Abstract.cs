@@ -1,12 +1,18 @@
-﻿namespace MartinZottmann.Game.Entities.Components
+﻿using RenderContext = MartinZottmann.Game.Graphics.RenderContext;
+
+namespace MartinZottmann.Game.Entities.Components
 {
     public abstract class Abstract
     {
-        public Entity Entity { get; protected set; }
+        public GameObject GameObject { get; protected set; }
 
-        public Abstract(Entity entity)
+        public Abstract(GameObject game_object)
         {
-            Entity = entity;
+            GameObject = game_object;
         }
+
+        public virtual void Update(double delta_time, RenderContext render_context) { }
+
+        public virtual void Render(double delta_time, RenderContext render_context) { }
     }
 }

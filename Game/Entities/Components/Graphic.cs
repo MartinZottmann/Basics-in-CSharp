@@ -16,11 +16,10 @@ namespace MartinZottmann.Game.Entities.Components
         protected Engine.Graphics.OpenGL.Entity orientation_model;
 #endif
 
-        public Graphic(Entity entity)
-            : base(entity)
+        public Graphic(GameObject game_object)
+            : base(game_object)
         {
 #if DEBUG
-            var t0 = Entity as Drawable; // @todo Remove
             var forward = new Color4(1.0f, 0.0f, 0.0f, 0.5f);
             var up = new Color4(0.0f, 1.0f, 0.0f, 0.5f);
             var right = new Color4(0.0f, 0.0f, 1.0f, 0.5f);
@@ -30,11 +29,11 @@ namespace MartinZottmann.Game.Entities.Components
                 {
                     Vertices = new VertexP3C4[] {
                         new VertexP3C4(Vector3.Zero, forward),
-                        new VertexP3C4((Vector3)t0.Forward, forward),
+                        new VertexP3C4((Vector3)GameObject.Forward, forward),
                         new VertexP3C4(Vector3.Zero, up),
-                        new VertexP3C4((Vector3)t0.Up, up),
+                        new VertexP3C4((Vector3)GameObject.Up, up),
                         new VertexP3C4(Vector3.Zero, right),
-                        new VertexP3C4((Vector3)t0.Right, right),
+                        new VertexP3C4((Vector3)GameObject.Right, right),
                     },
                     Indices = new uint[] {
                         0, 1, 2, 3, 4, 5
@@ -42,11 +41,11 @@ namespace MartinZottmann.Game.Entities.Components
                 }
             );
             orientation_model.Mode = BeginMode.Lines;
-            orientation_model.Program = entity.Resources.Programs["normal"];
+            orientation_model.Program = GameObject.Resources.Programs["normal"];
 #endif
         }
 
-        public void Render(double delta_time, RenderContext render_context)
+        public override void Render(double delta_time, RenderContext render_context)
         {
             var t0 = Model.Program;
             var t1 = Model.Texture;

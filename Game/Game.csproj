@@ -58,29 +58,43 @@
   <ItemGroup>
     <Compile Include="AI\Base.cs" />
     <Compile Include="AI\Steering.cs" />
+    <Compile Include="Entities\Asteroid.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Entities\Components\Abstract.cs" />
     <Compile Include="Entities\Components\Graphic.cs" />
     <Compile Include="Entities\Components\Physic.cs" />
+    <Compile Include="Entities\Components\Target.cs" />
     <Compile Include="Entities\Cursor.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Entities\Drawable.cs" />
-    <Compile Include="Entities\Explosion.cs" />
-    <Compile Include="Entities\Grid.cs" />
-    <Compile Include="Entities\GUI\Debugger.cs" />
-    <Compile Include="Entities\GUI\Entity.cs" />
-    <Compile Include="Entities\GUI\FPSCounter.cs" />
-    <Compile Include="Entities\GUI\Screen.cs" />
-    <Compile Include="Entities\Helper\INavigation.cs" />
-    <Compile Include="Entities\Ships\Components\Component.cs" />
-    <Compile Include="Entities\Ships\Components\Floor.cs" />
-    <Compile Include="Entities\Ships\Components\Terminal.cs" />
-    <Compile Include="Entities\Starfield.cs" />
+    <Compile Include="Entities\GameObject.cs" />
+    <Compile Include="Entities\Grid.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Entities\GUI\Debugger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Entities\GUI\FPSCounter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Entities\Ships\Components\Floor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Entities\Ships\Components\Terminal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Entities\Ships\Ship.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Entities\Starfield.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Entities\Textured.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Entities\World.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="Entities\Physical.cs" />
-    <Compile Include="Entities\Textured.cs" />
-    <Compile Include="Entities\Ships\Ship.cs" />
     <Compile Include="Graphics\RenderContext.cs" />
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="IO\ISaveable.cs" />
@@ -91,9 +105,7 @@
     <Compile Include="State\GameState.cs" />
     <Compile Include="State\Running.cs" />
     <Compile Include="Window.cs" />
-    <Compile Include="Entities\Asteroid.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Entities\Entity.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

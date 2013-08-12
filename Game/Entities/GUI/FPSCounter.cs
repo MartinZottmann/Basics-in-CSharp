@@ -1,15 +1,15 @@
 ﻿using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using System;
 using System.Drawing;
 
 namespace MartinZottmann.Game.Entities.GUI
 {
-    class FPSCounter : Entity
+    class FPSCounter : GameObject
     {
         protected double accumulator = 0;
 
@@ -24,9 +24,10 @@ namespace MartinZottmann.Game.Entities.GUI
         {
             var shape = new Quad();
             shape.Translate(Matrix4.CreateTranslation(1, -1, 0) * Matrix4.CreateScale(0.5f * size.Width, 0.5f * size.Height, 0.5f));
-            Graphic.Model = new Engine.Graphics.OpenGL.Entity();
-            Graphic.Model.Mesh(shape);
-            Graphic.Model.Program = Resources.Programs["plain_texture"];
+            var graphic = AddComponent(new Graphic(this));
+            graphic.Model = new Engine.Graphics.OpenGL.Entity();
+            graphic.Model.Mesh(shape);
+            graphic.Model.Program = Resources.Programs["plain_texture"];
         }
 
         public override void Update(double delta_time, RenderContext render_context)
@@ -37,9 +38,10 @@ namespace MartinZottmann.Game.Entities.GUI
             {
                 if (fps != counter)
                 {
-                    if (Graphic.Model.Texture != null)
-                        Graphic.Model.Texture.Dispose();
-                    Graphic.Model.Texture = new Texture(String.Format("FPS: {0:F}", counter), new Font("Courier", 25, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.LightGray, Color.FromArgb(127, 255, 255, 255), false, size);
+                    var graphic = GetComponent<Graphic>();
+                    if (graphic.Model.Texture != null)
+                        graphic.Model.Texture.Dispose();
+                    graphic.Model.Texture = new Texture(String.Format("FPS: {0:F}", counter), new Font("Courier", 25, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.LightGray, Color.FromArgb(127, 255, 255, 255), false, size);
                 }
                 fps = counter;
                 counter = 0;
