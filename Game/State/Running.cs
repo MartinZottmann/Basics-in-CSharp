@@ -1,8 +1,10 @@
 ﻿using MartinZottmann.Engine;
+using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.Components;
+using MartinZottmann.Game.Entities.GUI;
 using MartinZottmann.Game.Entities.Ships;
 using MartinZottmann.Game.Graphics;
 using MartinZottmann.Game.IO;
@@ -11,8 +13,10 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using Camera = MartinZottmann.Engine.Graphics.Camera;
+using FontStructure = System.Collections.Generic.Dictionary<char, System.Drawing.RectangleF>;
 
 namespace MartinZottmann.Game.State
 {
@@ -148,8 +152,13 @@ namespace MartinZottmann.Game.State
             world.AddChild(new Textured(resources) { Position = new Vector3d(-14, 0, 0), Scale = new Vector3d(7), Orientation = new Quaterniond(Vector3d.UnitZ, -1) });
 
             screen = new GameObject(resources);
-            screen.AddChild(new Entities.GUI.FPSCounter(resources));
-            screen.AddChild(new Entities.GUI.Debugger(resources));
+            {
+                FontStructure font_map;
+                var font_texture = new Texture(new Font("Courier", 25, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.LightGray, Color.FromArgb(127, 255, 255, 255), false, out font_map);
+                var font_mesh_builder = new FontMeshBuilder(font_map);
+                screen.AddChild(new FPSCounter(resources, font_texture, font_mesh_builder));
+                screen.AddChild(new Debugger(resources, font_texture, font_mesh_builder));
+            }
 
             var screen_camera = new Camera(Window);
             screen_render_context.Window = Window;
@@ -329,20 +338,16 @@ namespace MartinZottmann.Game.State
             GL.Viewport(0, 0, Window.Width, Window.Height);
 
             world_render_context.alpha_cutoff = 0.35f;
-            using (new Bind(resources.Textures["Resources/Textures/debug-256.png"]))
-            using (new Bind(world_render_context.DepthTexture))
-                world.Render(delta_time, world_render_context);
+            world.Render(delta_time, world_render_context);
             GL.Accum(AccumOp.Load, 0.5f);
 
             world_render_context.alpha_cutoff = 0.65f;
-            using (new Bind(resources.Textures["Resources/Textures/debug-256.png"]))
-            using (new Bind(world_render_context.DepthTexture))
-                world.Render(delta_time, world_render_context);
+            world.Render(delta_time, world_render_context);
             GL.Accum(AccumOp.Accum, 0.5f);
             GL.Accum(AccumOp.Return, 1f);
+            #endregion
 
             screen.Render(delta_time, screen_render_context);
-            #endregion
 
             #region Debug
             GL.Viewport(0, 0, Window.Width, Window.Height);

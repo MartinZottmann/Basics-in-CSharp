@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Engine.Graphics.OpenGL;
+﻿using MartinZottmann.Engine.Graphics.Mesh;
+using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.Components;
@@ -13,36 +14,30 @@ namespace MartinZottmann.Game.Entities.GUI
     {
         protected SizeF size = new SizeF(300, 30);
 
-        public Debugger(ResourceManager resources)
+        private FontMeshBuilder font_mesh_builder;
+
+        public Debugger(ResourceManager resources, Texture font_texture, FontMeshBuilder font_mesh_builder)
             : base(resources)
         {
-            var shape = new Quad();
-            shape.Translate(Matrix4.CreateTranslation(-1, -1, 0) * Matrix4.CreateScale(0.5f * size.Width, 0.5f * size.Height, 0.5f));
+            this.font_mesh_builder = font_mesh_builder;
+
+            Scale = new Vector3d(2);
+
             var graphic = AddComponent(new Graphic(this));
             graphic.Model = new Engine.Graphics.OpenGL.Entity();
-            graphic.Model.Mesh(shape);
             graphic.Model.Program = Resources.Programs["plain_texture"];
+            graphic.Model.Texture = font_texture;
         }
 
         public override void Update(double delta_time, RenderContext render_context)
         {
             var graphic = GetComponent<Graphic>();
-            if (graphic.Model.Texture != null)
-                graphic.Model.Texture.Dispose();
-            graphic.Model.Texture = new Texture(String.Format("Memory: {0}", GC.GetTotalMemory(false)), new Font("Courier", 25, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.LightGray, Color.FromArgb(127, 255, 255, 255), false, size);
+            graphic.Model.Mesh(font_mesh_builder.FromString(String.Format("Memory: {0}", GC.GetTotalMemory(false))));
         }
 
         public override void Render(double delta_time, RenderContext render_context)
         {
-            double yMax = render_context.Camera.Near * Math.Tan(0.5 * render_context.Camera.Fov);
-            double yMin = -yMax;
-            double xMin = yMin * render_context.Camera.Aspect;
-            double xMax = yMax * render_context.Camera.Aspect;
-            Position = new Vector3d(xMax, yMax, -render_context.Camera.Near);
-            Scale = new Vector3d(render_context.Camera.Aspect * Math.Tan(0.5 * render_context.Camera.Fov) / MathHelper.TwoPi / render_context.Camera.Width);
-            Orientation = new Quaterniond(Vector3d.UnitY, -0.95);
-
-            render_context.Model = Model;
+            Position = new Vector3d(-0.75, 0.5, -1) * render_context.Projection.Inverted();
             base.Render(delta_time, render_context);
         }
     }

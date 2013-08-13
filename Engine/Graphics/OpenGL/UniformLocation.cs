@@ -36,6 +36,12 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 GL.Uniform1((int)Id, v0);
         }
 
+        public void Set(uint v0)
+        {
+            using (new Bind(Program))
+                GL.Uniform1((int)Id, (int)v0); // uint gives GL_INVALID_OPERATION
+        }
+
         public void Set(float v0)
         {
             using (new Bind(Program))

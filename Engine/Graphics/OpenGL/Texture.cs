@@ -1,15 +1,21 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using FontStructure = System.Collections.Generic.Dictionary<char, System.Drawing.RectangleF>;
 
 namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class Texture : IBindable, IDisposable
     {
         public readonly uint Id;
+
+#if DEBUG
+        public readonly string Name;
+#endif
+
+        public uint BindId { get; protected set; }
 
         public readonly TextureTarget Target;
 
@@ -59,28 +65,41 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             }
         }
 
-        public Texture(Font font, Color textColor, Color backColor, bool mipmapped, out Dictionary<char, float> texture_data)
+        public Texture(Font font, Color textColor, Color backColor, bool mipmapped, out FontStructure font_map_normalized)
             : this(TextureTarget.Texture2D)
         {
-            var map = new Dictionary<char, SizeF>();
-            texture_data = new Dictionary<char, float>();
+#if DEBUG
+            Name = "Font map";
+#endif
+            var font_map = new FontStructure();
+            font_map_normalized = new FontStructure();
+            var height = 0.0f;
+            var width = 0.0f;
 
             using (var img = new Bitmap(1, 1))
             using (var g = System.Drawing.Graphics.FromImage(img))
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
                 for (var i = 0; i < 128; i++)
-                    map.Add((char)i, g.MeasureString(((char)i).ToString(), font));
+                {
+                    var size = g.MeasureString(((char)i).ToString(), font);
+                    height = Math.Max(height, size.Height);
+                    font_map.Add((char)i, new RectangleF(width, 0.0f, size.Width, size.Height));
+                    width += size.Width;
+                }
             }
 
-            var height = 0.0f;
-            var width = 0.0f;
-            foreach (var character in map)
+            foreach (var character in font_map)
             {
-                height = Math.Max(height, character.Value.Height);
-                texture_data.Add(character.Key, width);
-                width += character.Value.Width;
-                Console.WriteLine("{0}\t{1}\t{2}", character.Key, character.Value, width);
+                font_map_normalized.Add(
+                    character.Key,
+                    new RectangleF(
+                        character.Value.X / width,
+                        character.Value.Y / height,
+                        character.Value.Width / width,
+                        character.Value.Height / height
+                    )
+                );
             }
 
             using (var img = new Bitmap((int)width, (int)height))
@@ -90,11 +109,10 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                     g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
                     g.Clear(backColor);
                     using (var textBrush = new SolidBrush(textColor))
-                        foreach (var character in texture_data)
-                            g.DrawString(character.Key.ToString(), font, textBrush, character.Value, 0);
+                        foreach (var character in font_map)
+                            g.DrawString(character.Key.ToString(), font, textBrush, character.Value.X, 0);
                     g.Save();
                 }
-                img.Save("test.png");
                 Init(img, mipmapped, Target, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
             }
         }
@@ -102,6 +120,9 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         public Texture(string filename, bool mipmapped, TextureTarget target = TextureTarget.Texture2D)
             : this(target)
         {
+#if DEBUG
+            Name = filename;
+#endif
             using (var img = new Bitmap(filename))
                 Init(img, mipmapped, target);
         }
@@ -181,6 +202,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public void Bind()
         {
+            BindId = bind_stack;
             GL.Enable(gl_texture_capability);
             GL.ActiveTexture((TextureUnit)((uint)TextureUnit.Texture0 + bind_stack));
             GL.BindTexture(Target, Id);
@@ -192,6 +214,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             GL.BindTexture(Target, 0);
             GL.Disable(gl_texture_capability);
             bind_stack--;
+            BindId = 0;
         }
 
         public void Dispose()

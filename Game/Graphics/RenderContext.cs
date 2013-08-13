@@ -1,6 +1,5 @@
 ﻿using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.OpenGL;
-using OpenTK;
 
 namespace MartinZottmann.Game.Graphics
 {
@@ -22,6 +21,7 @@ namespace MartinZottmann.Game.Graphics
             render_context.Debug = Debug;
             render_context.alpha_cutoff = alpha_cutoff;
             render_context.Program = Program;
+            render_context.DepthTexture = DepthTexture;
             return render_context;
         }
     }

@@ -45,5 +45,15 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 else
                     GL.DrawElements(Mode, mesh.IndicesLength, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
+
+        public void Draw(Program program)
+        {
+            using (new Bind(program))
+            using (new Bind(VertexArrayObject))
+                if (mesh.IndicesLength == 0)
+                    GL.DrawArrays(Mode, 0, mesh.VerticesLength);
+                else
+                    GL.DrawElements(Mode, mesh.IndicesLength, DrawElementsType.UnsignedInt, IntPtr.Zero);
+        }
     }
 }

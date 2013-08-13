@@ -1,5 +1,4 @@
 ﻿using MartinZottmann.Engine.Graphics.Mesh;
-using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -47,34 +46,53 @@ namespace MartinZottmann.Game.Entities.Components
 
         public override void Render(double delta_time, RenderContext render_context)
         {
-            var t0 = Model.Program;
-            var t1 = Model.Texture;
-            if (render_context.Program != null)
-            {
-                Model.Program = render_context.Program;
-                Model.Texture = null;
-            }
-            foreach (var s in Model.Program.UniformLocations)
+            var program = render_context.Program == null
+                ? Model.Program
+                : render_context.Program;
+
+            foreach (var s in program.UniformLocations)
                 switch (s.Key)
                 {
                     case "alpha_cutoff": s.Value.Set(render_context.alpha_cutoff); break;
                     case "in_DepthBiasMVP": break;
-                    case "in_ShadowTexture": break;
+                    case "in_ShadowTexture":
+                        render_context.DepthTexture.Bind();
+                        s.Value.Set(render_context.DepthTexture.BindId);
+                        break;
                     case "in_LightPosition": s.Value.Set(new Vector3d(10, 10, 10)); break; // @todo
                     case "in_Model": s.Value.Set(render_context.Model); break;
                     case "in_View": s.Value.Set(render_context.View); break;
                     case "in_ModelView": s.Value.Set(render_context.ViewModel); break;
                     case "in_ModelViewProjection": s.Value.Set(render_context.ProjectionViewModel); break;
                     case "in_NormalView": s.Value.Set(render_context.Normal); break;
-                    case "in_Texture": s.Value.Set(0); break; // @todo
+                    case "in_Texture":
+                        Model.Texture.Bind();
+                        s.Value.Set(Model.Texture.BindId);
+                        break;
                     default: throw new NotImplementedException(s.Key);
                 }
-            Model.Draw();
-            if (render_context.Program != null)
-            {
-                Model.Program = t0;
-                Model.Texture = t1;
-            }
+
+            Model.Draw(program);
+
+            foreach (var s in program.UniformLocations)
+                switch (s.Key)
+                {
+                    case "alpha_cutoff": break;
+                    case "in_DepthBiasMVP": break;
+                    case "in_ShadowTexture":
+                        render_context.DepthTexture.UnBind();
+                        break;
+                    case "in_LightPosition": break;
+                    case "in_Model": break;
+                    case "in_View": break;
+                    case "in_ModelView": break;
+                    case "in_ModelViewProjection": break;
+                    case "in_NormalView": break;
+                    case "in_Texture":
+                        Model.Texture.UnBind();
+                        break;
+                    default: throw new NotImplementedException(s.Key);
+                }
 
 #if DEBUG
             if (render_context.Debug)
