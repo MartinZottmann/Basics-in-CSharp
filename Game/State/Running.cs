@@ -26,7 +26,7 @@ namespace MartinZottmann.Game.State
 
         protected List<GameObject> selection = new List<GameObject>();
 
-        protected Camera camera;
+        protected MartinZottmann.Game.Entities.Camera camera;
 
         protected ResourceManager resources;
 
@@ -81,14 +81,17 @@ namespace MartinZottmann.Game.State
             foreach (var filename in Directory.GetFiles("Resources/Textures/", "*.png"))
                 resources.Textures.Load(filename, true, TextureTarget.Texture2D);
 
-            camera = new Camera(Window) { Position = new Vector3d(10, 10, 10), Direction = new Vector3d(-1, -1, -1) };
-
-            world_render_context.Window = Window;
-            world_render_context.Camera = camera;
-
             Window.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
             world = new World();
+
+            camera = new MartinZottmann.Game.Entities.Camera(resources, Window) { Position = new Vector3d(10, 10, 10) };
+            camera.CameraObject.Orientation = Quaterniond.FromAxisAngle(new Vector3d(0, 1, 0), MathHelper.DegreesToRadians(225));
+            camera.AddComponent(new Input(camera));
+            world.AddChild(camera);
+
+            world_render_context.Window = Window;
+            world_render_context.Camera = camera.CameraObject;
 
             cursor = new Cursor(resources);
             Window.Mouse.ButtonUp += (s, e) =>
@@ -202,45 +205,11 @@ namespace MartinZottmann.Game.State
             if (e.Key == Key.F3)
                 world_render_context.Debug = !world_render_context.Debug;
             if (e.Key == Key.F10)
-                camera.MouseLook = !camera.MouseLook;
+                camera.CameraObject.MouseLook = !camera.CameraObject.MouseLook;
         }
 
         public override void Update(double delta_time)
         {
-            if (Window.Keyboard[Key.W])
-                if (camera.MouseLook)
-                    camera.Position += camera.Direction * delta_time * 100;
-                else
-                    camera.Position += camera.Forward * delta_time * 100;
-            if (Window.Keyboard[Key.S])
-                if (camera.MouseLook)
-                    camera.Position -= camera.Direction * delta_time * 100;
-                else
-                    camera.Position -= camera.Forward * delta_time * 100;
-            if (Window.Keyboard[Key.A])
-                camera.Position -= camera.Right * delta_time * 100;
-            if (Window.Keyboard[Key.D])
-                camera.Position += camera.Right * delta_time * 100;
-            if (Window.Keyboard[Key.Space])
-                camera.Position += camera.Up * delta_time * 100;
-            if (Window.Keyboard[Key.ShiftLeft])
-                camera.Position -= camera.Up * delta_time * 100;
-            if (Window.Keyboard[Key.F])
-                camera.RotateDirectionAroundUp(delta_time);
-            if (Window.Keyboard[Key.H])
-                camera.RotateDirectionAroundUp(-delta_time);
-            if (Window.Keyboard[Key.T])
-                camera.RotateDirectionAroundRight(delta_time);
-            if (Window.Keyboard[Key.G])
-                camera.RotateDirectionAroundRight(-delta_time);
-            if (Window.Keyboard[Key.KeypadPlus])
-                camera.Fov += MathHelper.PiOver6 * delta_time;
-            if (Window.Keyboard[Key.KeypadSubtract])
-                camera.Fov -= MathHelper.PiOver6 * delta_time;
-            if (camera.Fov <= 0)
-                camera.Fov = delta_time;
-            if (camera.Fov > System.Math.PI)
-                camera.Fov = System.Math.PI;
             if (Window.Keyboard[Key.J])
                 foreach (var entity in selection)
                 {
@@ -281,9 +250,9 @@ namespace MartinZottmann.Game.State
                 foreach (var entity in selection)
                     entity.GetComponent<Physic>().AngularVelocity = Vector3d.Zero;
 
-            camera.Update(delta_time);
-            world_render_context.Projection = camera.ProjectionMatrix();
-            world_render_context.View = camera.ViewMatrix();
+            camera.CameraObject.Update(delta_time);
+            world_render_context.Projection = camera.CameraObject.ProjectionMatrix();
+            world_render_context.View = camera.CameraObject.ViewMatrix();
             world_render_context.Model = Matrix4d.Identity;
 
             world.Update(delta_time, world_render_context);
