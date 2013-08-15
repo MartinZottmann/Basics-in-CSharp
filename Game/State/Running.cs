@@ -132,15 +132,12 @@ namespace MartinZottmann.Game.State
             world.AddChild(new Starfield(resources));
             var s0 = new Ship(resources) { Position = new Vector3d(5, 0, 0) };
             s0.GetComponent<Physic>().AngularVelocity = Vector3d.UnitX;
-            s0.GetComponent<Target>().Position = s0.Position;
             world.AddChild(s0);
             var s1 = new Ship(resources) { Position = new Vector3d(0, 0, 0) };
             s1.GetComponent<Physic>().AngularVelocity = Vector3d.UnitY;
-            s1.GetComponent<Target>().Position = s1.Position;
             world.AddChild(s1);
             var s2 = new Ship(resources) { Position = new Vector3d(-5, 0, 0) };
             s2.GetComponent<Physic>().AngularVelocity = Vector3d.UnitZ;
-            s2.GetComponent<Target>().Position = s2.Position;
             world.AddChild(s2);
             var a0 = new Asteroid(resources) { Position = new Vector3d(0, 0, 5), Scale = new Vector3d(2) };
             a0.GetComponent<Physic>().Velocity = Vector3d.Zero;
@@ -324,28 +321,28 @@ namespace MartinZottmann.Game.State
 
             screen.Render(delta_time, screen_render_context);
 
-            #region Debug
-            GL.Viewport(0, 0, Window.Width, Window.Height);
-            var debug_render_context = new RenderContext()
-            {
-                Window = Window,
-                Projection = Matrix4d.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1),
-                View = Matrix4d.Identity,
-                Model = Matrix4d.Scale(0.25) * Matrix4d.CreateTranslation(-0.75, -0.75, 0)
-            };
-            var debug_screen = new MartinZottmann.Engine.Graphics.OpenGL.Entity();
-            var shape = new MartinZottmann.Engine.Graphics.Shapes.Quad();
-            shape.Vertices[0].Texcoord.Y = 0;
-            shape.Vertices[1].Texcoord.Y = 0;
-            shape.Vertices[2].Texcoord.Y = 1;
-            shape.Vertices[3].Texcoord.Y = 1;
-            debug_screen.Mesh(shape);
-            debug_screen.Program = resources.Programs["plain_texture"];
-            debug_screen.Program.UniformLocations["in_ModelViewProjection"].Set(debug_render_context.ProjectionViewModel);
-            debug_screen.Program.UniformLocations["in_Texture"].Set(0);
-            debug_screen.Texture = world_render_context.DepthTexture;
-            debug_screen.Draw();
-            #endregion
+            //#region Debug
+            //GL.Viewport(0, 0, Window.Width, Window.Height);
+            //var debug_render_context = new RenderContext()
+            //{
+            //    Window = Window,
+            //    Projection = Matrix4d.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1),
+            //    View = Matrix4d.Identity,
+            //    Model = Matrix4d.Scale(0.25) * Matrix4d.CreateTranslation(-0.75, -0.75, 0)
+            //};
+            //var debug_screen = new MartinZottmann.Engine.Graphics.OpenGL.Entity();
+            //var shape = new MartinZottmann.Engine.Graphics.Shapes.Quad();
+            //shape.Vertices[0].Texcoord.Y = 0;
+            //shape.Vertices[1].Texcoord.Y = 0;
+            //shape.Vertices[2].Texcoord.Y = 1;
+            //shape.Vertices[3].Texcoord.Y = 1;
+            //debug_screen.Mesh(shape);
+            //debug_screen.Program = resources.Programs["plain_texture"];
+            //debug_screen.Program.UniformLocations["in_ModelViewProjection"].Set(debug_render_context.ProjectionViewModel);
+            //debug_screen.Program.UniformLocations["in_Texture"].Set(0);
+            //debug_screen.Texture = world_render_context.DepthTexture;
+            //debug_screen.Draw();
+            //#endregion
 
             Window.SwapBuffers();
         }

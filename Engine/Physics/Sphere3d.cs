@@ -51,7 +51,7 @@ namespace MartinZottmann.Engine.Physics
                 var disc_root = Math.Sqrt(discrim);
                 return new Collision()
                 {
-                    HitPoint = @object.Direction * (-B - disc_root) / 2 * A,
+                    HitPoint = Origin + @object.Direction * (-B - disc_root) / 2 * A,
                     //HitPoint1 = @object.Direction * (-B + disc_root) / 2 * A,
                     Normal = Vector3d.Zero, // @todo
                     Object0 = this,
@@ -78,7 +78,7 @@ namespace MartinZottmann.Engine.Physics
                 var penetration_depth = Radius + @object.Radius - distance;
                 return new Collision()
                 {
-                    HitPoint = -relative * Radius,
+                    HitPoint = Origin + - relative * Radius,
                     //HitPoint1 = relative * Radius,
                     Normal = relative * penetration_depth,
                     Object0 = this,

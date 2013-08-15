@@ -23,7 +23,8 @@ namespace MartinZottmann.Game.AI
 
         public override void Update(double delta_time)
         {
-            Steer(TurnToVelocity(Arrive(Subject.GetComponent<Target>().Position, delta_time), delta_time), delta_time);
+            if (Subject.GetComponent<Target>().Position.HasValue)
+                Steer(TurnToVelocity(Arrive(Subject.GetComponent<Target>().Position.Value, delta_time), delta_time), delta_time);
         }
 
         protected void Steer(SteeringCommand steering_command, double delta_time)
