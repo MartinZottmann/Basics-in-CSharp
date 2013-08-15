@@ -61,8 +61,8 @@
     <Compile Include="Entities\Asteroid.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Entities\Camera.cs" />
     <Compile Include="Entities\Components\Abstract.cs" />
+    <Compile Include="Entities\Components\Camera.cs" />
     <Compile Include="Entities\Components\Graphic.cs" />
     <Compile Include="Entities\Components\Input.cs" />
     <Compile Include="Entities\Components\Physic.cs" />

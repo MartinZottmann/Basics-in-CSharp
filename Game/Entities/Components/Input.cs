@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using MartinZottmann.Game.Graphics;
+using OpenTK;
 using OpenTK.Input;
 
 namespace MartinZottmann.Game.Entities.Components
@@ -7,21 +8,21 @@ namespace MartinZottmann.Game.Entities.Components
     {
         public Input(GameObject game_object) : base(game_object) { }
 
-        public override void Update(double delta_time, Graphics.RenderContext render_context)
+        public override void Update(double delta_time, RenderContext render_context)
         {
             var window = render_context.Window;
             if (window.Keyboard[Key.W])
-                GameObject.Position += GameObject.ForwardRelative * delta_time * 100;
+                GameObject.Position += render_context.Camera.ForwardRelative * delta_time * 100;
             if (window.Keyboard[Key.S])
-                GameObject.Position -= GameObject.ForwardRelative * delta_time * 100;
+                GameObject.Position -= render_context.Camera.ForwardRelative * delta_time * 100;
             if (window.Keyboard[Key.A])
-                GameObject.Position -= GameObject.RightRelative * delta_time * 100;
+                GameObject.Position -= render_context.Camera.RightRelative * delta_time * 100;
             if (window.Keyboard[Key.D])
-                GameObject.Position += GameObject.RightRelative * delta_time * 100;
+                GameObject.Position += render_context.Camera.RightRelative * delta_time * 100;
             if (window.Keyboard[Key.Space])
-                GameObject.Position += GameObject.UpRelative * delta_time * 100;
+                GameObject.Position += render_context.Camera.UpRelative * delta_time * 100;
             if (window.Keyboard[Key.ShiftLeft])
-                GameObject.Position -= GameObject.UpRelative * delta_time * 100;
+                GameObject.Position -= render_context.Camera.UpRelative * delta_time * 100;
             if (window.Keyboard[Key.KeypadPlus])
                 render_context.Camera.Fov += MathHelper.PiOver6 * delta_time;
             if (window.Keyboard[Key.KeypadSubtract])
