@@ -158,7 +158,7 @@ namespace MartinZottmann.Game.State
             screen = new GameObject(resources);
             {
                 FontStructure font_map;
-                var font_texture = new Texture(new Font("Courier", 25, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.LightGray, Color.FromArgb(127, 255, 255, 255), false, out font_map);
+                var font_texture = new Texture(new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.White, Color.Black, Color.Transparent, false, out font_map);
                 var font_mesh_builder = new FontMeshBuilder(font_map);
                 screen.AddChild(new FPSCounter(resources, font_texture, font_mesh_builder));
                 screen.AddChild(new Debugger(resources, font_texture, font_mesh_builder, world));
@@ -206,7 +206,10 @@ namespace MartinZottmann.Game.State
         protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
         {
             if (e.Key == Key.F3)
+            {
                 world_render_context.Debug = !world_render_context.Debug;
+                screen_render_context.Debug = !screen_render_context.Debug;
+            }
             if (e.Key == Key.F10)
                 camera.CameraObject.MouseLook = !camera.CameraObject.MouseLook;
         }

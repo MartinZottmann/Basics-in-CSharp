@@ -9,6 +9,8 @@ namespace MartinZottmann.Engine.Resources
 
         protected Dictionary<string, T> resources = new Dictionary<string, T>();
 
+        public int Count { get { return resources.Count; } }
+
         public Resource(ResourceManager resources)
         {
             this.Resources = resources;

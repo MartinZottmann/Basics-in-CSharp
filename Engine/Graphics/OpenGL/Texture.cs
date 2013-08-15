@@ -41,7 +41,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             }
         }
 
-        public Texture(String text, Font font, Color textColor, Color backColor, bool mipmapped, out SizeF size)
+        public Texture(String text, Font font, Color text_color, Color text_outline_color, Color background_color, bool mipmapped, out SizeF size)
             : this(TextureTarget.Texture2D)
         {
             using (var img = new Bitmap(1, 1))
@@ -56,8 +56,8 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 using (var g = System.Drawing.Graphics.FromImage(img))
                 {
                     g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                    g.Clear(backColor);
-                    using (var textBrush = new SolidBrush(textColor))
+                    g.Clear(background_color);
+                    using (var textBrush = new SolidBrush(text_color))
                         g.DrawString(text, font, textBrush, 0, 0);
                     g.Save();
                 }
@@ -65,7 +65,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             }
         }
 
-        public Texture(Font font, Color textColor, Color backColor, bool mipmapped, out FontStructure font_map_normalized)
+        public Texture(Font font, Color text_color, Color text_outline_color, Color background_color, bool mipmapped, out FontStructure font_map_normalized)
             : this(TextureTarget.Texture2D)
         {
 #if DEBUG
@@ -107,10 +107,17 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 using (var g = System.Drawing.Graphics.FromImage(img))
                 {
                     g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                    g.Clear(backColor);
-                    using (var textBrush = new SolidBrush(textColor))
+                    g.Clear(background_color);
+                    using (var text_brush = new SolidBrush(text_color))
                         foreach (var character in font_map)
-                            g.DrawString(character.Key.ToString(), font, textBrush, character.Value.X, 0);
+                        {
+                            if (text_outline_color != Color.Transparent)
+                                using (var text_outline_brush = new SolidBrush(text_outline_color))
+                                    for (var x = -1; x <= 1; x++)
+                                        for (var y = -1; y <= 1; y++)
+                                            g.DrawString(character.Key.ToString(), font, text_outline_brush, x + character.Value.X, y);
+                            g.DrawString(character.Key.ToString(), font, text_brush, character.Value.X, 0);
+                        }
                     g.Save();
                 }
                 Init(img, mipmapped, Target, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);

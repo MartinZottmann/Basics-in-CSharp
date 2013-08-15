@@ -55,7 +55,7 @@ namespace MartinZottmann.Game.Entities.GUI
 
         public override void Render(double delta_time, RenderContext render_context)
         {
-            Position = new Vector3d(-0.75, 0.75, -1) * render_context.Projection.Inverted();
+            Position = new Vector3d(-0.90, 0.75, -1) * render_context.Projection.Inverted();
             base.Render(delta_time, render_context);
         }
     }
