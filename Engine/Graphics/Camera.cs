@@ -1,5 +1,4 @@
 ﻿using OpenTK;
-using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -43,7 +42,7 @@ namespace MartinZottmann.Engine.Graphics
 
         public bool InvertXAxis = false;
 
-        public bool InvertYAxis = true;
+        public bool InvertYAxis = false;
 
         public double SensitivityX = 0.1;
 
@@ -86,9 +85,9 @@ namespace MartinZottmann.Engine.Graphics
                 var mouse_y_delta = Window.Mouse.Y - window_center.Y;
 
                 if (mouse_x_delta != 0)
-                    Orientation = Quaterniond.FromAxisAngle(Up, (InvertXAxis ? 1 : -1) * SensitivityX * mouse_x_delta * delta_time * Fov) * Orientation;
+                    Orientation = Quaterniond.FromAxisAngle(Up, (InvertXAxis ? -1 : 1) * SensitivityX * mouse_x_delta * delta_time * Fov).Inverted() * Orientation;
                 if (mouse_y_delta != 0)
-                    Orientation = Orientation * Quaterniond.FromAxisAngle(Right, (InvertYAxis ? 1 : -1) * SensitivityY * mouse_y_delta * delta_time * Fov);
+                    Orientation = Orientation * Quaterniond.FromAxisAngle(Right, (InvertYAxis ? -1 : 1) * SensitivityY * mouse_y_delta * delta_time * Fov).Inverted();
 
                 if (Window.WindowState == WindowState.Fullscreen)
                     Cursor.Position = window_center;

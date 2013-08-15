@@ -161,7 +161,7 @@ namespace MartinZottmann.Game.State
                 var font_texture = new Texture(new Font("Courier", 25, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.LightGray, Color.FromArgb(127, 255, 255, 255), false, out font_map);
                 var font_mesh_builder = new FontMeshBuilder(font_map);
                 screen.AddChild(new FPSCounter(resources, font_texture, font_mesh_builder));
-                screen.AddChild(new Debugger(resources, font_texture, font_mesh_builder));
+                screen.AddChild(new Debugger(resources, font_texture, font_mesh_builder, world));
             }
 
             var screen_camera = new Camera(Window);

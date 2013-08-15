@@ -1,6 +1,5 @@
 ﻿using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
-using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Graphics;
@@ -16,10 +15,13 @@ namespace MartinZottmann.Game.Entities.GUI
 
         protected FontMeshBuilder font_mesh_builder;
 
-        public Debugger(ResourceManager resources, Texture font_texture, FontMeshBuilder font_mesh_builder)
+        protected World world;
+
+        public Debugger(ResourceManager resources, Texture font_texture, FontMeshBuilder font_mesh_builder, World world)
             : base(resources)
         {
             this.font_mesh_builder = font_mesh_builder;
+            this.world = world;
 
             Scale = new Vector3d(2);
 
@@ -32,7 +34,7 @@ namespace MartinZottmann.Game.Entities.GUI
         public override void Update(double delta_time, RenderContext render_context)
         {
             var graphic = GetComponent<Graphic>();
-            graphic.Model.Mesh(font_mesh_builder.FromString(String.Format("Memory: {0}", GC.GetTotalMemory(false))));
+            graphic.Model.Mesh(font_mesh_builder.FromString(String.Format("Memory: {0}\nWorld objects: {1}", GC.GetTotalMemory(false), world.Children.Count)));
         }
 
         public override void Render(double delta_time, RenderContext render_context)

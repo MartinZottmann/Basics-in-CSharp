@@ -21,7 +21,8 @@ namespace MartinZottmann.Engine.Graphics.Mesh
                 new VertexP3N3T2[@string.Length * nv],
                 new uint[@string.Length * ni]
             );
-            var offset_x = 0.0f;
+            var offset_x = 0f;
+            var offset_y = 0f;
             for (var i = 0; i < @string.Length; i++)
             {
                 var character = FontStructure[@string[i]];
@@ -29,12 +30,18 @@ namespace MartinZottmann.Engine.Graphics.Mesh
                 var y = character.Y;
                 var w = character.Width;
                 var h = character.Height;
+                if (@string[i] == '\n')
+                {
+                    offset_x = 0;
+                    offset_y -= h / nc;
+                    continue;
+                }
 
-                mesh.Vertices[i * nv + 0] = new VertexP3N3T2(0 + offset_x, 0, 0, 0, 0, 1, x, y + h);
-                mesh.Vertices[i * nv + 1] = new VertexP3N3T2(w + offset_x, 0, 0, 0, 0, 1, x + w, y + h);
-                mesh.Vertices[i * nv + 2] = new VertexP3N3T2(w + offset_x, h / nc, 0, 0, 0, 1, x + w, y);
-                mesh.Vertices[i * nv + 3] = new VertexP3N3T2(0 + offset_x, h / nc, 0, 0, 0, 1, x, y);
-                
+                mesh.Vertices[i * nv + 0] = new VertexP3N3T2(offset_x, offset_y, 0, 0, 0, 1, x, y + h);
+                mesh.Vertices[i * nv + 1] = new VertexP3N3T2(offset_x + w, offset_y, 0, 0, 0, 1, x + w, y + h);
+                mesh.Vertices[i * nv + 2] = new VertexP3N3T2(offset_x + w, offset_y + h / nc, 0, 0, 0, 1, x + w, y);
+                mesh.Vertices[i * nv + 3] = new VertexP3N3T2(offset_x, offset_y + h / nc, 0, 0, 0, 1, x, y);
+
                 mesh.Indices[i * ni + 0] = 0 + (uint)(i * nv);
                 mesh.Indices[i * ni + 1] = 1 + (uint)(i * nv);
                 mesh.Indices[i * ni + 2] = 2 + (uint)(i * nv);

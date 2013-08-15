@@ -1,5 +1,4 @@
 ﻿using MartinZottmann.Engine.Resources;
-using OpenTK;
 
 namespace MartinZottmann.Game.Entities
 {
