@@ -11,13 +11,13 @@ namespace MartinZottmann.Game.Entities.Components
         {
             var window = render_context.Window;
             if (window.Keyboard[Key.W])
-                GameObject.Position -= GameObject.ForwardRelative * delta_time * 100;
-            if (window.Keyboard[Key.S])
                 GameObject.Position += GameObject.ForwardRelative * delta_time * 100;
+            if (window.Keyboard[Key.S])
+                GameObject.Position -= GameObject.ForwardRelative * delta_time * 100;
             if (window.Keyboard[Key.A])
-                GameObject.Position += GameObject.RightRelative * delta_time * 100;
-            if (window.Keyboard[Key.D])
                 GameObject.Position -= GameObject.RightRelative * delta_time * 100;
+            if (window.Keyboard[Key.D])
+                GameObject.Position += GameObject.RightRelative * delta_time * 100;
             if (window.Keyboard[Key.Space])
                 GameObject.Position += GameObject.UpRelative * delta_time * 100;
             if (window.Keyboard[Key.ShiftLeft])

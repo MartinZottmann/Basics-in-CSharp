@@ -1,4 +1,5 @@
 ﻿using MartinZottmann.Engine.Graphics.Mesh;
+using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -7,12 +8,12 @@ using Color4 = MartinZottmann.Engine.Graphics.Color4;
 
 namespace MartinZottmann.Game.Entities.Components
 {
-    public class Graphic : Abstract
+    public class Graphic : Abstract, IDisposable
     {
-        public Engine.Graphics.OpenGL.Entity Model;
+        public Entity Model;
 
 #if DEBUG
-        protected Engine.Graphics.OpenGL.Entity orientation_model;
+        protected Entity orientation_model;
 #endif
 
         public Graphic(GameObject game_object)
@@ -41,6 +42,14 @@ namespace MartinZottmann.Game.Entities.Components
             );
             orientation_model.Mode = BeginMode.Lines;
             orientation_model.Program = GameObject.Resources.Programs["normal"];
+#endif
+        }
+
+        public void Dispose()
+        {
+            Model.Dispose();
+#if DEBUG
+            orientation_model.Dispose();
 #endif
         }
 

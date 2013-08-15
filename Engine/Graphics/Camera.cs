@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -22,7 +23,11 @@ namespace MartinZottmann.Engine.Graphics
 
         public Vector3d RightRelative { get { return Vector3d.Transform(Right, Orientation); } }
 
-        public Vector3d LookAt { get { return Position - ForwardRelative; } }
+        public Vector3d LookAt
+        {
+            get { return Position + ForwardRelative; }
+            set { Orientation = Matrix4d.LookAt(Position, value, Up).ExtractRotation().Inverted(); }
+        }
 
         public double Fov = MathHelper.PiOver4;
 
@@ -52,10 +57,7 @@ namespace MartinZottmann.Engine.Graphics
 
         public bool MouseLook
         {
-            get
-            {
-                return mouse_look;
-            }
+            get { return mouse_look; }
             set
             {
                 mouse_look = value;
@@ -65,6 +67,10 @@ namespace MartinZottmann.Engine.Graphics
                     Cursor.Show();
             }
         }
+
+        public Matrix4d ProjectionMatrix { get { return Matrix4d.CreatePerspectiveFieldOfView(Fov, Aspect, Near, Far); } }
+
+        public Matrix4d ViewMatrix { get { return Matrix4d.LookAt(Position, LookAt, UpRelative); } }
 
         public Camera(GameWindow window)
         {
@@ -89,16 +95,6 @@ namespace MartinZottmann.Engine.Graphics
                 else
                     Cursor.Position = Window.PointToScreen(window_center);
             }
-        }
-
-        public Matrix4d ProjectionMatrix()
-        {
-            return Matrix4d.CreatePerspectiveFieldOfView(Fov, Aspect, Near, Far);
-        }
-
-        public Matrix4d ViewMatrix()
-        {
-            return Matrix4d.LookAt(Position, LookAt, UpRelative);
         }
     }
 }

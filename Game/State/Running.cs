@@ -86,7 +86,8 @@ namespace MartinZottmann.Game.State
             world = new World();
 
             camera = new MartinZottmann.Game.Entities.Camera(resources, Window) { Position = new Vector3d(10, 10, 10) };
-            camera.CameraObject.Orientation = Quaterniond.FromAxisAngle(new Vector3d(0, 1, 0), MathHelper.DegreesToRadians(225));
+            camera.CameraObject.Position = camera.Position;
+            camera.CameraObject.LookAt = new Vector3d(0, 0, 0);
             camera.AddComponent(new Input(camera));
             world.AddChild(camera);
 
@@ -166,8 +167,8 @@ namespace MartinZottmann.Game.State
             var screen_camera = new Camera(Window);
             screen_render_context.Window = Window;
             screen_render_context.Camera = screen_camera;
-            screen_render_context.Projection = screen_camera.ProjectionMatrix();
-            screen_render_context.View = screen_camera.ViewMatrix();
+            screen_render_context.Projection = screen_camera.ProjectionMatrix;
+            screen_render_context.View = screen_camera.ViewMatrix;
             screen_render_context.Model = Matrix4d.Identity;
 
             var texture_target = TextureTarget.Texture2D;
@@ -194,6 +195,8 @@ namespace MartinZottmann.Game.State
         public override void Dispose()
         {
             //file_system.Save(savegame_filepath, world.SaveValue());
+            frame_buffer.Dispose();
+            screen.Dispose();
             world.Dispose();
             selection.Clear();
             resources.Dispose();
@@ -251,8 +254,8 @@ namespace MartinZottmann.Game.State
                     entity.GetComponent<Physic>().AngularVelocity = Vector3d.Zero;
 
             camera.CameraObject.Update(delta_time);
-            world_render_context.Projection = camera.CameraObject.ProjectionMatrix();
-            world_render_context.View = camera.CameraObject.ViewMatrix();
+            world_render_context.Projection = camera.CameraObject.ProjectionMatrix;
+            world_render_context.View = camera.CameraObject.ViewMatrix;
             world_render_context.Model = Matrix4d.Identity;
 
             world.Update(delta_time, world_render_context);

@@ -14,7 +14,7 @@ namespace MartinZottmann.Game.Entities.GUI
     {
         protected SizeF size = new SizeF(300, 30);
 
-        private FontMeshBuilder font_mesh_builder;
+        protected FontMeshBuilder font_mesh_builder;
 
         public Debugger(ResourceManager resources, Texture font_texture, FontMeshBuilder font_mesh_builder)
             : base(resources)
