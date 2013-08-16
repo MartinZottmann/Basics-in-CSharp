@@ -1,8 +1,9 @@
-﻿using RenderContext = MartinZottmann.Game.Graphics.RenderContext;
+﻿using System;
+using RenderContext = MartinZottmann.Game.Graphics.RenderContext;
 
 namespace MartinZottmann.Game.Entities.Components
 {
-    public abstract class Abstract
+    public abstract class Abstract : IDisposable
     {
         public GameObject GameObject { get; protected set; }
 
@@ -10,6 +11,8 @@ namespace MartinZottmann.Game.Entities.Components
         {
             GameObject = game_object;
         }
+
+        public virtual void Dispose() { }
 
         public virtual void Update(double delta_time, RenderContext render_context) { }
 

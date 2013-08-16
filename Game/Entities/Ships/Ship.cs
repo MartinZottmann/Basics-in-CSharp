@@ -18,13 +18,14 @@ namespace MartinZottmann.Game.Entities.Ships
 
             Streering = new Steering<Ship>(this);
 
-            AddChild(new Floor(resources) { Position = new Vector3d(0, -1, -1) });
-            AddChild(new Floor(resources) { Position = new Vector3d(0, -1, 0) });
-            AddChild(new Floor(resources) { Position = new Vector3d(0, -1, 1) });
-            AddChild(new Terminal(resources) { Position = new Vector3d(0, 0, -1) });
+            var children = AddComponent(new Children(this));
+            children.Add(new Floor(resources) { Position = new Vector3d(0, -1, -1) });
+            children.Add(new Floor(resources) { Position = new Vector3d(0, -1, 0) });
+            children.Add(new Floor(resources) { Position = new Vector3d(0, -1, 1) });
+            children.Add(new Terminal(resources) { Position = new Vector3d(0, 0, -1) });
 
             var physic = AddComponent(new Physic(this));
-            foreach (var child in Children)
+            foreach (var child in children.List)
                 physic.BoundingSphere.Radius = System.Math.Max(physic.BoundingSphere.Radius, child.Position.Length + child.GetComponent<Physic>().BoundingSphere.Radius);
             physic.BoundingBox.Max = new Vector3d(physic.BoundingSphere.Radius);
             physic.BoundingBox.Min = new Vector3d(-physic.BoundingSphere.Radius);

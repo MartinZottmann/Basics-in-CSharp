@@ -8,7 +8,7 @@ using Color4 = MartinZottmann.Engine.Graphics.Color4;
 
 namespace MartinZottmann.Game.Entities.Components
 {
-    public class Graphic : Abstract, IDisposable
+    public class Graphic : Abstract
     {
         public Entity Model;
 
@@ -45,12 +45,13 @@ namespace MartinZottmann.Game.Entities.Components
 #endif
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Model.Dispose();
 #if DEBUG
             orientation_model.Dispose();
 #endif
+            base.Dispose();
         }
 
         public override void Render(double delta_time, RenderContext render_context)

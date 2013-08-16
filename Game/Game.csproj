@@ -63,6 +63,7 @@
     </Compile>
     <Compile Include="Entities\Components\Abstract.cs" />
     <Compile Include="Entities\Components\Camera.cs" />
+    <Compile Include="Entities\Components\Children.cs" />
     <Compile Include="Entities\Components\Graphic.cs" />
     <Compile Include="Entities\Components\Input.cs" />
     <Compile Include="Entities\Components\Physic.cs" />

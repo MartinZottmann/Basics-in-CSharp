@@ -136,13 +136,14 @@ namespace MartinZottmann.Game.Entities.Components
             if (collision == null)
                 return hits;
 
-            foreach (var child in game_object.Children)
-                if (child.HasComponent<Physic>())
-                    foreach (var hit in child.GetComponent<Physic>().Intersect(ref ray, ref model_world))
-                    {
-                        hit.Parent = GameObject;
-                        hits.Add(hit);
-                    }
+            if (game_object.HasComponent<Children>())
+                foreach (var child in game_object.GetComponent<Children>().List)
+                    if (child.HasComponent<Physic>())
+                        foreach (var hit in child.GetComponent<Physic>().Intersect(ref ray, ref model_world))
+                        {
+                            hit.Parent = GameObject;
+                            hits.Add(hit);
+                        }
 
             var best = hits.Min;
             hits.Clear();

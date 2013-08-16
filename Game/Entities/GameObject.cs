@@ -47,8 +47,6 @@ namespace MartinZottmann.Game.Entities
 
         public readonly ResourceManager Resources;
 
-        public List<GameObject> Children = new List<GameObject>();
-
         protected Dictionary<Type, Component> components = new Dictionary<Type, Component>();
 
         public GameObject(ResourceManager resources)
@@ -58,18 +56,8 @@ namespace MartinZottmann.Game.Entities
 
         public virtual void Dispose()
         {
-            foreach (var child in Children)
-                child.Dispose();
-        }
-
-        public void AddChild(GameObject child)
-        {
-            Children.Add(child);
-        }
-
-        public void RemoveChild(GameObject child)
-        {
-            Children.Remove(child);
+            foreach (var component in components)
+                component.Value.Dispose();
         }
 
         public T AddComponent<T>(T component) where T : Component
@@ -93,13 +81,6 @@ namespace MartinZottmann.Game.Entities
         {
             foreach (var component in components)
                 component.Value.Update(delta_time, render_context);
-
-            if (Children.Count == 0)
-                return;
-
-            render_context = render_context.Push();
-            Children.ForEach(s => s.Update(delta_time, render_context));
-            render_context = render_context.Pop();
         }
 
         public virtual void Render(double delta_time, RenderContext render_context)
@@ -108,13 +89,6 @@ namespace MartinZottmann.Game.Entities
 
             foreach (var component in components)
                 component.Value.Render(delta_time, render_context);
-
-            if (Children.Count == 0)
-                return;
-
-            render_context = render_context.Push();
-            Children.ForEach(s => s.Render(delta_time, render_context));
-            render_context = render_context.Pop();
         }
 
         public virtual SaveValue SaveValue()
@@ -123,9 +97,9 @@ namespace MartinZottmann.Game.Entities
 
             //status.Add("Destroyed", Destroyed);
             //status.Add("Position", Position);
-            var children_status = new SaveList();
-            Children.ForEach(s => children_status.TryAdd(s));
-            status.Add("children", children_status);
+            //var children_status = new SaveList();
+            //Children.ForEach(s => children_status.TryAdd(s));
+            //status.Add("children", children_status);
 
             return status;
         }
@@ -134,17 +108,17 @@ namespace MartinZottmann.Game.Entities
         {
             //status.TryGetValue<bool>("Destroyed", ref Destroyed);
             //status.TryGetValue<Vector3d>("Position", ref Position);
-            SaveList children_status = new SaveList();
-            if (status.TryGetValue<SaveList>("children", ref children_status))
-                foreach (var child_status in children_status)
-                {
-                    var child = (GameObject)System.Activator.CreateInstance(
-                        child_status.Key.Type,
-                        new object[] { Resources }
-                    );
-                    child.Load(child_status.Value);
-                    AddChild(child);
-                }
+            //SaveList children_status = new SaveList();
+            //if (status.TryGetValue<SaveList>("children", ref children_status))
+            //    foreach (var child_status in children_status)
+            //    {
+            //        var child = (GameObject)System.Activator.CreateInstance(
+            //            child_status.Key.Type,
+            //            new object[] { Resources }
+            //        );
+            //        child.Load(child_status.Value);
+            //        AddChild(child);
+            //    }
         }
 
         public override string ToString()

@@ -159,8 +159,9 @@ namespace MartinZottmann.Game.State
                 FontStructure font_map;
                 var font_texture = new Texture(new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.White, Color.Black, Color.Transparent, false, out font_map);
                 var font_mesh_builder = new FontMeshBuilder(font_map);
-                screen.AddChild(new FPSCounter(resources, font_texture, font_mesh_builder));
-                screen.AddChild(new Debugger(resources, font_texture, font_mesh_builder, world));
+                var children = screen.AddComponent(new Children(screen));
+                children.Add(new FPSCounter(resources, font_texture, font_mesh_builder));
+                children.Add(new Debugger(resources, font_texture, font_mesh_builder, world));
             }
 
             var screen_camera = new Camera(Window);

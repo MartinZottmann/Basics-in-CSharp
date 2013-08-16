@@ -1,6 +1,5 @@
 ﻿using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
-using MartinZottmann.Engine.Graphics.Shapes;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Graphics;
