@@ -41,19 +41,21 @@ namespace MartinZottmann.Engine.Physics
 
         public Collision Collides(ref Ray3d @object)
         {
-            var A = Vector3d.Dot(@object.Direction, @object.Direction);
+            var direction = @object.Direction.Normalized();
+            var A = Vector3d.Dot(direction, direction);
             var p = @object.Origin - Origin;
-            var B = Vector3d.Dot(@object.Direction, p) * 2;
+            var B = Vector3d.Dot(direction, p) * 2;
             var C = Vector3d.Dot(p, p) - Radius * Radius;
             var discrim = B * B - 4 * (A * C);
             if (discrim >= 0)
             {
                 var disc_root = Math.Sqrt(discrim);
+                var h0 = @object.Origin + direction * (-B - disc_root) / 2 * A;
                 return new Collision()
                 {
-                    HitPoint = Origin + @object.Direction * (-B - disc_root) / 2 * A,
+                    HitPoint = h0,
                     //HitPoint1 = @object.Direction * (-B + disc_root) / 2 * A,
-                    Normal = Vector3d.Zero, // @todo
+                    Normal = (h0 - Origin).Normalized(),
                     Object0 = this,
                     Object1 = @object,
                     PenetrationDepth = 0.0 // @todo
@@ -80,7 +82,7 @@ namespace MartinZottmann.Engine.Physics
                 {
                     HitPoint = Origin + - relative * Radius,
                     //HitPoint1 = relative * Radius,
-                    Normal = relative * penetration_depth,
+                    Normal = relative,
                     Object0 = this,
                     Object1 = @object,
                     PenetrationDepth = penetration_depth
