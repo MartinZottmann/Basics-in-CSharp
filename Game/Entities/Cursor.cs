@@ -6,6 +6,7 @@ using MartinZottmann.Game.Graphics;
 using MartinZottmann.Game.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System.Collections.Generic;
 
 namespace MartinZottmann.Game.Entities
 {
@@ -71,6 +72,19 @@ namespace MartinZottmann.Game.Entities
             );
 
             Ray.Intersect(Plane, out Position);
+        }
+
+        public virtual SortedSet<Collision> Intersect(ref Ray3d ray, ref GameObject world)
+        {
+            var world_orientation_matrix = Matrix4d.Identity; // world.GetComponent<Physic>().OrientationMatrix
+            var hits = new SortedSet<Collision>();
+
+            foreach (var child in world.GetComponent<Children>())
+                if (child.HasComponent<Physic>())
+                    foreach (var hit in child.GetComponent<Physic>().Intersect(ref ray, ref world_orientation_matrix))
+                        hits.Add(hit);
+
+            return hits;
         }
 
         public override void Update(double delta_time, RenderContext render_context)

@@ -15,9 +15,9 @@ namespace MartinZottmann.Game.Entities.GUI
 
         protected FontMeshBuilder font_mesh_builder;
 
-        protected World world;
+        protected GameObject world;
 
-        public Debugger(ResourceManager resources, Texture font_texture, FontMeshBuilder font_mesh_builder, World world)
+        public Debugger(ResourceManager resources, Texture font_texture, FontMeshBuilder font_mesh_builder, GameObject world)
             : base(resources)
         {
             this.font_mesh_builder = font_mesh_builder;
@@ -42,7 +42,7 @@ namespace MartinZottmann.Game.Entities.GUI
                     String.Format(
                         "Memory: {0}\nWorld objects: {1}\nEntities: {2}\nPrograms: {3}\nShaders: {4}\nTextures: {5}\nWavefrontObjFiles: {6}",
                         GC.GetTotalMemory(false),
-                        world.Children.Count,
+                        world.GetComponent<Children>().Count,
                         Resources.Entities.Count,
                         Resources.Programs.Count,
                         Resources.Shaders.Count,

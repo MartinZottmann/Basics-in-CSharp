@@ -22,7 +22,7 @@ namespace MartinZottmann.Game.State
 {
     class Running : GameState
     {
-        protected World world;
+        protected GameObject world;
 
         protected List<GameObject> selection = new List<GameObject>();
 
@@ -83,76 +83,82 @@ namespace MartinZottmann.Game.State
 
             Window.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
-            world = new World();
-
-            {
-                var c0 = new GameObject(resources) { Position = new Vector3d(10, 10, 10) };
-                c0.AddComponent(new Input(c0));
-                c0.Position = new Vector3d(10, 10, 10);
-                camera = c0.AddComponent(new Entities.Components.Camera(c0, Window) { LockPosition = true }).CameraObject;
-                camera.LookAt = new Vector3d(0, 0, 0);
-                world.AddChild(c0);
-            }
-
             world_render_context.Window = Window;
 
-            cursor = new Cursor(resources);
-            Window.Mouse.ButtonUp += (s, e) =>
+            world = new GameObject(resources);
             {
-                if (e.Button == MouseButton.Left)
+                var children = world.AddComponent(new Children(world));
+                world.AddComponent(new ChildrenPhysic(world));
+
                 {
-                    selection.ForEach(t => t.Mark = default(OpenTK.Graphics.Color4));
-                    selection.Clear();
-                    foreach (var hit in world.Intersect(ref cursor.Ray))
-                    {
-                        selection.Add((GameObject)hit.Object1);
-                        if (hit.Parent == null)
-                            Console.WriteLine("{0}", hit.Object1);
-                        else
-                            Console.WriteLine("{0} > {1}", hit.Parent, hit.Object1);
-                    }
-                    selection.ForEach(t => t.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255));
+                    var c0 = new GameObject(resources);
+                    c0.AddComponent(new Input(c0));
+                    c0.Position = new Vector3d(10, 10, 10);
+                    camera = c0.AddComponent(new Entities.Components.Camera(c0, Window) { LockPosition = true }).CameraObject;
+                    camera.LookAt = new Vector3d(0, 0, 0);
+                    children.Add(c0);
                 }
-                if (e.Button == MouseButton.Right)
-                    foreach (var game_object in selection)
-                        if (game_object.HasComponent<Target>())
-                            game_object.GetComponent<Target>().Position = cursor.Position;
-            };
-            world.AddChild(cursor);
 
-            file_system = new FileSystem();
-            savegame_filepath = "world.save";
-            //if (File.Exists(savegame_filepath))
-            //    using (var stream = new FileStream(savegame_filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            //        if (stream.Length != 0)
-            //        {
-            //            world.Load(file_system.Load<SaveValue>(stream));
-            //            return;
-            //        }
+                {
+                    cursor = new Cursor(resources);
+                    Window.Mouse.ButtonUp += (s, e) =>
+                    {
+                        if (e.Button == MouseButton.Left)
+                        {
+                            selection.ForEach(t => t.Mark = default(OpenTK.Graphics.Color4));
+                            selection.Clear();
+                            foreach (var hit in cursor.Intersect(ref cursor.Ray, ref world))
+                            {
+                                selection.Add((GameObject)hit.Object1);
+                                if (hit.Parent == null)
+                                    Console.WriteLine("{0}", hit.Object1);
+                                else
+                                    Console.WriteLine("{0} > {1}", hit.Parent, hit.Object1);
+                            }
+                            selection.ForEach(t => t.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255));
+                        }
+                        if (e.Button == MouseButton.Right)
+                            foreach (var game_object in selection)
+                                if (game_object.HasComponent<Target>())
+                                    game_object.GetComponent<Target>().Position = cursor.Position;
+                    };
+                    children.Add(cursor);
+                }
 
-            world.AddChild(new Grid(resources));
-            world.AddChild(new Starfield(resources));
-            var s0 = new Ship(resources) { Position = new Vector3d(5, 0, 0) };
-            s0.GetComponent<Physic>().AngularVelocity = Vector3d.UnitX;
-            world.AddChild(s0);
-            var s1 = new Ship(resources) { Position = new Vector3d(0, 0, 0) };
-            s1.GetComponent<Physic>().AngularVelocity = Vector3d.UnitY;
-            world.AddChild(s1);
-            var s2 = new Ship(resources) { Position = new Vector3d(-5, 0, 0) };
-            s2.GetComponent<Physic>().AngularVelocity = Vector3d.UnitZ;
-            world.AddChild(s2);
-            var a0 = new Asteroid(resources) { Position = new Vector3d(0, 0, 5), Scale = new Vector3d(2) };
-            a0.GetComponent<Physic>().Velocity = Vector3d.Zero;
-            a0.GetComponent<Physic>().AngularVelocity = new Vector3d(0.25, 0.5, 0.75);
-            world.AddChild(a0);
-            var t0 = new Textured(resources) { Position = new Vector3d(3, -3, 0), Scale = new Vector3d(2) };
-            t0.GetComponent<Physic>().AngularVelocity = Vector3d.UnitY;
-            world.AddChild(t0);
-            var t1 = new Textured(resources) { Position = new Vector3d(-3, -4, 0), Scale = new Vector3d(2) };
-            t1.GetComponent<Physic>().AngularVelocity = -Vector3d.UnitY;
-            world.AddChild(t1);
-            world.AddChild(new Textured(resources) { Position = new Vector3d(0, -14, 0), Scale = new Vector3d(7) });
-            world.AddChild(new Textured(resources) { Position = new Vector3d(-14, 0, 0), Scale = new Vector3d(7), Orientation = new Quaterniond(Vector3d.UnitZ, -1) });
+                file_system = new FileSystem();
+                savegame_filepath = "world.save";
+                //if (File.Exists(savegame_filepath))
+                //    using (var stream = new FileStream(savegame_filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                //        if (stream.Length != 0)
+                //        {
+                //            world.Load(file_system.Load<SaveValue>(stream));
+                //            return;
+                //        }
+
+                children.Add(new Grid(resources));
+                children.Add(new Starfield(resources));
+                var s0 = new Ship(resources) { Position = new Vector3d(5, 0, 0) };
+                s0.GetComponent<Physic>().AngularVelocity = Vector3d.UnitX;
+                children.Add(s0);
+                var s1 = new Ship(resources) { Position = new Vector3d(0, 0, 0) };
+                s1.GetComponent<Physic>().AngularVelocity = Vector3d.UnitY;
+                children.Add(s1);
+                var s2 = new Ship(resources) { Position = new Vector3d(-5, 0, 0) };
+                s2.GetComponent<Physic>().AngularVelocity = Vector3d.UnitZ;
+                children.Add(s2);
+                var a0 = new Asteroid(resources) { Position = new Vector3d(0, 0, 5), Scale = new Vector3d(2) };
+                a0.GetComponent<Physic>().Velocity = Vector3d.Zero;
+                a0.GetComponent<Physic>().AngularVelocity = new Vector3d(0.25, 0.5, 0.75);
+                children.Add(a0);
+                var t0 = new Textured(resources) { Position = new Vector3d(3, -3, 0), Scale = new Vector3d(2) };
+                t0.GetComponent<Physic>().AngularVelocity = Vector3d.UnitY;
+                children.Add(t0);
+                var t1 = new Textured(resources) { Position = new Vector3d(-3, -4, 0), Scale = new Vector3d(2) };
+                t1.GetComponent<Physic>().AngularVelocity = -Vector3d.UnitY;
+                children.Add(t1);
+                children.Add(new Textured(resources) { Position = new Vector3d(0, -14, 0), Scale = new Vector3d(7) });
+                children.Add(new Textured(resources) { Position = new Vector3d(-14, 0, 0), Scale = new Vector3d(7), Orientation = new Quaterniond(Vector3d.UnitZ, -1) });
+            }
 
             screen = new GameObject(resources);
             {

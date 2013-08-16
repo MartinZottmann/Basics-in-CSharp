@@ -64,6 +64,7 @@
     <Compile Include="Entities\Components\Abstract.cs" />
     <Compile Include="Entities\Components\Camera.cs" />
     <Compile Include="Entities\Components\Children.cs" />
+    <Compile Include="Entities\Components\ChildrenPhysic.cs" />
     <Compile Include="Entities\Components\Graphic.cs" />
     <Compile Include="Entities\Components\Input.cs" />
     <Compile Include="Entities\Components\Physic.cs" />
@@ -96,7 +97,6 @@
     <Compile Include="Entities\Textured.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Entities\World.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Graphics\RenderContext.cs" />
     <Compile Include="IO\FileSystem.cs" />

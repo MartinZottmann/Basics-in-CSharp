@@ -1,78 +1,42 @@
 ﻿using MartinZottmann.Engine.Physics;
-using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Graphics;
-using OpenTK;
-using System;
 using System.Collections.Generic;
 
-namespace MartinZottmann.Game.Entities
+namespace MartinZottmann.Game.Entities.Components
 {
-    public class World : IDisposable
+    public class ChildrenPhysic : Abstract
     {
-        public List<GameObject> Children = new List<GameObject>();
+        protected Children children;
 
-        public virtual void Dispose()
-        {
-            foreach (var child in Children)
-                child.Dispose();
+        public ChildrenPhysic(GameObject game_object) : base(game_object) {
+            children = GameObject.GetComponent<Children>();
         }
 
-        public void AddChild(GameObject child)
-        {
-            Children.Add(child);
-        }
-
-        public void RemoveChild(GameObject child)
-        {
-            Children.Remove(child);
-        }
-
-        public virtual SortedSet<Collision> Intersect(ref Ray3d ray)
-        {
-            Matrix4d world_model = Matrix4d.Identity;
-            var hits = new SortedSet<Collision>();
-
-            foreach (var child in Children)
-                if (child.HasComponent<Physic>())
-                    foreach (var hit in child.GetComponent<Physic>().Intersect(ref ray, ref world_model))
-                        hits.Add(hit);
-
-            return hits;
-        }
-
-        public void Update(double delta_time, RenderContext render_context)
+        public override void Update(double delta_time, RenderContext render_context)
         {
             var collisions = DetectCollisions();
 
-            foreach (var child in Children)
+            foreach (var child in children)
                 if (child.HasComponent<Physic>())
                     child.GetComponent<Physic>().UpdateVelocity(delta_time);
 
             ApplyImpusles(collisions, delta_time);
 
-            foreach (var child in Children)
+            foreach (var child in children)
                 if (child.HasComponent<Physic>())
                     child.GetComponent<Physic>().UpdatePosition(delta_time);
-
-            Children.ForEach(s => s.Update(delta_time, render_context));
-        }
-
-        public void Render(double delta_time, RenderContext render_context)
-        {
-            foreach (var child in Children)
-                child.Render(delta_time, render_context);
         }
 
         protected List<Collision> DetectCollisions()
         {
             var collisions = new List<Collision>();
 
-            foreach (GameObject e0 in Children)
+            foreach (GameObject e0 in children)
             {
                 if (!e0.HasComponent<Physic>())
                     continue;
 
-                foreach (GameObject e1 in Children)
+                foreach (GameObject e1 in children)
                 {
                     if (e0 == e1)
                         continue;

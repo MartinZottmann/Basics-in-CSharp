@@ -137,7 +137,7 @@ namespace MartinZottmann.Game.Entities.Components
                 return hits;
 
             if (game_object.HasComponent<Children>())
-                foreach (var child in game_object.GetComponent<Children>().List)
+                foreach (var child in game_object.GetComponent<Children>())
                     if (child.HasComponent<Physic>())
                         foreach (var hit in child.GetComponent<Physic>().Intersect(ref ray, ref model_world))
                         {

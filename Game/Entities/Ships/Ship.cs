@@ -25,7 +25,7 @@ namespace MartinZottmann.Game.Entities.Ships
             children.Add(new Terminal(resources) { Position = new Vector3d(0, 0, -1) });
 
             var physic = AddComponent(new Physic(this));
-            foreach (var child in children.List)
+            foreach (var child in children)
                 physic.BoundingSphere.Radius = System.Math.Max(physic.BoundingSphere.Radius, child.Position.Length + child.GetComponent<Physic>().BoundingSphere.Radius);
             physic.BoundingBox.Max = new Vector3d(physic.BoundingSphere.Radius);
             physic.BoundingBox.Min = new Vector3d(-physic.BoundingSphere.Radius);
