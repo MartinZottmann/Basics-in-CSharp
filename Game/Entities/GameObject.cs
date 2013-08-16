@@ -1,10 +1,10 @@
 ﻿using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Components;
+using MartinZottmann.Game.Graphics;
 using MartinZottmann.Game.IO;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using Component = MartinZottmann.Game.Entities.Components.Abstract;
-using RenderContext = MartinZottmann.Game.Graphics.RenderContext;
 
 namespace MartinZottmann.Game.Entities
 {
@@ -47,7 +47,7 @@ namespace MartinZottmann.Game.Entities
 
         public readonly ResourceManager Resources;
 
-        protected Dictionary<Type, Component> components = new Dictionary<Type, Component>();
+        protected Dictionary<Type, IComponent> components = new Dictionary<Type, IComponent>();
 
         public GameObject(ResourceManager resources)
         {
@@ -60,19 +60,19 @@ namespace MartinZottmann.Game.Entities
                 component.Value.Dispose();
         }
 
-        public T AddComponent<T>(T component) where T : Component
+        public T AddComponent<T>(T component) where T : IComponent
         {
             components.Add(typeof(T), component);
 
             return component;
         }
 
-        public bool HasComponent<T>() where T : Component
+        public bool HasComponent<T>() where T : IComponent
         {
             return components.ContainsKey(typeof(T));
         }
 
-        public T GetComponent<T>() where T : Component
+        public T GetComponent<T>() where T : IComponent
         {
             return (T)components[typeof(T)];
         }
@@ -95,30 +95,33 @@ namespace MartinZottmann.Game.Entities
         {
             var status = new SaveValue(1);
 
-            //status.Add("Destroyed", Destroyed);
-            //status.Add("Position", Position);
-            //var children_status = new SaveList();
-            //Children.ForEach(s => children_status.TryAdd(s));
-            //status.Add("children", children_status);
+            status.Add("Scale", Scale);
+            status.Add("Position", Position);
+            status.Add("Orientation", Orientation);
+            var components_status = new SaveList();
+            foreach (var component in components)
+                components_status.TryAdd(component.Value);
+            status.Add("components_status", components_status);
 
             return status;
         }
 
         public virtual void Load(SaveValue status)
         {
-            //status.TryGetValue<bool>("Destroyed", ref Destroyed);
-            //status.TryGetValue<Vector3d>("Position", ref Position);
-            //SaveList children_status = new SaveList();
-            //if (status.TryGetValue<SaveList>("children", ref children_status))
-            //    foreach (var child_status in children_status)
-            //    {
-            //        var child = (GameObject)System.Activator.CreateInstance(
-            //            child_status.Key.Type,
-            //            new object[] { Resources }
-            //        );
-            //        child.Load(child_status.Value);
-            //        AddChild(child);
-            //    }
+            status.TryGetValue<Vector3d>("Scale", ref Scale);
+            status.TryGetValue<Vector3d>("Position", ref Position);
+            status.TryGetValue<Quaterniond>("Orientation", ref Orientation);
+            SaveList components_status = new SaveList();
+            if (status.TryGetValue<SaveList>("components_status", ref components_status))
+                foreach (var component_status in components_status)
+                {
+                    IComponent component = (IComponent)System.Activator.CreateInstance(
+                        component_status.Key.Type,
+                        new object[] { this }
+                    );
+                    component.Load(component_status.Value);
+                    AddComponent(component);
+                }
         }
 
         public override string ToString()

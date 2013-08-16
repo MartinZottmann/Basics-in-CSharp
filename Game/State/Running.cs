@@ -86,6 +86,14 @@ namespace MartinZottmann.Game.State
             world_render_context.Window = Window;
 
             world = new GameObject(resources);
+
+            file_system = new FileSystem();
+            savegame_filepath = "world.save";
+            //if (File.Exists(savegame_filepath))
+            //    using (var stream = new FileStream(savegame_filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            //        if (stream.Length != 0)
+            //            world.Load(file_system.Load<SaveValue>(stream));
+
             {
                 var children = world.AddComponent(new Children(world));
                 world.AddComponent(new ChildrenPhysic(world));
@@ -124,16 +132,6 @@ namespace MartinZottmann.Game.State
                     };
                     children.Add(cursor);
                 }
-
-                file_system = new FileSystem();
-                savegame_filepath = "world.save";
-                //if (File.Exists(savegame_filepath))
-                //    using (var stream = new FileStream(savegame_filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                //        if (stream.Length != 0)
-                //        {
-                //            world.Load(file_system.Load<SaveValue>(stream));
-                //            return;
-                //        }
 
                 children.Add(new Grid(resources));
                 children.Add(new Starfield(resources));
@@ -200,7 +198,7 @@ namespace MartinZottmann.Game.State
 
         public override void Dispose()
         {
-            //file_system.Save(savegame_filepath, world.SaveValue());
+            file_system.Save(savegame_filepath, world.SaveValue());
             frame_buffer.Dispose();
             screen.Dispose();
             world.Dispose();

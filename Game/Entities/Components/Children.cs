@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MartinZottmann.Game.Graphics;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -28,7 +29,7 @@ namespace MartinZottmann.Game.Entities.Components
             list.Remove(child);
         }
 
-        public override void Update(double delta_time, Graphics.RenderContext render_context)
+        public override void Update(double delta_time, RenderContext render_context)
         {
             if (list.Count == 0)
                 return;
@@ -38,7 +39,7 @@ namespace MartinZottmann.Game.Entities.Components
             render_context = render_context.Pop();
         }
 
-        public override void Render(double delta_time, Graphics.RenderContext render_context)
+        public override void Render(double delta_time, RenderContext render_context)
         {
             if (list.Count == 0)
                 return;

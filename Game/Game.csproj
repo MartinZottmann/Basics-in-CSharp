@@ -66,6 +66,7 @@
     <Compile Include="Entities\Components\Children.cs" />
     <Compile Include="Entities\Components\ChildrenPhysic.cs" />
     <Compile Include="Entities\Components\Graphic.cs" />
+    <Compile Include="Entities\Components\IComponent.cs" />
     <Compile Include="Entities\Components\Input.cs" />
     <Compile Include="Entities\Components\Physic.cs" />
     <Compile Include="Entities\Components\Target.cs" />
