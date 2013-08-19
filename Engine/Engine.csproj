@@ -33,8 +33,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Bind.cs" />
+    <Compile Include="Entities\ComponentEventArgs.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\EntityManager.cs" />
+    <Compile Include="Entities\IComponent.cs" />
+    <Compile Include="Entities\INodeList.cs" />
+    <Compile Include="Entities\ISystem.cs" />
+    <Compile Include="Entities\Node.cs" />
+    <Compile Include="Entities\NodeEventArgs.cs" />
+    <Compile Include="Entities\NodeList.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\Color.cs" />
+    <Compile Include="Graphics\FontStructure.cs" />
     <Compile Include="Graphics\Mesh\FontMeshBuilder.cs" />
     <Compile Include="Graphics\Mesh\IIndices.cs" />
     <Compile Include="Graphics\Mesh\IMesh.cs" />

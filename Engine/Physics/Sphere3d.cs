@@ -3,6 +3,7 @@ using System;
 
 namespace MartinZottmann.Engine.Physics
 {
+    [Serializable]
     public struct Sphere3d : ICollidable, ICollidable<Ray3d>, ICollidable<Sphere3d>
     {
         public Vector3d Origin;
@@ -74,13 +75,13 @@ namespace MartinZottmann.Engine.Physics
         {
             var relative = Origin - @object.Origin;
             var distance = relative.Length;
-            if (distance <= Radius + @object.Radius)
+            if (distance <= Radius + @object.Radius && distance > Double.Epsilon)
             {
                 relative /= distance;
                 var penetration_depth = Radius + @object.Radius - distance;
                 return new Collision()
                 {
-                    HitPoint = Origin + - relative * Radius,
+                    HitPoint = Origin - relative * Radius,
                     //HitPoint1 = relative * Radius,
                     Normal = relative,
                     Object0 = this,

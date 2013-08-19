@@ -25,15 +25,7 @@ namespace MartinZottmann.Engine.Graphics.Mesh
         {
             Vector3.Transform(ref Position, ref matrix, out Position);
             Vector3.Transform(ref Normal, ref matrix, out Normal);
-        }
-
-        public string[] GetAttributeLayout()
-        {
-            return new string[] {
-                "in_Position",
-                "in_Normal",
-                "in_TexCoord"
-            };
+            Vector3.Normalize(ref Normal, out Normal);
         }
     }
 }

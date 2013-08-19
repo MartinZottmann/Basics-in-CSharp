@@ -9,62 +9,37 @@ using System.Drawing;
 
 namespace MartinZottmann.Game.Entities.GUI
 {
-    public class Debugger : GameObject
+    public class Debugger : Abstract
     {
         protected SizeF size = new SizeF(300, 30);
 
-        protected FontMeshBuilder font_mesh_builder;
+        public ResourceManager ResourceManager;
 
-        protected GameObject world;
-
-        public Debugger(ResourceManager resources, Texture font_texture, FontMeshBuilder font_mesh_builder, GameObject world)
-            : base(resources)
+        public override void Start(ResourceManager resource_manager)
         {
-            this.font_mesh_builder = font_mesh_builder;
-            this.world = world;
+            base.Start(resource_manager);
 
             Scale = new Vector3d(2);
-
-            var graphic = AddComponent(new Graphic(this));
-            graphic.Model = new Engine.Graphics.OpenGL.Entity();
-            graphic.Model.Program = Resources.Programs["plain_texture"];
-            graphic.Model.Texture = font_texture;
+            Position = new Vector3d(-0.90, 0.5, -1);
+            ResourceManager = resource_manager;
         }
 
-        public override void Update(double delta_time, RenderContext render_context)
+        public override void Update(double delta_time)
         {
-            if (!render_context.Debug)
-                return;
-
-            var graphic = GetComponent<Graphic>();
-            graphic.Model.Mesh(
-                font_mesh_builder.FromString(
+            Model.Mesh(
+                FontMeshBuilder.FromString(
                     String.Format(
                         "Memory: {0}\nWorld objects: {1}\nEntities: {2}\nPrograms: {3}\nShaders: {4}\nTextures: {5}\nWavefrontObjFiles: {6}",
                         GC.GetTotalMemory(false),
-                        world.GetComponent<Children>().Count,
-                        Resources.Entities.Count,
-                        Resources.Programs.Count,
-                        Resources.Shaders.Count,
-                        Resources.Textures.Count,
-                        Resources.WavefrontObjFiles.Count
+                        "???",
+                        ResourceManager.Entities.Count,
+                        ResourceManager.Programs.Count,
+                        ResourceManager.Shaders.Count,
+                        ResourceManager.Textures.Count,
+                        ResourceManager.WavefrontObjFiles.Count
                     )
                 )
             );
-        }
-
-        public override void Render(double delta_time, RenderContext render_context)
-        {
-            if (!render_context.Debug)
-                return;
-
-            // @todo Remove once keyboard inputs are thread safe so render_context.Debug cannot change between Update and Render
-            var graphic = GetComponent<Graphic>();
-            if (graphic.Model.Mesh() == null)
-                return;
-
-            Position = new Vector3d(-0.90, 0.5, -1) * render_context.Projection.Inverted();
-            base.Render(delta_time, render_context);
         }
     }
 }

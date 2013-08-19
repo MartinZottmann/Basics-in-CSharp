@@ -3,6 +3,7 @@ using System;
 
 namespace MartinZottmann.Engine.Physics
 {
+    [Serializable]
     public struct AABB3d
     {
         public Vector3d Min;

@@ -15,10 +15,14 @@ namespace MartinZottmann.Engine.Resources
 
         public Entity Load(string filename, Matrix4? transformation = null)
         {
-            if (!resources.ContainsKey(filename))
-                this[filename] = Entity(Resources.WavefrontObjFiles.Load(filename), transformation);
+            var key = transformation == null
+                ? filename
+                : String.Format("{0} as {1}", filename, transformation.Value);
 
-            return this[filename];
+            if (!resources.ContainsKey(key))
+                this[key] = Entity(Resources.WavefrontObjFiles.Load(filename), transformation);
+
+            return this[key];
         }
 
         public Entity Entity(ObjFile obj_file, Matrix4? transformation = null)

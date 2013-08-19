@@ -4,16 +4,21 @@ using System;
 
 namespace MartinZottmann.Engine.Graphics.OpenGL
 {
+    [Serializable]
     public class Entity : IDisposable
     {
         public BeginMode Mode = BeginMode.Triangles;
 
+        [NonSerialized]
         public Program Program;
 
+        [NonSerialized]
         public Texture Texture;
 
+        [NonSerialized]
         public readonly VertexArrayObject VertexArrayObject = new VertexArrayObject();
 
+        [NonSerialized]
         protected IMesh mesh;
 
         public Entity() : base() { }
@@ -35,7 +40,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             VertexArrayObject.Dispose();
         }
 
-        public void Draw()
+        public virtual void Draw()
         {
             using (new Bind(Texture))
             using (new Bind(Program))
@@ -46,7 +51,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                     GL.DrawElements(Mode, mesh.IndicesLength, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
 
-        public void Draw(Program program)
+        public virtual void Draw(Program program)
         {
             using (new Bind(program))
             using (new Bind(VertexArrayObject))

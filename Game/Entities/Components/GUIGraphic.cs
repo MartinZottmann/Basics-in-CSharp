@@ -3,5 +3,5 @@
 namespace MartinZottmann.Game.Entities.Components
 {
     [Serializable]
-    public class Input : Abstract { }
+    public class GUIGraphic : Graphic { }
 }

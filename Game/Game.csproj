@@ -56,56 +56,38 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI\Base.cs" />
-    <Compile Include="AI\Steering.cs" />
-    <Compile Include="Entities\Asteroid.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Entities\Components\Abstract.cs" />
-    <Compile Include="Entities\Components\Camera.cs" />
-    <Compile Include="Entities\Components\Children.cs" />
-    <Compile Include="Entities\Components\ChildrenPhysic.cs" />
+    <Compile Include="Entities\Components\Base.cs" />
+    <Compile Include="Entities\Components\Cursor.cs" />
     <Compile Include="Entities\Components\Graphic.cs" />
-    <Compile Include="Entities\Components\IComponent.cs" />
+    <Compile Include="Entities\Components\GUIGraphic.cs" />
     <Compile Include="Entities\Components\Input.cs" />
     <Compile Include="Entities\Components\Physic.cs" />
     <Compile Include="Entities\Components\Target.cs" />
-    <Compile Include="Entities\Cursor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Entities\GameObject.cs" />
-    <Compile Include="Entities\Grid.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Entities\Creator.cs" />
+    <Compile Include="Entities\GUI\Abstract.cs" />
     <Compile Include="Entities\GUI\Debugger.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Entities\GUI\FPSCounter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Entities\Ships\Components\Floor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Entities\Ships\Components\Terminal.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Entities\Ships\Ship.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Entities\Starfield.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Entities\Textured.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Entities\GUI\IGUIElement.cs" />
+    <Compile Include="Entities\Nodes\CursorNode.cs" />
+    <Compile Include="Entities\Nodes\GraphicNode.cs" />
+    <Compile Include="Entities\Nodes\InputNode.cs" />
+    <Compile Include="Entities\Nodes\PhysicNode.cs" />
+    <Compile Include="Entities\Systems\CursorSystem.cs" />
+    <Compile Include="Entities\Systems\GraphicSystem.cs" />
+    <Compile Include="Entities\Systems\GUISystem.cs" />
+    <Compile Include="Entities\Systems\InputSystem.cs" />
+    <Compile Include="Entities\Systems\PhysicSystem.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Graphics\Cursor.cs" />
+    <Compile Include="Graphics\Grid.cs" />
     <Compile Include="Graphics\RenderContext.cs" />
+    <Compile Include="Graphics\Starfield.cs" />
     <Compile Include="IO\FileSystem.cs" />
-    <Compile Include="IO\ISaveable.cs" />
-    <Compile Include="IO\SaveKey.cs" />
-    <Compile Include="IO\SaveList.cs" />
-    <Compile Include="IO\SaveTuple.cs" />
-    <Compile Include="IO\SaveValue.cs" />
     <Compile Include="State\GameState.cs" />
     <Compile Include="State\Running.cs" />
     <Compile Include="Window.cs" />

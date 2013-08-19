@@ -3,7 +3,6 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using FontStructure = System.Collections.Generic.Dictionary<char, System.Drawing.RectangleF>;
 
 namespace MartinZottmann.Engine.Graphics.OpenGL
 {

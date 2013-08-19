@@ -28,7 +28,20 @@ namespace MartinZottmann.Engine.Graphics
             set { Orientation = Matrix4d.LookAt(Position, value, Up).ExtractRotation().Inverted(); }
         }
 
-        public double Fov = MathHelper.PiOver4;
+        protected double fov = MathHelper.PiOver4;
+
+        public double Fov
+        {
+            get { return fov; }
+            set
+            {
+                fov = value;
+                if (fov <= 0)
+                    fov = 0.1;
+                if (fov > System.Math.PI)
+                    fov = System.Math.PI;
+            }
+        }
 
         public double Near = 0.1;
 

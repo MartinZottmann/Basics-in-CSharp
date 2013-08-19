@@ -4,10 +4,5 @@ using System;
 
 namespace MartinZottmann.Game.Entities.Components
 {
-    public interface IComponent : IDisposable, ISaveable
-    {
-        void Update(double delta_time, RenderContext render_context);
-
-        void Render(double delta_time, RenderContext render_context);
-    }
+    public interface IComponent : MartinZottmann.Engine.Entities.IComponent, IDisposable, ISaveable { }
 }

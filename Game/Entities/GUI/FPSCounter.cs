@@ -9,7 +9,7 @@ using System.Drawing;
 
 namespace MartinZottmann.Game.Entities.GUI
 {
-    class FPSCounter : GameObject
+    public class FPSCounter : Abstract
     {
         protected double accumulator = 0;
 
@@ -19,43 +19,27 @@ namespace MartinZottmann.Game.Entities.GUI
 
         protected SizeF size = new SizeF(300, 30);
 
-        protected FontMeshBuilder font_mesh_builder;
-
-        public FPSCounter(ResourceManager resources, Texture font_texture, FontMeshBuilder font_mesh_builder)
-            : base(resources)
+        public override void Start(ResourceManager resource_manager)
         {
-            this.font_mesh_builder = font_mesh_builder;
+            base.Start(resource_manager);
 
             Scale = new Vector3d(2);
-
-            var graphic = AddComponent(new Graphic(this));
-            graphic.Model = new Engine.Graphics.OpenGL.Entity();
-            graphic.Model.Mesh(font_mesh_builder.FromString(String.Format("FPS: {0:F}", counter)));
-            graphic.Model.Program = Resources.Programs["plain_texture"];
-            graphic.Model.Texture = font_texture;
+            Position = new Vector3d(-0.90, 0.75, -1);
+            Model.Mesh(FontMeshBuilder.FromString(String.Format("FPS: {0:F}", counter)));
         }
 
-        public override void Update(double delta_time, RenderContext render_context)
+        public override void Update(double delta_time)
         {
             counter++;
             accumulator += delta_time;
             if (accumulator > 1)
             {
                 if (fps != counter)
-                {
-                    var graphic = GetComponent<Graphic>();
-                    graphic.Model.Mesh(font_mesh_builder.FromString(String.Format("FPS: {0:F}", counter)));
-                }
+                    Model.Mesh(FontMeshBuilder.FromString(String.Format("FPS: {0:F}", counter)));
                 fps = counter;
                 counter = 0;
                 accumulator -= 1;
             }
-        }
-
-        public override void Render(double delta_time, RenderContext render_context)
-        {
-            Position = new Vector3d(-0.90, 0.75, -1) * render_context.Projection.Inverted();
-            base.Render(delta_time, render_context);
         }
     }
 }

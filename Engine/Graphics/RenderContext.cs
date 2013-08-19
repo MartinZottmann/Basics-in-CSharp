@@ -10,8 +10,6 @@ namespace MartinZottmann.Engine.Graphics
 
         public GameWindow Window;
 
-        public Camera Camera;
-
         protected Matrix4d projection;
 
         /// <summary>
@@ -74,7 +72,6 @@ namespace MartinZottmann.Engine.Graphics
             {
                 Parent = (T)this,
                 Window = Window,
-                Camera = Camera,
                 Projection = Matrix4d.Identity,
                 View = Matrix4d.Identity,
                 Model = Matrix4d.Identity

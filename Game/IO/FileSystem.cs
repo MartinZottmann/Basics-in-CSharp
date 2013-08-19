@@ -6,18 +6,29 @@ namespace MartinZottmann.Game.IO
 {
     public class FileSystem
     {
+        public string FilePath;
+
         public IFormatter Formatter = new BinaryFormatter();
 
-        public void Save(string filepath, object @object)
+        public FileSystem(string filepath)
         {
-            using (var stream = new FileStream(filepath, FileMode.Create, FileAccess.Write, FileShare.None))
+            FilePath = filepath;
+        }
+
+        public void Save(object @object)
+        {
+            using (var stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 Formatter.Serialize(stream, @object);
         }
 
-        public T Load<T>(string filepath)
+        public T Load<T>() where T : class
         {
-            using (var stream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                return Load<T>(stream);
+            if (File.Exists(FilePath))
+                using (var stream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    if (stream.Length != 0)
+                        return Load<T>(stream);
+
+            return null;
         }
 
         public T Load<T>(Stream stream)
