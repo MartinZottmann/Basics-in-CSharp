@@ -1,5 +1,4 @@
-﻿using FontStructure = System.Collections.Generic.Dictionary<char, System.Drawing.RectangleF>;
-using MeshStructure = MartinZottmann.Engine.Graphics.Mesh.Mesh<MartinZottmann.Engine.Graphics.Mesh.VertexP3N3T2, uint>;
+﻿using MeshStructure = MartinZottmann.Engine.Graphics.Mesh.Mesh<MartinZottmann.Engine.Graphics.Mesh.VertexP3N3T2, uint>;
 
 namespace MartinZottmann.Engine.Graphics.Mesh
 {
@@ -36,6 +35,8 @@ namespace MartinZottmann.Engine.Graphics.Mesh
                     offset_y -= h / nc;
                     continue;
                 }
+                if (offset_y == 0f)
+                    offset_y -= h / nc;
 
                 mesh.Vertices[i * nv + 0] = new VertexP3N3T2(offset_x, offset_y, 0, 0, 0, 1, x, y + h);
                 mesh.Vertices[i * nv + 1] = new VertexP3N3T2(offset_x + w, offset_y, 0, 0, 0, 1, x + w, y + h);

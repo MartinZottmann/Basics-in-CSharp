@@ -110,6 +110,7 @@ namespace MartinZottmann.Game.Entities.Systems
             {
                 Window = RenderContext.Window,
                 Projection = Matrix4d.CreateOrthographicOffCenter(-10, 10, -10, 10, 0, 30),
+                //Projection = Matrix4d.Perspective(MathHelper.PiOver2, Camera.Aspect, 0.1, 30),
                 View = Matrix4d.LookAt(light, light_target, Vector3d.UnitY),
                 Model = Matrix4d.Identity,
                 Program = ResourceManager.Programs["depth"],
@@ -133,14 +134,6 @@ namespace MartinZottmann.Game.Entities.Systems
             //GL.CullFace(CullFaceMode.Back);
             //GL.Disable(EnableCap.PolygonOffsetFill);
             #endregion
-
-            //#region Shadow
-            //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            //GL.Viewport(0, 0, Window.Width, Window.Height);
-            //using (new Bind(resources.Textures["Resources/Textures/debug-256.png"]))
-            //using (new Bind(world_render_context.DepthTexture))
-            //    world.Render(delta_time, world_render_context);
-            //#endregion
 
             #region Accumulation
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);

@@ -46,10 +46,7 @@ namespace MartinZottmann.Game.Entities.Systems
                 SetCursor(cursor_node);
         }
 
-        public void Render(double delta_time)
-        {
-            // void
-        }
+        public void Render(double delta_time) { }
 
         public void SetCursor(CursorNode input_node)
         {
@@ -111,8 +108,8 @@ namespace MartinZottmann.Game.Entities.Systems
             if (e.Button == MouseButton.Right)
                 foreach (var cursor_node in cursor_nodes)
                     foreach (var physic_node in selection)
-                        if (physic_node.Entity.Has<Target>())
-                            physic_node.Entity.Get<Target>().Position = cursor_node.Base.Position;
+                        if (physic_node.Entity.Has<TargetComponent>())
+                            physic_node.Entity.Get<TargetComponent>().Position = cursor_node.Base.Position;
         }
 
         protected SortedSet<Collision> Intersections(CursorNode cursor_node)

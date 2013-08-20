@@ -56,14 +56,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Components\Abstract.cs" />
-    <Compile Include="Entities\Components\Base.cs" />
-    <Compile Include="Entities\Components\Cursor.cs" />
-    <Compile Include="Entities\Components\Graphic.cs" />
-    <Compile Include="Entities\Components\GUIGraphic.cs" />
-    <Compile Include="Entities\Components\Input.cs" />
-    <Compile Include="Entities\Components\Physic.cs" />
-    <Compile Include="Entities\Components\Target.cs" />
+    <Compile Include="Entities\CollisionGroups.cs" />
+    <Compile Include="Entities\Components\BaseComponent.cs" />
+    <Compile Include="Entities\Components\CollisionComponent.cs" />
+    <Compile Include="Entities\Components\CursorComponent.cs" />
+    <Compile Include="Entities\Components\GraphicComponent.cs" />
+    <Compile Include="Entities\Components\InputComponent.cs" />
+    <Compile Include="Entities\Components\ParticleEmitterComponent.cs" />
+    <Compile Include="Entities\Components\PhysicComponent.cs" />
+    <Compile Include="Entities\Components\TargetComponent.cs" />
     <Compile Include="Entities\Creator.cs" />
     <Compile Include="Entities\GUI\Abstract.cs" />
     <Compile Include="Entities\GUI\Debugger.cs">
@@ -73,14 +74,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Entities\GUI\IGUIElement.cs" />
+    <Compile Include="Entities\Nodes\CollisionNode.cs" />
     <Compile Include="Entities\Nodes\CursorNode.cs" />
     <Compile Include="Entities\Nodes\GraphicNode.cs" />
     <Compile Include="Entities\Nodes\InputNode.cs" />
+    <Compile Include="Entities\Nodes\ParticleEmitterNode.cs" />
     <Compile Include="Entities\Nodes\PhysicNode.cs" />
+    <Compile Include="Entities\Systems\CollisionSystem.cs" />
     <Compile Include="Entities\Systems\CursorSystem.cs" />
     <Compile Include="Entities\Systems\GraphicSystem.cs" />
     <Compile Include="Entities\Systems\GUISystem.cs" />
     <Compile Include="Entities\Systems\InputSystem.cs" />
+    <Compile Include="Entities\Systems\ParticleSystem.cs" />
     <Compile Include="Entities\Systems\PhysicSystem.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Graphics\Cursor.cs" />

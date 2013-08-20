@@ -5,7 +5,7 @@ namespace MartinZottmann.Engine.Resources
 {
     public class Shaders : Resource<Shader>
     {
-        public Shaders(ResourceManager resources) : base(resources) { }
+        public Shaders(ResourceManager resource_manager) : base(resource_manager) { }
 
         public Shader Load(ShaderType type, string filename)
         {

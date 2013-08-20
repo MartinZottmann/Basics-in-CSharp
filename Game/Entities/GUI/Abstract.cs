@@ -16,15 +16,7 @@ namespace MartinZottmann.Game.Entities.GUI
         /// <summary>
         /// Model Matrix = Scale * Rotation * Translation
         /// </summary>
-        public Matrix4d ModelMatrix
-        {
-            get
-            {
-                return Matrix4d.Scale(Scale)
-                    * Matrix4d.Rotate(Orientation)
-                    * Matrix4d.CreateTranslation(Position);
-            }
-        }
+        public Matrix4d ModelMatrix { get { return Matrix4d.Scale(Scale) * Matrix4d.Rotate(Orientation) * Matrix4d.CreateTranslation(Position); } }
 
         public Texture FontTexture { get; set; }
 

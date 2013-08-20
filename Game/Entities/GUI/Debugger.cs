@@ -6,6 +6,7 @@ using MartinZottmann.Game.Graphics;
 using OpenTK;
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace MartinZottmann.Game.Entities.GUI
 {
@@ -19,8 +20,8 @@ namespace MartinZottmann.Game.Entities.GUI
         {
             base.Start(resource_manager);
 
-            Scale = new Vector3d(2);
-            Position = new Vector3d(-0.90, 0.5, -1);
+            Scale = new Vector3d(1500.0);
+            Position = new Vector3d(0.1, 0.8, 0.0);
             ResourceManager = resource_manager;
         }
 

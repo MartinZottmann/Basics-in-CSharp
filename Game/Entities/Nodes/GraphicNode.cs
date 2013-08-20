@@ -5,8 +5,8 @@ namespace MartinZottmann.Game.Entities.Nodes
 {
     public class GraphicNode : Node
     {
-        public Base Base;
+        public BaseComponent Base;
 
-        public Graphic Graphic;
+        public GraphicComponent Graphic;
     }
 }

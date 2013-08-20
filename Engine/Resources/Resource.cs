@@ -5,15 +5,15 @@ namespace MartinZottmann.Engine.Resources
 {
     public abstract class Resource<T> : IDisposable where T : IDisposable
     {
-        public ResourceManager Resources { get; protected set; }
+        public ResourceManager ResourceManager { get; protected set; }
 
         protected Dictionary<string, T> resources = new Dictionary<string, T>();
 
         public int Count { get { return resources.Count; } }
 
-        public Resource(ResourceManager resources)
+        public Resource(ResourceManager resource_manager)
         {
-            this.Resources = resources;
+            ResourceManager = resource_manager;
         }
 
         public T this[string key]

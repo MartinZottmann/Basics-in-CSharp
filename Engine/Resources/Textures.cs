@@ -4,7 +4,7 @@ namespace MartinZottmann.Engine.Resources
 {
     public class Textures : Resource<Texture>
     {
-        public Textures(ResourceManager resources) : base(resources) { }
+        public Textures(ResourceManager resource_manager) : base(resource_manager) { }
 
         //public override void LoadFromFile(string filename)
         //{

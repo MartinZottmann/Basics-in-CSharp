@@ -5,8 +5,8 @@ namespace MartinZottmann.Game.Entities.Nodes
 {
     public class InputNode : Node
     {
-        public Input Input;
+        public InputComponent Input;
 
-        public Base Base;
+        public BaseComponent Base;
     }
 }

@@ -1,11 +1,12 @@
-﻿using OpenTK;
+﻿using MartinZottmann.Engine.Entities;
+using OpenTK;
 using OpenTK.Graphics;
 using System;
 
 namespace MartinZottmann.Game.Entities.Components
 {
     [Serializable]
-    public class Base : Abstract
+    public class BaseComponent : IComponent
     {
         public static Random Random = new Random();
 
@@ -22,9 +23,9 @@ namespace MartinZottmann.Game.Entities.Components
         {
             get
             {
-                return Matrix4d.Scale(Scale)
-                    * Matrix4d.Rotate(Orientation)
-                    * Matrix4d.CreateTranslation(Position);
+                return Parent == null
+                    ? Matrix4d.Scale(Scale) * Matrix4d.Rotate(Orientation) * Matrix4d.CreateTranslation(Position)
+                    : Matrix4d.Scale(Scale) * Matrix4d.Rotate(Orientation) * Matrix4d.CreateTranslation(Position) * Parent.Model;
             }
         }
 
@@ -53,5 +54,28 @@ namespace MartinZottmann.Game.Entities.Components
         public Vector3d Right = Vector3d.UnitX;
 
         public Vector3d RightRelative { get { return Vector3d.Transform(Right, Orientation); } }
+
+        public BaseComponent Parent { get; protected set; }
+
+        public BaseComponent[] Children { get; protected set; }
+
+        public BaseComponent Add(Entity child)
+        {
+            return Add(child.Get<BaseComponent>());
+        }
+
+        public BaseComponent Add(BaseComponent child)
+        {
+            var children = Children;
+            var i = 0;
+            var n = children == null ? 0 : children.Length;
+            Children = new BaseComponent[n + 1];
+            for (; i < n; i++)
+                Children[i] = children[i];
+            Children[i] = child;
+            child.Parent = this;
+
+            return this;
+        }
     }
 }

@@ -1,8 +1,6 @@
-﻿using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Graphics.Mesh;
+﻿using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Graphics.Wavefront;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Diagnostics;
@@ -11,21 +9,17 @@ namespace MartinZottmann.Engine.Resources
 {
     public class Entities : Resource<Entity>
     {
-        public Entities(ResourceManager resources) : base(resources) { }
+        public Entities(ResourceManager resource_manager) : base(resource_manager) { }
 
-        public Entity Load(string filename, Matrix4? transformation = null)
+        public Entity Load(string filename)
         {
-            var key = transformation == null
-                ? filename
-                : String.Format("{0} as {1}", filename, transformation.Value);
+            if (!resources.ContainsKey(filename))
+                this[filename] = Entity(ResourceManager.WavefrontObjFiles.Load(filename));
 
-            if (!resources.ContainsKey(key))
-                this[key] = Entity(Resources.WavefrontObjFiles.Load(filename), transformation);
-
-            return this[key];
+            return this[filename];
         }
 
-        public Entity Entity(ObjFile obj_file, Matrix4? transformation = null)
+        public Entity Entity(ObjFile obj_file)
         {
             var n = obj_file.f.Count;
             var m = obj_file.f[0].v.Length;
@@ -45,12 +39,9 @@ namespace MartinZottmann.Engine.Resources
                     indices[i * m + j] = (uint)(i * m + j);
                 }
             }
-            var mesh = new Mesh<VertexP3N3T2, uint>(vertices, indices);
-            if (transformation != null)
-                mesh.Translate(transformation.Value);
 
             var entity = new Entity();
-            entity.Mesh(mesh);
+            entity.Mesh(new Mesh<VertexP3N3T2, uint>(vertices, indices));
             switch (obj_file.f[0].v.Length)
             {
                 case 3:

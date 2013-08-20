@@ -79,7 +79,9 @@ namespace MartinZottmann.Game.State
                 var g = new GraphicSystem(world_camera, resource_manager);
                 world_render_context = g.RenderContext;
                 entity_manager.Add(g);
+                entity_manager.Add(new ParticleSystem(world_camera, resource_manager));
                 entity_manager.Add(new PhysicSystem());
+                entity_manager.Add(new CollisionSystem());
                 entity_manager.Add(new GUISystem(screen_camera, resource_manager));
             }
 
@@ -103,11 +105,19 @@ namespace MartinZottmann.Game.State
             creator.CreateGrid();
             for (var i = 0; i < 10; i++)
                 creator.CreateAsteroid();
-            creator.CreateShip(new Vector3d(-5, 0, 0));
-            creator.CreateShip(new Vector3d(0, 0, 0));
-            creator.CreateShip(new Vector3d(5, 0, 0));
-            creator.Create("Resources/Models/cube.obj", new Vector3d(0, -20, 0), Matrix4.CreateScale(10));
-            creator.Create("Resources/Models/cube.obj", new Vector3d(-20, 0, 0), Matrix4.CreateScale(10));
+            //var a0 = creator.Create("Resources/Models/sphere.obj", new Vector3d(-5, 0, 0));
+            //a0.Add(new CollisionComponent() { Group = CollisionGroups.Space });
+            //a0.Get<PhysicComponent>().Velocity = new Vector3d(1, 0, 0);
+            //var a1 = creator.Create("Resources/Models/sphere.obj", new Vector3d(5, 0, 0));
+            //a1.Add(new CollisionComponent() { Group = CollisionGroups.Space });
+            //a1.Get<PhysicComponent>().Velocity = new Vector3d(-1, 0, 0);
+            creator.CreateShip(new Vector3d(-5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitX;
+            creator.CreateShip(new Vector3d(0, 0, 0))
+                .Add(new ParticleEmitterComponent())
+                .Get<PhysicComponent>().AngularVelocity = Vector3d.UnitY;
+            creator.CreateShip(new Vector3d(5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitZ;
+            creator.Create("Resources/Models/cube.obj", new Vector3d(0, -20, 0), new Vector3d(10));
+            creator.Create("Resources/Models/cube.obj", new Vector3d(-20, 0, 0), new Vector3d(10));
             //}
             //else
             //{

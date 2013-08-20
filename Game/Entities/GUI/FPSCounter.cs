@@ -23,8 +23,8 @@ namespace MartinZottmann.Game.Entities.GUI
         {
             base.Start(resource_manager);
 
-            Scale = new Vector3d(2);
-            Position = new Vector3d(-0.90, 0.75, -1);
+            Scale = new Vector3d(1500.0);
+            Position = new Vector3d(0.1, 0.9, 0.0);
             Model.Mesh(FontMeshBuilder.FromString(String.Format("FPS: {0:F}", counter)));
         }
 

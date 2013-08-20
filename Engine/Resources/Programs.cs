@@ -4,7 +4,7 @@ namespace MartinZottmann.Engine.Resources
 {
     public class Programs : Resource<Program>
     {
-        public Programs(ResourceManager resources) : base(resources) { }
+        public Programs(ResourceManager resource_manager) : base(resource_manager) { }
 
         public Program Load(string name, string[] shader_files)
         {
@@ -13,7 +13,7 @@ namespace MartinZottmann.Engine.Resources
                 var n = shader_files.Length;
                 var shaders = new Shader[n];
                 for (int i = 0; i < n; i++)
-                    shaders[i] = Resources.Shaders[shader_files[i]];
+                    shaders[i] = ResourceManager.Shaders[shader_files[i]];
 
                 this[name] = new Program(shaders);
             }

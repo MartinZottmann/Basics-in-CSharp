@@ -1,10 +1,11 @@
-﻿using OpenTK;
+﻿using MartinZottmann.Engine.Entities;
+using OpenTK;
 using System;
 
 namespace MartinZottmann.Game.Entities.Components
 {
     [Serializable]
-    public class Target : Abstract
+    public class TargetComponent : IComponent
     {
         public Vector3d? Position;
 

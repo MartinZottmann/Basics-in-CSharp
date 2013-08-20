@@ -5,6 +5,7 @@ using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.GUI;
 using MartinZottmann.Game.Graphics;
+using OpenTK;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -18,7 +19,7 @@ namespace MartinZottmann.Game.Entities.Systems
 
         public ResourceManager ResourceManager;
 
-        protected List<IGUIElement> list = new List<IGUIElement>();
+        protected List<IGUIElement> gui_elements = new List<IGUIElement>();
 
         public GUISystem(Camera camera, ResourceManager resource_manager)
         {
@@ -30,14 +31,14 @@ namespace MartinZottmann.Game.Entities.Systems
             var font_mesh_builder = new FontMeshBuilder(font_map);
 
             // @todo Move hardcoded GUI elements
-            list.Add(new Debugger());
-            list.Add(new FPSCounter());
+            gui_elements.Add(new Debugger());
+            gui_elements.Add(new FPSCounter());
 
-            foreach (var i in list)
+            foreach (var gui_element in gui_elements)
             {
-                i.FontTexture = font_texture;
-                i.FontMeshBuilder = font_mesh_builder;
-                i.Start(resource_manager);
+                gui_element.FontTexture = font_texture;
+                gui_element.FontMeshBuilder = font_mesh_builder;
+                gui_element.Start(resource_manager);
             }
         }
 
@@ -52,17 +53,21 @@ namespace MartinZottmann.Game.Entities.Systems
             RenderContext.Projection = Camera.ProjectionMatrix;
             RenderContext.View = Camera.ViewMatrix;
 
-            foreach (var i in list)
-                i.Update(delta_time);
+            foreach (var gui_element in gui_elements)
+                gui_element.Update(delta_time);
         }
 
         public void Render(double delta_time)
         {
-            foreach (var i in list)
+            foreach (var gui_element in gui_elements)
             {
-                RenderContext.Model = i.ModelMatrix * RenderContext.InvertedProjection;
-                i.Model.Program.UniformLocations["in_ModelViewProjection"].Set(RenderContext.ProjectionViewModel);
-                i.Render(delta_time);
+                RenderContext.Model = Matrix4d.Scale(1.0 / Camera.Window.ClientRectangle.Width, 1.0 / Camera.Window.ClientRectangle.Height, 1.0)
+                    * gui_element.ModelMatrix
+                    * Matrix4d.CreateTranslation(-0.5, -0.5, 0.0)
+                    * Matrix4d.Scale(2.0, 2.0, 1.0)
+                    * RenderContext.InvertedProjection;
+                gui_element.Model.Program.UniformLocations["in_ModelViewProjection"].Set(RenderContext.ProjectionViewModel);
+                gui_element.Render(delta_time);
             }
         }
     }

@@ -4,5 +4,8 @@ using System;
 namespace MartinZottmann.Game.Entities.Components
 {
     [Serializable]
-    public abstract class Abstract : IComponent { }
+    public class CollisionComponent : IComponent
+    {
+        public CollisionGroups Group = CollisionGroups.All;
+    }
 }

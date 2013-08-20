@@ -97,9 +97,6 @@ namespace MartinZottmann.Game.Entities.Systems
             }
         }
 
-        public void Render(double delta_time)
-        {
-            // void
-        }
+        public void Render(double delta_time) { }
     }
 }
