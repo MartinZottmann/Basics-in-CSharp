@@ -1,11 +1,10 @@
-﻿using MartinZottmann.Engine.Graphics.OpenGL;
-using System;
+﻿using System;
 
 namespace MartinZottmann.Engine.Resources
 {
     public class ResourceManager : IDisposable
     {
-        public Entities Entities { get; set; }
+        public Models Models { get; set; }
 
         public Programs Programs { get; set; }
 
@@ -17,7 +16,7 @@ namespace MartinZottmann.Engine.Resources
 
         public ResourceManager()
         {
-            Entities = new Entities(this);
+            Models = new Models(this);
             Programs = new Programs(this);
             Shaders = new Shaders(this);
             Textures = new Textures(this);
@@ -26,7 +25,7 @@ namespace MartinZottmann.Engine.Resources
 
         public void Dispose()
         {
-            Entities.Dispose();
+            Models.Dispose();
             Programs.Dispose();
             Shaders.Dispose();
             Textures.Dispose();

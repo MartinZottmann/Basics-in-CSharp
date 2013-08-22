@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Graphics
 {
-    public class Grid : Entity
+    public class Grid : Model
     {
         public Grid()
         {

@@ -33,7 +33,7 @@ namespace MartinZottmann.Game.Entities.GUI
                         "Memory: {0}\nWorld objects: {1}\nEntities: {2}\nPrograms: {3}\nShaders: {4}\nTextures: {5}\nWavefrontObjFiles: {6}",
                         GC.GetTotalMemory(false),
                         "???",
-                        ResourceManager.Entities.Count,
+                        ResourceManager.Models.Count,
                         ResourceManager.Programs.Count,
                         ResourceManager.Shaders.Count,
                         ResourceManager.Textures.Count,

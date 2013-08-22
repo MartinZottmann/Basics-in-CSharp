@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Engine.Graphics.Mesh;
+﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
@@ -13,7 +14,7 @@ namespace MartinZottmann.Game.Entities.GUI
 
         FontMeshBuilder FontMeshBuilder { get; set; }
 
-        Entity Model { get; set; }
+        Model Model { get; set; }
 
         Matrix4d ModelMatrix { get; }
 

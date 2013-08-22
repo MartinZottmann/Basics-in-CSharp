@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Engine.Graphics.Mesh;
+﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
@@ -22,11 +23,11 @@ namespace MartinZottmann.Game.Entities.GUI
 
         public FontMeshBuilder FontMeshBuilder { get; set; }
 
-        public Entity Model { get; set; }
+        public Model Model { get; set; }
 
         public virtual void Start(ResourceManager resource_manager)
         {
-            Model = new MartinZottmann.Engine.Graphics.OpenGL.Entity();
+            Model = new Model();
             Model.Program = resource_manager.Programs["plain_texture"];
             Model.Texture = FontTexture;
         }

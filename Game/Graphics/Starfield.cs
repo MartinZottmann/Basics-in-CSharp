@@ -5,7 +5,7 @@ using System;
 
 namespace MartinZottmann.Game.Graphics
 {
-    public class Starfield : Entity
+    public class Starfield : Model
     {
         public static Random Random = new Random();
 

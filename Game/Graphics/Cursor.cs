@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace MartinZottmann.Game.Graphics
 {
-    public class Cursor : Entity
+    public class Cursor : Model
     {
         public Cursor()
         {

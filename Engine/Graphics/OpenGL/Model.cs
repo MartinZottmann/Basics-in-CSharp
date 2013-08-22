@@ -4,24 +4,21 @@ using System;
 
 namespace MartinZottmann.Engine.Graphics.OpenGL
 {
-    [Serializable]
-    public class Entity : IDisposable
+    public class Model : IDisposable
     {
-        public BeginMode Mode = BeginMode.Triangles;
+        public BeginMode Mode { get; set; }
 
-        [NonSerialized]
-        public Program Program;
+        public Program Program { get; set; }
 
-        [NonSerialized]
-        public Texture Texture;
+        public Texture Texture { get; set; }
 
-        [NonSerialized]
         public readonly VertexArrayObject VertexArrayObject = new VertexArrayObject();
 
-        [NonSerialized]
         protected IMesh mesh;
 
-        public Entity() : base() { }
+        public Model() : base() {
+            Mode = BeginMode.Triangles;
+        }
 
         public IMesh Mesh() { return mesh; }
 

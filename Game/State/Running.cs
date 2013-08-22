@@ -11,6 +11,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Camera = MartinZottmann.Engine.Graphics.Camera;
 
@@ -70,68 +71,73 @@ namespace MartinZottmann.Game.State
 
             Window.Keyboard.KeyUp += OnKeyUp;
 
-            {
-                var world_camera = new Camera(Window);
-                world_camera.Position = new Vector3d(10);
-                world_camera.LookAt = new Vector3d(0);
-                var screen_camera = new Camera(Window);
+            var world_camera = new Camera(Window);
+            world_camera.Position = new Vector3d(10);
+            world_camera.LookAt = new Vector3d(0);
+            var screen_camera = new Camera(Window);
 
-                entity_manager = new EntityManager();
-                entity_manager.Add(new InputSystem(Window, world_camera));
-                entity_manager.Add(new CursorSystem(Window, world_camera));
-                var g = new GraphicSystem(world_camera, resource_manager);
-                world_render_context = g.RenderContext;
-                entity_manager.Add(g);
-                entity_manager.Add(new ParticleSystem(world_camera, resource_manager));
-                entity_manager.Add(new PhysicSystem());
-                entity_manager.Add(new CollisionSystem());
-                entity_manager.Add(new GUISystem(screen_camera, resource_manager));
-            }
+            entity_manager = new EntityManager();
+            entity_manager.Add(new InputSystem(Window, world_camera));
+            entity_manager.Add(new CursorSystem(Window, world_camera));
+            var g = new GraphicSystem(world_camera, resource_manager);
+            world_render_context = g.RenderContext;
+            entity_manager.Add(g);
+            entity_manager.Add(new ParticleSystem(world_camera, resource_manager));
+            entity_manager.Add(new PhysicSystem());
+            entity_manager.Add(new CollisionSystem());
+            entity_manager.Add(new GUISystem(screen_camera, resource_manager));
 
             world_render_context.Window = Window;
 
-            //MartinZottmann.Engine.Entities.Entity[] entities = null;
-            //try
-            //{
-            //    entities = file_system.Load<MartinZottmann.Engine.Entities.Entity[]>();
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine(e);
-            //}
-            //if (entities == null)
-            //{
-            var creator = new Creator(entity_manager, resource_manager);
-            creator.CreateCursor();
-            creator.CreateCamera();
-            creator.CreateStarfield();
-            creator.CreateGrid();
-            for (var i = 0; i < 10; i++)
-                creator.CreateAsteroid();
-            //var a0 = creator.Create("Resources/Models/sphere.obj", new Vector3d(-5, 0, 0));
-            //a0.Add(new CollisionComponent() { Group = CollisionGroups.Space });
-            //a0.Get<PhysicComponent>().Velocity = new Vector3d(1, 0, 0);
-            //var a1 = creator.Create("Resources/Models/sphere.obj", new Vector3d(5, 0, 0));
-            //a1.Add(new CollisionComponent() { Group = CollisionGroups.Space });
-            //a1.Get<PhysicComponent>().Velocity = new Vector3d(-1, 0, 0);
-            creator.CreateShip(new Vector3d(-5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitX;
-            creator.CreateShip(new Vector3d(0, 0, 0))
-                .Add(new ParticleEmitterComponent())
-                .Get<PhysicComponent>().AngularVelocity = Vector3d.UnitY;
-            creator.CreateShip(new Vector3d(5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitZ;
-            creator.Create("Resources/Models/cube.obj", new Vector3d(0, -20, 0), new Vector3d(10));
-            creator.Create("Resources/Models/cube.obj", new Vector3d(-20, 0, 0), new Vector3d(10));
-            //}
-            //else
-            //{
-            //    foreach (var entity in entities)
-            //        entity_manager.Add(entity);
-            //}
+            MartinZottmann.Engine.Entities.Entity[] entities = null;
+            try
+            {
+                Debug.WriteLine(String.Format("Loading {0}", file_system.FilePath));
+                entities = file_system.Load<MartinZottmann.Engine.Entities.Entity[]>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            if (entities == null)
+            {
+                var creator = new Creator(entity_manager, resource_manager);
+                creator.CreateCursor();
+                creator.CreateCamera();
+                creator.CreateStarfield();
+                creator.CreateGrid();
+                for (var i = 0; i < 10; i++)
+                    creator.CreateAsteroid();
+                //var a0 = creator.Create("Resources/Models/sphere.obj", new Vector3d(-5, 0, 0));
+                //a0.Add(new CollisionComponent() { Group = CollisionGroups.Space });
+                //a0.Get<PhysicComponent>().Velocity = new Vector3d(1, 0, 0);
+                //var a1 = creator.Create("Resources/Models/sphere.obj", new Vector3d(5, 0, 0));
+                //a1.Add(new CollisionComponent() { Group = CollisionGroups.Space });
+                //a1.Get<PhysicComponent>().Velocity = new Vector3d(-1, 0, 0);
+                creator.CreateShip(new Vector3d(-5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitX;
+                creator.CreateShip(new Vector3d(0, 0, 0))
+                    .Add(new ParticleEmitterComponent())
+                    .Get<PhysicComponent>().AngularVelocity = Vector3d.UnitY;
+                creator.CreateShip(new Vector3d(5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitZ;
+                creator.Create("Resources/Models/cube.obj", new Vector3d(0, -20, 0), new Vector3d(10));
+                creator.Create("Resources/Models/cube.obj", new Vector3d(-20, 0, 0), new Vector3d(10));
+            }
+            else
+            {
+                foreach (var entity in entities)
+                    entity_manager.Add(entity);
+
+                var camera_base = entity_manager.Get("Camera").Get<BaseComponent>();
+                world_camera.Position = camera_base.Position;
+                world_camera.Orientation = camera_base.Orientation;
+            }
         }
 
         public override void Dispose()
         {
-            //file_system.Save(entity_manager.Entities);
+            Debug.WriteLine(String.Format("Saving {0}", file_system.FilePath));
+            file_system.Save(entity_manager.Entities);
+
             resource_manager.Dispose();
         }
 

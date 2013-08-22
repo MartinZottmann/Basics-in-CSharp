@@ -1,4 +1,5 @@
-﻿using MartinZottmann.Engine.Graphics.Mesh;
+﻿using MartinZottmann.Engine.Graphics;
+using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Graphics.Wavefront;
 using OpenTK.Graphics.OpenGL;
@@ -7,19 +8,19 @@ using System.Diagnostics;
 
 namespace MartinZottmann.Engine.Resources
 {
-    public class Entities : Resource<Entity>
+    public class Models : Resource<Model>
     {
-        public Entities(ResourceManager resource_manager) : base(resource_manager) { }
+        public Models(ResourceManager resource_manager) : base(resource_manager) { }
 
-        public Entity Load(string filename)
+        public Model Load(string filename)
         {
             if (!resources.ContainsKey(filename))
-                this[filename] = Entity(ResourceManager.WavefrontObjFiles.Load(filename));
+                this[filename] = Load(ResourceManager.WavefrontObjFiles.Load(filename));
 
             return this[filename];
         }
 
-        public Entity Entity(ObjFile obj_file)
+        public Model Load(ObjFile obj_file)
         {
             var n = obj_file.f.Count;
             var m = obj_file.f[0].v.Length;
@@ -40,20 +41,20 @@ namespace MartinZottmann.Engine.Resources
                 }
             }
 
-            var entity = new Entity();
-            entity.Mesh(new Mesh<VertexP3N3T2, uint>(vertices, indices));
+            var model = new Model();
+            model.Mesh(new Mesh<VertexP3N3T2, uint>(vertices, indices));
             switch (obj_file.f[0].v.Length)
             {
                 case 3:
-                    entity.Mode = BeginMode.Triangles;
+                    model.Mode = BeginMode.Triangles;
                     break;
                 case 4:
-                    entity.Mode = BeginMode.Quads;
+                    model.Mode = BeginMode.Quads;
                     break;
                 default:
                     throw new NotImplementedException();
             }
-            return entity;
+            return model;
         }
     }
 }

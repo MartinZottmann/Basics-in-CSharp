@@ -13,7 +13,7 @@ namespace MartinZottmann.Game.Entities.Systems
 {
     public class ParticleList
     {
-        public MartinZottmann.Engine.Graphics.OpenGL.Entity Model;
+        public Model Model;
 
         public VertexP3C4[] Verticies;
 
@@ -106,7 +106,7 @@ namespace MartinZottmann.Game.Entities.Systems
                 p.Particles[i] = GetParticle();
             }
 
-            p.Model = new Engine.Graphics.OpenGL.Entity();
+            p.Model = new Model();
             p.Model.Mesh(new Mesh<VertexP3C4, uint>(p.Verticies));
             p.Model.Mode = BeginMode.Points;
             p.Model.Program = ResourceManager.Programs["particle"];

@@ -1,4 +1,5 @@
 ﻿using MartinZottmann.Engine.Entities;
+using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using System;
 
@@ -7,11 +8,18 @@ namespace MartinZottmann.Game.Entities.Components
     [Serializable]
     public class GraphicComponent : IComponent, IDisposable
     {
-        public MartinZottmann.Engine.Graphics.OpenGL.Entity Model;
+        public string ModelName;
+
+        public string ProgramName;
+
+        public string TextureName;
+
+        [NonSerialized]
+        internal Model Model;
 
 #if DEBUG
         [NonSerialized]
-        public MartinZottmann.Engine.Graphics.OpenGL.Entity DebugModel;
+        internal Model DebugModel;
 #endif
 
         public void Dispose()

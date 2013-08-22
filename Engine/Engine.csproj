@@ -55,7 +55,7 @@
     <Compile Include="Graphics\Mesh\VertexP3N3.cs" />
     <Compile Include="Graphics\Mesh\VertexP3N3T2.cs" />
     <Compile Include="Graphics\OpenGL\BufferObject.cs" />
-    <Compile Include="Graphics\OpenGL\Entity.cs" />
+    <Compile Include="Graphics\OpenGL\Model.cs" />
     <Compile Include="Graphics\OpenGL\FrameBuffer.cs" />
     <Compile Include="Graphics\OpenGL\Info.cs" />
     <Compile Include="Graphics\OpenGL\Program.cs" />
@@ -86,7 +86,7 @@
     <Compile Include="Physics\Ray3d.cs" />
     <Compile Include="Physics\Sphere3d.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Entities.cs" />
+    <Compile Include="Resources\Models.cs" />
     <Compile Include="Resources\Programs.cs" />
     <Compile Include="Resources\Resource.cs" />
     <Compile Include="Resources\ResourceManager.cs" />

@@ -25,7 +25,10 @@ namespace MartinZottmann.Game.Entities
         public Entity Create(string filepath, Vector3d? position = null, Vector3d? scale = null, string program = "standard", string texture = "Resources/Textures/debug-256.png")
         {
             var g = new GraphicComponent();
-            g.Model = ResourceManager.Entities.Load(filepath);
+            g.ModelName = filepath;
+            g.ProgramName = program;
+            g.TextureName = texture;
+            g.Model = ResourceManager.Models.Load(filepath);
             g.Model.Program = ResourceManager.Programs[program];
             g.Model.Texture = ResourceManager.Textures[texture];
 
@@ -123,8 +126,10 @@ namespace MartinZottmann.Game.Entities
         public Entity CreateStarfield()
         {
             var g = new GraphicComponent();
-            g.Model = new Starfield();
-            g.Model.Program = ResourceManager.Programs["normal"];
+            g.ModelName = typeof(Starfield).FullName;
+            g.ProgramName = "normal";
+            //g.Model = new Starfield();
+            //g.Model.Program = ResourceManager.Programs["normal"];
 
             var e = new Entity("Starfield")
                 .Add(new BaseComponent())
@@ -137,8 +142,10 @@ namespace MartinZottmann.Game.Entities
         public Entity CreateGrid()
         {
             var g = new GraphicComponent();
-            g.Model = new Grid();
-            g.Model.Program = ResourceManager.Programs["normal"];
+            g.ModelName = typeof(Grid).FullName;
+            g.ProgramName = "normal";
+            //g.Model = new Grid();
+            //g.Model.Program = ResourceManager.Programs["normal"];
 
             var e = new Entity("Grid")
                 .Add(new BaseComponent())
@@ -151,12 +158,14 @@ namespace MartinZottmann.Game.Entities
         public Entity CreateCursor()
         {
             var g = new GraphicComponent();
-            g.Model = new MartinZottmann.Game.Graphics.Cursor();
-            g.Model.Program = ResourceManager.Programs["normal"];
+            g.ModelName = typeof(Cursor).FullName;
+            g.ProgramName = "normal";
+            //g.Model = new MartinZottmann.Game.Graphics.Cursor();
+            //g.Model.Program = ResourceManager.Programs["normal"];
 
             var e = new Entity("Cursor")
                 .Add(new BaseComponent())
-                .Add(new MartinZottmann.Game.Entities.Components.CursorComponent())
+                .Add(new CursorComponent())
                 .Add(g);
             EntityManager.Add(e);
 
