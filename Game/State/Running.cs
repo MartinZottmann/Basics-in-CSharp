@@ -45,6 +45,9 @@ namespace MartinZottmann.Game.State
                     case "vs":
                         shader = resource_manager.Shaders.Load(ShaderType.VertexShader, filename);
                         break;
+                    case "gs":
+                        shader = resource_manager.Shaders.Load(ShaderType.GeometryShader, filename);
+                        break;
                     case "fs":
                         shader = resource_manager.Shaders.Load(ShaderType.FragmentShader, filename);
                         break;

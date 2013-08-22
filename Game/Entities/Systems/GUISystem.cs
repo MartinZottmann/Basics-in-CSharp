@@ -67,6 +67,7 @@ namespace MartinZottmann.Game.Entities.Systems
                     * Matrix4d.Scale(2.0, 2.0, 1.0)
                     * RenderContext.InvertedProjection;
                 gui_element.Model.Program.UniformLocations["in_ModelViewProjection"].Set(RenderContext.ProjectionViewModel);
+                gui_element.Model.Program.UniformLocations["in_Texture"].Set(0);
                 gui_element.Render(delta_time);
             }
         }

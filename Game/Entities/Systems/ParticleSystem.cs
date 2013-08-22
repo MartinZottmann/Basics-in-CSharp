@@ -83,9 +83,13 @@ namespace MartinZottmann.Game.Entities.Systems
             {
                 var p = particles[particle_emitter_node.Entity.Name];
                 p.Model.Program.UniformLocations["in_ModelViewProjection"].Set(Matrix4d.CreateTranslation(particle_emitter_node.Base.Position) * Camera.ViewMatrix * Camera.ProjectionMatrix);
-                GL.PointSize(2);
+                p.Model.Program.UniformLocations["in_CameraPosition"].Set(Camera.Position);
+                p.Model.Program.UniformLocations["in_CameraUp"].Set(Camera.Up);
+                p.Model.Program.UniformLocations["in_ParticleSize"].Set(0.25f);
+                p.Model.Program.UniformLocations["in_Texture"].Set(0);
+                GL.DepthMask(false);
                 p.Model.Draw();
-                GL.PointSize(1);
+                GL.DepthMask(true);
             }
         }
 
@@ -105,7 +109,8 @@ namespace MartinZottmann.Game.Entities.Systems
             p.Model = new Engine.Graphics.OpenGL.Entity();
             p.Model.Mesh(new Mesh<VertexP3C4, uint>(p.Verticies));
             p.Model.Mode = BeginMode.Points;
-            p.Model.Program = ResourceManager.Programs["normal"];
+            p.Model.Program = ResourceManager.Programs["particle"];
+            p.Model.Texture = ResourceManager.Textures["Resources/Textures/particle-dot.png"];
 
             p.BufferObject = (BufferObject<VertexP3C4>)p.Model.VertexArrayObject.BufferObjects[0];
 

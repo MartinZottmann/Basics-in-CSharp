@@ -11,11 +11,14 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public readonly string Name;
 
+        public bool Filled { get; protected set; }
+
         public UniformBlockIndex(Program program, uint id, string name)
         {
             Program = program;
             Id = id;
             Name = name;
+            Filled = false;
         }
 
         public UniformBlockIndex(Program program, string name)
@@ -27,6 +30,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             Program = program;
             Id = (uint)id;
             Name = name;
+            Filled = false;
 
             int size;
             GL.GetActiveUniformBlock(program.Id, this.Id, ActiveUniformBlockParameter.UniformBlockDataSize, out size);

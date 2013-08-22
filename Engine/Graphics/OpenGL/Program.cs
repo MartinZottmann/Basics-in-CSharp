@@ -25,6 +25,23 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
             GL.LinkProgram(Id);
 
+#if DEBUG
+            //OpenGL.Info.ProgramParameters(Id);
+            //OpenGL.Info.Uniform(Id);
+
+            int info;
+            GL.GetProgram(Id, ProgramParameter.InfoLogLength, out info);
+            if (info > 1)
+            {
+                string info_log;
+                GL.GetProgramInfoLog((int)Id, out info_log);
+                Console.WriteLine(info_log);
+            }
+            GL.GetProgram(Id, ProgramParameter.LinkStatus, out info);
+            if (info != 1)
+                throw new Exception("LinkProgram failed");
+#endif
+
             using (new Bind(this))
             {
                 int count;
@@ -45,23 +62,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                     UniformBlockIndices[name] = new UniformBlockIndex(this, i, name);
                 }
             }
-
-#if DEBUG
-            //OpenGL.Info.ProgramParameters(Id);
-            //OpenGL.Info.Uniform(Id);
-
-            int info;
-            GL.GetProgram(Id, ProgramParameter.InfoLogLength, out info);
-            if (info > 1)
-            {
-                string info_log;
-                GL.GetProgramInfoLog((int)Id, out info_log);
-                Console.WriteLine(info_log);
-            }
-            GL.GetProgram(Id, ProgramParameter.LinkStatus, out info);
-            if (info != 1)
-                throw new Exception("LinkProgram failed");
-#endif
         }
 
         public void Bind()
@@ -77,6 +77,17 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         public void Dispose()
         {
             GL.DeleteProgram(Id);
+        }
+
+        public void CheckUniforms()
+        {
+            foreach (var uniform_location in UniformLocations)
+                if (!uniform_location.Value.Filled)
+                    throw new Exception(String.Format("Uniform location {0} has no value.", uniform_location.Key));
+
+            foreach (var uniform_block_index in UniformBlockIndices)
+                if (!uniform_block_index.Value.Filled)
+                    throw new Exception(String.Format("Uniform block index {0} has no value.", uniform_block_index.Key));
         }
     }
 }

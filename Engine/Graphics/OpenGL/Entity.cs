@@ -42,6 +42,9 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public virtual void Draw()
         {
+            if (Program != null)
+                Program.CheckUniforms();
+
             using (new Bind(Texture))
             using (new Bind(Program))
             using (new Bind(VertexArrayObject))
@@ -53,6 +56,9 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public virtual void Draw(Program program)
         {
+            if (program != null)
+                program.CheckUniforms();
+
             using (new Bind(program))
             using (new Bind(VertexArrayObject))
                 if (mesh.IndicesLength == 0)
