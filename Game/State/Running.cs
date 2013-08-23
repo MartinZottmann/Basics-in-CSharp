@@ -76,6 +76,7 @@ namespace MartinZottmann.Game.State
             var screen_camera = new Camera(Window);
 
             entity_manager = new EntityManager();
+            entity_manager.Add(new ChunkSystem());
             entity_manager.Add(new InputSystem(Window, world_camera));
             entity_manager.Add(new CursorSystem(Window, world_camera));
             var g = new GraphicSystem(world_camera, resource_manager);
