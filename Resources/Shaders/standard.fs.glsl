@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 
 const float bias = 0.005;
 

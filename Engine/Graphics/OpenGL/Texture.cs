@@ -79,10 +79,10 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             using (var g = System.Drawing.Graphics.FromImage(img))
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                height = font.GetHeight(g);
                 for (var i = 0; i < 128; i++)
                 {
                     var size = g.MeasureString(((char)i).ToString(), font);
-                    height = Math.Max(height, size.Height);
                     font_map.Add((char)i, new RectangleF(width, 0.0f, size.Width, size.Height));
                     width += size.Width;
                 }

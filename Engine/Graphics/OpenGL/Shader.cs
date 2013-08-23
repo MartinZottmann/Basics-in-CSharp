@@ -30,7 +30,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             if (info != 0)
             {
                 string info_log;
-                GL.GetShaderInfoLog((int)Id, out info_log); // GL.GetShaderInfoLog(int shader, out string info) is missing
+                GL.GetShaderInfoLog((int)Id, out info_log); // GL.GetShaderInfoLog(uint shader, out string info) is missing
                 Console.WriteLine(info_log);
             }
 
