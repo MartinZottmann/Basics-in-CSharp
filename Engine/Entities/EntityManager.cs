@@ -17,6 +17,9 @@ namespace MartinZottmann.Engine.Entities
 
         public void Add(Entity entity)
         {
+            if (entity_names.ContainsKey(entity.Name))
+                return;
+
             entity_names.Add(entity.Name, entity);
             entities.Add(entity);
             entity.NameChanged += OnNameChanged;

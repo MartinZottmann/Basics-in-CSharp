@@ -1,4 +1,5 @@
 ﻿using MartinZottmann.Engine.Entities;
+using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities;
@@ -12,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Camera = MartinZottmann.Engine.Graphics.Camera;
 
 namespace MartinZottmann.Game.State
 {
@@ -83,7 +83,7 @@ namespace MartinZottmann.Game.State
             world_render_context = g.RenderContext;
             entity_manager.Add(g);
             entity_manager.Add(new ParticleSystem(world_camera, resource_manager));
-            entity_manager.Add(new PhysicSystem());
+            entity_manager.Add(new PhysicSystem(world_camera, resource_manager));
             entity_manager.Add(new CollisionSystem());
             entity_manager.Add(new GUISystem(screen_camera, resource_manager));
 

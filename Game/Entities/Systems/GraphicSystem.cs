@@ -64,60 +64,7 @@ namespace MartinZottmann.Game.Entities.Systems
         {
             graphic_nodes = entity_manager.Get<GraphicNode>();
             graphic_nodes.NodeAdded += OnNodeAdded;
-            //graphic_nodes.NodeRemoved += OnNodeRemoved;
         }
-
-        protected void OnNodeAdded(object sender, NodeEventArgs<GraphicNode> e)
-        {
-            LoadModel(e.Node);
-
-#if DEBUG
-            var b = e.Node.Base;
-            var forward = new Color4(1.0f, 0.0f, 0.0f, 0.5f);
-            var up = new Color4(0.0f, 1.0f, 0.0f, 0.5f);
-            var right = new Color4(0.0f, 0.0f, 1.0f, 0.5f);
-            e.Node.Graphic.DebugModel = new Model();
-            e.Node.Graphic.DebugModel.Mesh(
-                new Mesh<VertexP3C4, uint>()
-                {
-                    Vertices = new VertexP3C4[] {
-                            new VertexP3C4(Vector3.Zero, forward),
-                            new VertexP3C4((Vector3)b.Forward, forward),
-                            new VertexP3C4(Vector3.Zero, up),
-                            new VertexP3C4((Vector3)b.Up, up),
-                            new VertexP3C4(Vector3.Zero, right),
-                            new VertexP3C4((Vector3)b.Right, right),
-                        },
-                    Indices = new uint[] {
-                            0, 1, 2, 3, 4, 5
-                        }
-                }
-            );
-            e.Node.Graphic.DebugModel.Mode = BeginMode.Lines;
-            e.Node.Graphic.DebugModel.Program = ResourceManager.Programs["normal"];
-#endif
-        }
-
-        private void LoadModel(GraphicNode graphic_node)
-        {
-            if (graphic_node.Graphic.Model != null)
-                return;
-
-            try
-            {
-                graphic_node.Graphic.Model = (Model)Activator.CreateInstance(Type.GetType(graphic_node.Graphic.ModelName));
-            }
-            catch
-            {
-                graphic_node.Graphic.Model = ResourceManager.Models.Load(graphic_node.Graphic.ModelName);
-            }
-            if (graphic_node.Graphic.ProgramName != null)
-                graphic_node.Graphic.Model.Program = ResourceManager.Programs[graphic_node.Graphic.ProgramName];
-            if (graphic_node.Graphic.TextureName != null)
-                graphic_node.Graphic.Model.Texture = ResourceManager.Textures[graphic_node.Graphic.TextureName];
-        }
-
-        //protected void OnNodeRemoved(object sender, NodeEventArgs<GraphicNode> e) { }
 
         public void Update(double delta_time)
         {
@@ -201,6 +148,62 @@ namespace MartinZottmann.Game.Entities.Systems
             }
             #endregion
         }
+
+        protected void OnNodeAdded(object sender, NodeEventArgs<GraphicNode> e)
+        {
+            LoadModel(e.Node);
+#if DEBUG
+            InitDebugModel(e.Node);
+#endif
+        }
+
+        protected void LoadModel(GraphicNode graphic_node)
+        {
+            if (graphic_node.Graphic.Model != null)
+                return;
+
+            try
+            {
+                graphic_node.Graphic.Model = (Model)Activator.CreateInstance(Type.GetType(graphic_node.Graphic.ModelName));
+            }
+            catch
+            {
+                graphic_node.Graphic.Model = ResourceManager.Models.Load(graphic_node.Graphic.ModelName);
+            }
+            if (graphic_node.Graphic.ProgramName != null)
+                graphic_node.Graphic.Model.Program = ResourceManager.Programs[graphic_node.Graphic.ProgramName];
+            if (graphic_node.Graphic.TextureName != null)
+                graphic_node.Graphic.Model.Texture = ResourceManager.Textures[graphic_node.Graphic.TextureName];
+        }
+
+#if DEBUG
+        protected void InitDebugModel(GraphicNode graphic_node)
+        {
+            var b = graphic_node.Base;
+            var forward = new Color4(1.0f, 0.0f, 0.0f, 0.5f);
+            var up = new Color4(0.0f, 1.0f, 0.0f, 0.5f);
+            var right = new Color4(0.0f, 0.0f, 1.0f, 0.5f);
+            graphic_node.Graphic.DebugModel = new Model();
+            graphic_node.Graphic.DebugModel.Mesh(
+                new Mesh<VertexP3C4, uint>()
+                {
+                    Vertices = new VertexP3C4[] {
+                            new VertexP3C4(Vector3.Zero, forward),
+                            new VertexP3C4((Vector3)b.Forward, forward),
+                            new VertexP3C4(Vector3.Zero, up),
+                            new VertexP3C4((Vector3)b.Up, up),
+                            new VertexP3C4(Vector3.Zero, right),
+                            new VertexP3C4((Vector3)b.Right, right),
+                        },
+                    Indices = new uint[] {
+                            0, 1, 2, 3, 4, 5
+                        }
+                }
+            );
+            graphic_node.Graphic.DebugModel.Mode = BeginMode.Lines;
+            graphic_node.Graphic.DebugModel.Program = ResourceManager.Programs["normal"];
+        }
+#endif
 
         protected void Draw(double delta_time, MartinZottmann.Game.Graphics.RenderContext render_context)
         {

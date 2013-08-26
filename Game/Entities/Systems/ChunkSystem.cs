@@ -95,6 +95,8 @@ namespace MartinZottmann.Game.Entities.Systems
             }
         }
 
+        public void Render(double delta_time) { }
+
         public Point3i VectorToPoint(Vector3d vector)
         {
             return new Point3i(
@@ -103,8 +105,6 @@ namespace MartinZottmann.Game.Entities.Systems
                 (int)Math.Round(vector.Z / CHUNK_SIZE, MidpointRounding.AwayFromZero)
             );
         }
-
-        public void Render(double delta_time) { }
 
         public IEnumerable<Point3i> Chunks(Point3i position)
         {

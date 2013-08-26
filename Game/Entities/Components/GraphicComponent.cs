@@ -1,6 +1,7 @@
 ﻿using MartinZottmann.Engine.Entities;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using System;
+using System.Xml.Serialization;
 
 namespace MartinZottmann.Game.Entities.Components
 {
@@ -13,12 +14,12 @@ namespace MartinZottmann.Game.Entities.Components
 
         public string TextureName;
 
-        [NonSerialized]
-        internal Model Model;
+        [XmlIgnore]
+        public Model Model;
 
 #if DEBUG
-        [NonSerialized]
-        internal Model DebugModel;
+        [XmlIgnore]
+        public Model DebugModel;
 #endif
 
         public void Dispose()

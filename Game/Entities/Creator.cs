@@ -1,7 +1,6 @@
 ﻿using MartinZottmann.Engine.Entities;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.Components;
-using MartinZottmann.Game.Entities.Nodes;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
 using System;
