@@ -41,7 +41,7 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected NodeList<ParticleEmitterNode> particle_emitter_nodes;
 
-        protected Dictionary<string, ParticleList> particles = new Dictionary<string, ParticleList>();
+        protected internal Dictionary<string, ParticleList> particles = new Dictionary<string, ParticleList>();
 
         public ParticleSystem(Camera camera, ResourceManager resource_manager)
         {

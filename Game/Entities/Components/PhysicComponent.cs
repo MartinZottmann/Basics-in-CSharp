@@ -2,6 +2,7 @@
 using MartinZottmann.Engine.Physics;
 using OpenTK;
 using System;
+using System.Xml.Serialization;
 
 namespace MartinZottmann.Game.Entities.Components
 {
@@ -38,6 +39,7 @@ namespace MartinZottmann.Game.Entities.Components
             }
         }
 
+        [XmlIgnore]
         public double InverseMass
         {
             get { return inverse_mass; }
@@ -66,6 +68,7 @@ namespace MartinZottmann.Game.Entities.Components
             }
         }
 
+        [XmlIgnore]
         public Matrix4d InverseInertia
         {
             get { return inverse_inertia; }

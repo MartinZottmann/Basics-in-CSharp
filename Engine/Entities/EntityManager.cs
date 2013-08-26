@@ -19,6 +19,7 @@ namespace MartinZottmann.Engine.Entities
         {
             entity_names.Add(entity.Name, entity);
             entities.Add(entity);
+            entity.NameChanged += OnNameChanged;
             entity.ComponentAdded += OnComponentAdded;
             entity.ComponentRemoved += OnComponentRemoved;
             foreach (var node_list in node_lists.Values)
@@ -37,10 +38,16 @@ namespace MartinZottmann.Engine.Entities
         {
             entity_names.Remove(entity.Name);
             entities.Remove(entity);
+            entity.NameChanged -= OnNameChanged;
             entity.ComponentAdded -= OnComponentAdded;
             entity.ComponentRemoved -= OnComponentRemoved;
             foreach (var node_list in node_lists.Values)
                 node_list.MaybeRemove(entity);
+        }
+
+        public void Remove(string name)
+        {
+            Remove(entity_names[name]);
         }
 
         public NodeList<T> Get<T>() where T : Node
@@ -66,6 +73,12 @@ namespace MartinZottmann.Engine.Entities
         public T GetSystem<T>() where T : ISystem
         {
             return (T)systems[typeof(T)];
+        }
+
+        protected void OnNameChanged(object sender, NameEventArgs e)
+        {
+            entity_names.Remove(e.OldName);
+            entity_names.Add(e.NewName, e.Entity);
         }
 
         protected void OnComponentAdded(object sender, ComponentEventArgs e)

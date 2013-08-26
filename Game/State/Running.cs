@@ -16,13 +16,13 @@ using Camera = MartinZottmann.Engine.Graphics.Camera;
 
 namespace MartinZottmann.Game.State
 {
-    class Running : GameState
+    public class Running : GameState
     {
         protected ResourceManager resource_manager = new ResourceManager();
 
         protected MartinZottmann.Game.Graphics.RenderContext world_render_context;
 
-        protected FileSystem file_system = new FileSystem("world.save");
+        protected FileSystem file_system = new FileSystem("save.xml");
 
         protected MartinZottmann.Game.Graphics.RenderContext screen_render_context = new MartinZottmann.Game.Graphics.RenderContext();
 

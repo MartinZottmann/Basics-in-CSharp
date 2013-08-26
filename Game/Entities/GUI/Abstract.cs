@@ -19,11 +19,11 @@ namespace MartinZottmann.Game.Entities.GUI
         /// </summary>
         public Matrix4d ModelMatrix { get { return Matrix4d.Scale(Scale) * Matrix4d.Rotate(Orientation) * Matrix4d.CreateTranslation(Position); } }
 
-        public Texture FontTexture { get; set; }
+        protected internal Texture FontTexture { get; set; }
 
-        public FontMeshBuilder FontMeshBuilder { get; set; }
+        protected internal FontMeshBuilder FontMeshBuilder { get; set; }
 
-        public Model Model { get; set; }
+        protected internal Model Model { get; set; }
 
         public virtual void Start(ResourceManager resource_manager)
         {

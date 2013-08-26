@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace MartinZottmann.Engine.Entities
 {
@@ -8,7 +9,26 @@ namespace MartinZottmann.Engine.Entities
     {
         protected static uint id = 0;
 
-        public readonly string Name;
+        protected internal string name;
+
+        [XmlAttribute]
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                var old_name = name;
+                name = value;
+                if (NameChanged != null)
+                    NameChanged(this, new NameEventArgs(this, old_name, name));
+            }
+        }
+
+        [field: NonSerialized]
+        public event EventHandler<NameEventArgs> NameChanged;
 
         [field: NonSerialized]
         public event EventHandler<ComponentEventArgs> ComponentAdded;
@@ -16,7 +36,24 @@ namespace MartinZottmann.Engine.Entities
         [field: NonSerialized]
         public event EventHandler<ComponentEventArgs> ComponentRemoved;
 
-        internal Dictionary<Type, IComponent> components = new Dictionary<Type, IComponent>();
+        protected internal Dictionary<Type, IComponent> components = new Dictionary<Type, IComponent>();
+
+        [XmlArray("Components")]
+        [XmlArrayItem("Component")]
+        public object[] Components
+        {
+            get
+            {
+                IComponent[] r = new IComponent[components.Count];
+                components.Values.CopyTo(r, 0);
+                return r;
+            }
+            set
+            {
+                foreach (var component in value)
+                    Add((IComponent)component);
+            }
+        }
 
         public Entity() : this("Entity", true) { }
 

@@ -36,9 +36,10 @@ namespace MartinZottmann.Game.Entities.Systems
 
             foreach (var gui_element in gui_elements)
             {
-                gui_element.FontTexture = font_texture;
-                gui_element.FontMeshBuilder = font_mesh_builder;
-                gui_element.Start(resource_manager);
+                var g = (Abstract)gui_element;
+                g.FontTexture = font_texture;
+                g.FontMeshBuilder = font_mesh_builder;
+                g.Start(resource_manager);
             }
         }
 
@@ -66,9 +67,10 @@ namespace MartinZottmann.Game.Entities.Systems
                     * Matrix4d.CreateTranslation(-0.5, -0.5, 0.0)
                     * Matrix4d.Scale(2.0, 2.0, 1.0)
                     * RenderContext.InvertedProjection;
-                gui_element.Model.Program.UniformLocations["in_ModelViewProjection"].Set(RenderContext.ProjectionViewModel);
-                gui_element.Model.Program.UniformLocations["in_Texture"].Set(0);
-                gui_element.Render(delta_time);
+                var g = (Abstract)gui_element;
+                g.Model.Program.UniformLocations["in_ModelViewProjection"].Set(RenderContext.ProjectionViewModel);
+                g.Model.Program.UniformLocations["in_Texture"].Set(0);
+                g.Render(delta_time);
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using MartinZottmann.Engine.Entities;
-using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using System;
 

@@ -10,11 +10,11 @@ namespace MartinZottmann.Game.Entities.GUI
     {
         //Vector3d Position { get; set; }
 
-        Texture FontTexture { get; set; }
+        //Texture FontTexture { get; set; }
 
-        FontMeshBuilder FontMeshBuilder { get; set; }
+        //FontMeshBuilder FontMeshBuilder { get; set; }
 
-        Model Model { get; set; }
+        //Model Model { get; set; }
 
         Matrix4d ModelMatrix { get; }
 

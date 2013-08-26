@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="Bind.cs" />
     <Compile Include="Entities\ComponentEventArgs.cs" />
+    <Compile Include="Entities\NameEventArgs.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityManager.cs" />
     <Compile Include="Entities\IComponent.cs" />
@@ -104,6 +105,7 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

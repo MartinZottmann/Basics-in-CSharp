@@ -2,6 +2,7 @@
 using OpenTK;
 using OpenTK.Graphics;
 using System;
+using System.Xml.Serialization;
 
 namespace MartinZottmann.Game.Entities.Components
 {
@@ -19,6 +20,7 @@ namespace MartinZottmann.Game.Entities.Components
         /// <summary>
         /// Model Matrix = Scale * Rotation * Translation
         /// </summary>
+        [XmlIgnore]
         public Matrix4d Model
         {
             get
@@ -29,12 +31,14 @@ namespace MartinZottmann.Game.Entities.Components
             }
         }
 
+        [XmlIgnore]
         public Matrix4d OrientationMatrix
         {
             get { return Matrix4d.CreateFromQuaternion(ref Orientation); }
             set { Orientation = value.ExtractRotation(); }
         }
 
+        [XmlIgnore]
         public Matrix4d InverseOrientationMatrix
         {
             get { return Matrix4d.CreateFromQuaternion(ref Orientation).Inverted(); }
@@ -55,9 +59,9 @@ namespace MartinZottmann.Game.Entities.Components
 
         public Vector3d RightRelative { get { return Vector3d.Transform(Right, Orientation); } }
 
-        public BaseComponent Parent { get; protected set; }
+        protected BaseComponent Parent { get; set; }
 
-        public BaseComponent[] Children { get; protected set; }
+        protected BaseComponent[] Children { get; set; }
 
         public BaseComponent Add(Entity child)
         {

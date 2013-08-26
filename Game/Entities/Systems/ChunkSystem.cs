@@ -39,6 +39,23 @@ namespace MartinZottmann.Game.Entities.Systems
         {
             return left.X != right.X || left.Y != right.Y || left.Z != right.Z;
         }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
+        }
+
+        public override bool Equals(object @object)
+        {
+            if (!(@object is Point3i))
+                return false;
+            return Equals((Point3i)@object);
+        }
+
+        public bool Equals(Point3i other)
+        {
+            return X == other.X && Y == other.Y && Z == other.Z;
+        }
     }
 
     public class ChunkSystem : ISystem
@@ -68,7 +85,6 @@ namespace MartinZottmann.Game.Entities.Systems
                     foreach (var chunk in Chunks(input_position))
                         if (entity_position == chunk)
                             goto CHUNK_FOUND;
-                CHUNK_NOT_FOUND:
                     Save(entity_position, entitiy);
                     entitiy_manager.Remove(entitiy);
                 CHUNK_FOUND:
@@ -106,7 +122,7 @@ namespace MartinZottmann.Game.Entities.Systems
             if (!directory.Exists)
                 directory.Create();
 
-            var file = new FileSystem(String.Format("{0}/{1}.save", directory, @object.GetHashCode()));
+            var file = new FileSystem(String.Format("{0}/{1}.xml", directory, @object.GetHashCode()));
             file.Save(@object);
         }
 
@@ -122,7 +138,7 @@ namespace MartinZottmann.Game.Entities.Systems
             if (!directory_info.Exists)
                 return;
 
-            foreach(var file_info in directory_info.GetFiles("*.save"))
+            foreach (var file_info in directory_info.GetFiles("*.xml"))
             {
                 Debug.WriteLine("Load {0}: {1}", position, file_info.FullName);
                 var file = new FileSystem(file_info.FullName);
