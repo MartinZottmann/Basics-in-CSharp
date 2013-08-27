@@ -90,10 +90,6 @@ namespace MartinZottmann.Game.Entities
                 Create("Resources/Models/table.obj", new Vector3d(0, 0, -1), new Vector3d(0.5f, 0.5f, 0.5f))
             };
 
-            var b = new BaseComponent() { Position = position };
-            foreach (var i in c)
-                b.Add(i.Get<BaseComponent>());
-
             var p = new PhysicComponent();
             foreach (var i in c)
                 p.BoundingSphere.Radius = Math.Max(
@@ -104,9 +100,13 @@ namespace MartinZottmann.Game.Entities
             p.BoundingBox.Min = -p.BoundingBox.Max;
 
             var e = new Entity("Ship", true)
-                .Add(b)
+                .Add(new BaseComponent() { Position = position })
                 .Add(p)
                 .Add(new TargetComponent());
+
+            foreach (var i in c)
+                i.Get<BaseComponent>().ParentName = e.Name;
+
             EntityManager.Add(e);
 
             return e;

@@ -3,6 +3,7 @@ using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Entities.Nodes;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -15,6 +16,8 @@ namespace MartinZottmann.Game.Entities.Systems
 
         public ResourceManager ResourceManager;
 
+        public EntityManager EntityManager;
+
         protected NodeList<PhysicNode> physic_nodes;
 
         public PhysicSystem(Camera camera, ResourceManager resource_manager)
@@ -25,7 +28,8 @@ namespace MartinZottmann.Game.Entities.Systems
 
         public void Bind(EntityManager entitiy_manager)
         {
-            physic_nodes = entitiy_manager.Get<PhysicNode>();
+            EntityManager = entitiy_manager;
+            physic_nodes = EntityManager.Get<PhysicNode>();
             physic_nodes.NodeAdded += OnNodeAdded;
         }
 
@@ -33,6 +37,9 @@ namespace MartinZottmann.Game.Entities.Systems
         {
             foreach (var physic_node in physic_nodes)
             {
+                if (physic_node.Base.ParentName != null && physic_node.Base.parent_base == null)
+                    physic_node.Base.parent_base = EntityManager.Get(physic_node.Base.ParentName).Get<BaseComponent>();
+
                 physic_node.UpdateVelocity(delta_time);
                 physic_node.UpdatePosition(delta_time);
             }
@@ -43,7 +50,7 @@ namespace MartinZottmann.Game.Entities.Systems
 #if DEBUG
             foreach (var physic_node in physic_nodes)
             {
-                physic_node.DebugModel.Program.UniformLocations["in_ModelViewProjection"].Set(Matrix4d.CreateTranslation(physic_node.Base.Position) * Camera.ViewMatrix * Camera.ProjectionMatrix);
+                physic_node.DebugModel.Program.UniformLocations["in_ModelViewProjection"].Set(physic_node.Base.Model * Camera.ViewMatrix * Camera.ProjectionMatrix);
                 physic_node.DebugModel.Draw();
             }
 #endif

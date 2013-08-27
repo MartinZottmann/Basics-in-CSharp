@@ -20,14 +20,13 @@ namespace MartinZottmann.Game.Entities.Components
         /// <summary>
         /// Model Matrix = Scale * Rotation * Translation
         /// </summary>
-        [XmlIgnore]
         public Matrix4d Model
         {
             get
             {
-                return Parent == null
+                return parent_base == null
                     ? Matrix4d.Scale(Scale) * Matrix4d.Rotate(Orientation) * Matrix4d.CreateTranslation(Position)
-                    : Matrix4d.Scale(Scale) * Matrix4d.Rotate(Orientation) * Matrix4d.CreateTranslation(Position) * Parent.Model;
+                    : Matrix4d.Scale(Scale) * Matrix4d.Rotate(Orientation) * Matrix4d.CreateTranslation(Position) * parent_base.Model;
             }
         }
 
@@ -59,27 +58,8 @@ namespace MartinZottmann.Game.Entities.Components
 
         public Vector3d RightRelative { get { return Vector3d.Transform(Right, Orientation); } }
 
-        protected BaseComponent Parent { get; set; }
+        public string ParentName;
 
-        protected BaseComponent[] Children { get; set; }
-
-        public BaseComponent Add(Entity child)
-        {
-            return Add(child.Get<BaseComponent>());
-        }
-
-        public BaseComponent Add(BaseComponent child)
-        {
-            var children = Children;
-            var i = 0;
-            var n = children == null ? 0 : children.Length;
-            Children = new BaseComponent[n + 1];
-            for (; i < n; i++)
-                Children[i] = children[i];
-            Children[i] = child;
-            child.Parent = this;
-
-            return this;
-        }
+        protected internal BaseComponent parent_base;
     }
 }
