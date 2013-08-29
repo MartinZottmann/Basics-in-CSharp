@@ -11,7 +11,7 @@ namespace MartinZottmann.Game.Entities.GUI
     {
         protected SizeF size = new SizeF(300, 30);
 
-        protected internal ResourceManager resource_manager;
+        protected ResourceManager resource_manager;
 
         public override void Start(ResourceManager resource_manager)
         {

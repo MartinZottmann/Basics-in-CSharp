@@ -94,13 +94,21 @@ namespace MartinZottmann.Engine.Graphics
             if (MouseLook)
             {
                 var window_center = WindowCenter;
-                var mouse_x_delta = Window.Mouse.X - window_center.X;
-                var mouse_y_delta = Window.Mouse.Y - window_center.Y;
+                var mouse_x_delta = window_center.X - Window.Mouse.X;
+                var mouse_y_delta = window_center.Y - Window.Mouse.Y;
 
                 if (mouse_x_delta != 0)
-                    Orientation = Quaterniond.FromAxisAngle(Up, (InvertXAxis ? -1 : 1) * SensitivityX * mouse_x_delta * delta_time * Fov).Inverted() * Orientation;
+                    Orientation = Quaterniond.FromAxisAngle(Up, (InvertXAxis ? -1 : 1) * SensitivityX * mouse_x_delta * delta_time * Fov) * Orientation;
                 if (mouse_y_delta != 0)
-                    Orientation = Orientation * Quaterniond.FromAxisAngle(Right, (InvertYAxis ? -1 : 1) * SensitivityY * mouse_y_delta * delta_time * Fov).Inverted();
+                    Orientation = Orientation * Quaterniond.FromAxisAngle(Right, (InvertYAxis ? -1 : 1) * SensitivityY * mouse_y_delta * delta_time * Fov);
+
+                // Clamp Orientation
+                var pitch = Vector3d.Dot(ForwardRelative, Vector3d.Cross(Up, RightRelative));
+                if (pitch < 0)
+                {
+                    var sign = Vector3d.Dot(Vector3d.Cross(Forward, ForwardRelative), Right) < 0 ? -1 : 1;
+                    Orientation = Orientation * Quaterniond.FromAxisAngle(Right, sign * pitch);
+                }
 
                 if (Window.WindowState == WindowState.Fullscreen)
                     Cursor.Position = window_center;
