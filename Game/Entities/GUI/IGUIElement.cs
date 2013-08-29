@@ -1,4 +1,6 @@
-﻿using MartinZottmann.Engine.Resources;
+﻿using MartinZottmann.Engine.Graphics.Mesh;
+using MartinZottmann.Engine.Graphics.OpenGL;
+using MartinZottmann.Engine.Resources;
 using OpenTK;
 
 namespace MartinZottmann.Game.Entities.GUI
@@ -7,7 +9,9 @@ namespace MartinZottmann.Game.Entities.GUI
     {
         Matrix4d ModelMatrix { get; }
 
-        void Start(ResourceManager resource_manager);
+        Model Model { get; set; }
+
+        void Bind(ResourceManager resource_manager, FontMeshBuilder font_mesh_builder);
 
         void Update(double delta_time);
 

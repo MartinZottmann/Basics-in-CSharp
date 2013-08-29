@@ -3,7 +3,6 @@ using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using OpenTK;
 using System;
-using System.Drawing;
 
 namespace MartinZottmann.Game.Entities.GUI
 {
@@ -15,15 +14,13 @@ namespace MartinZottmann.Game.Entities.GUI
 
         protected int fps = 0;
 
-        protected SizeF size = new SizeF(300, 30);
-
-        public override void Start(ResourceManager resource_manager)
+        public override void Bind(ResourceManager resource_manager, FontMeshBuilder font_mesh_builder)
         {
-            base.Start(resource_manager);
+            base.Bind(resource_manager, font_mesh_builder);
 
             Scale = new Vector3d(0.75);
             Position = new Vector3d(0.1, 0.9, 0.0);
-            Model.Mesh(FontMeshBuilder.FromString(String.Format("FPS: {0:F}", counter)));
+            RebuildModel();
         }
 
         public override void Update(double delta_time)
@@ -33,11 +30,16 @@ namespace MartinZottmann.Game.Entities.GUI
             if (accumulator > 1)
             {
                 if (fps != counter)
-                    Model.Mesh(FontMeshBuilder.FromString(String.Format("FPS: {0:F}", counter)));
+                    RebuildModel();
                 fps = counter;
                 counter = 0;
                 accumulator -= 1;
             }
+        }
+
+        protected void RebuildModel()
+        {
+            Model.Mesh(font_mesh_builder.FromString(String.Format("FPS: {0:F}", counter)));
         }
     }
 }

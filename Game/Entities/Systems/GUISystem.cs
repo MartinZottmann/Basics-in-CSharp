@@ -19,6 +19,8 @@ namespace MartinZottmann.Game.Entities.Systems
 
         public ResourceManager ResourceManager;
 
+        protected FontMeshBuilder font_mesh_builder;
+
         protected List<IGUIElement> gui_elements = new List<IGUIElement>();
 
         public GUISystem(Camera camera, ResourceManager resource_manager)
@@ -28,19 +30,8 @@ namespace MartinZottmann.Game.Entities.Systems
 
             FontStructure font_map;
             var font_texture = new Texture(new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.White, Color.Black, Color.Transparent, false, out font_map);
-            var font_mesh_builder = new FontMeshBuilder(font_map);
-
-            // @todo Move hardcoded GUI elements
-            gui_elements.Add(new Debugger());
-            gui_elements.Add(new FPSCounter());
-
-            foreach (var gui_element in gui_elements)
-            {
-                var g = (Abstract)gui_element;
-                g.FontTexture = font_texture;
-                g.FontMeshBuilder = font_mesh_builder;
-                g.Start(resource_manager);
-            }
+            resource_manager.Textures["GUI_font"] = font_texture;
+            font_mesh_builder = new FontMeshBuilder(font_map);
         }
 
         public void Bind(EntityManager entitiy_manager)
@@ -67,11 +58,22 @@ namespace MartinZottmann.Game.Entities.Systems
                     * Matrix4d.CreateTranslation(-0.5, -0.5, 0.0)
                     * Matrix4d.Scale(2.0, 2.0, 1.0)
                     * RenderContext.InvertedProjection;
-                var g = (Abstract)gui_element;
-                g.Model.Program.UniformLocations["in_ModelViewProjection"].Set(RenderContext.ProjectionViewModel);
-                g.Model.Program.UniformLocations["in_Texture"].Set(0);
-                g.Render(delta_time);
+
+                gui_element.Model.Program.UniformLocations["in_ModelViewProjection"].Set(RenderContext.ProjectionViewModel);
+                gui_element.Model.Program.UniformLocations["in_Texture"].Set(0);
+                gui_element.Render(delta_time);
             }
+        }
+
+        public void Add(IGUIElement gui_element)
+        {
+            gui_elements.Add(gui_element);
+            gui_element.Bind(ResourceManager, font_mesh_builder);
+        }
+
+        public void Remove(IGUIElement gui_element)
+        {
+            gui_elements.Remove(gui_element);
         }
     }
 }

@@ -18,17 +18,18 @@ namespace MartinZottmann.Game.Entities.GUI
         /// </summary>
         public Matrix4d ModelMatrix { get { return Matrix4d.Scale(Scale) * Matrix4d.Rotate(Orientation) * Matrix4d.CreateTranslation(Position); } }
 
-        protected internal Texture FontTexture { get; set; }
+        protected FontMeshBuilder font_mesh_builder;
 
-        protected internal FontMeshBuilder FontMeshBuilder { get; set; }
+        protected ResourceManager resource_manager;
 
-        protected internal Model Model { get; set; }
+        public Model Model { get; set; }
 
-        public virtual void Start(ResourceManager resource_manager)
+        public virtual void Bind(ResourceManager resource_manager, FontMeshBuilder font_mesh_builder)
         {
-            Model = new Model();
-            Model.Program = resource_manager.Programs["plain_texture"];
-            Model.Texture = FontTexture;
+            this.resource_manager = resource_manager;
+            this.font_mesh_builder = font_mesh_builder;
+
+            InitModel();
         }
 
         public virtual void Update(double delta_time) { }
@@ -36,6 +37,13 @@ namespace MartinZottmann.Game.Entities.GUI
         public virtual void Render(double delta_time)
         {
             Model.Draw();
+        }
+
+        protected void InitModel()
+        {
+            Model = new Model();
+            Model.Program = resource_manager.Programs["plain_texture"];
+            Model.Texture = resource_manager.Textures["GUI_font"];
         }
     }
 }

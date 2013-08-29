@@ -4,6 +4,7 @@ using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.Components;
+using MartinZottmann.Game.Entities.GUI;
 using MartinZottmann.Game.Entities.Systems;
 using MartinZottmann.Game.IO;
 using OpenTK;
@@ -131,6 +132,9 @@ namespace MartinZottmann.Game.State
                 world_camera.Position = camera_base.Position;
                 world_camera.Orientation = camera_base.Orientation;
             }
+
+            entity_manager.GetSystem<GUISystem>().Add(new MartinZottmann.Game.Entities.GUI.Debugger(entity_manager));
+            entity_manager.GetSystem<GUISystem>().Add(new FPSCounter());
 
             Debug.WriteLine(String.Format("Saving {0}", file_system.FilePath));
             file_system.Save(entity_manager.Entities);
