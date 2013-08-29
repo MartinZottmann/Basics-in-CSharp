@@ -64,23 +64,22 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             }
         }
 
-        public Texture(Font font, Color text_color, Color text_outline_color, Color background_color, bool mipmapped, out FontStructure font_map_normalized)
+        public Texture(Font font, Color text_color, Color text_outline_color, Color background_color, bool mipmapped, out FontStructure font_map)
             : this(TextureTarget.Texture2D)
         {
 #if DEBUG
             Name = "Font map";
 #endif
-            var font_map = new FontStructure();
-            font_map_normalized = new FontStructure();
-            var height = 0.0f;
-            var width = 0.0f;
+            font_map = new FontStructure();
+            var width = 0f;
+            var height = 0f;
 
             using (var img = new Bitmap(1, 1))
             using (var g = System.Drawing.Graphics.FromImage(img))
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                height = font.GetHeight(g);
-                for (var i = 0; i < 128; i++)
+                height = (int)Math.Ceiling(font.GetHeight(g));
+                for (var i = 32; i < 128; i++)
                 {
                     var size = g.MeasureString(((char)i).ToString(), font);
                     font_map.Add((char)i, new RectangleF(width, 0.0f, size.Width, size.Height));
@@ -88,20 +87,14 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 }
             }
 
-            foreach (var character in font_map)
-            {
-                font_map_normalized.Add(
-                    character.Key,
-                    new RectangleF(
-                        character.Value.X / width,
-                        character.Value.Y / height,
-                        character.Value.Width / width,
-                        character.Value.Height / height
-                    )
-                );
-            }
+            var image_width = (int)Math.Ceiling(width) + 1;
+            var image_height = (int)Math.Ceiling(height) + 1;
 
-            using (var img = new Bitmap((int)width, (int)height))
+            font_map.ImageWidth = image_width;
+            font_map.ImageHeight = image_height;
+            font_map.LineSpacing = font.Size * font.FontFamily.GetLineSpacing(font.Style) / font.FontFamily.GetEmHeight(font.Style);
+
+            using (var img = new Bitmap(image_width, image_height))
             {
                 using (var g = System.Drawing.Graphics.FromImage(img))
                 {
@@ -119,6 +112,9 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                         }
                     g.Save();
                 }
+#if DEBUG
+                img.Save(String.Format("{0}.png", font.GetHashCode()));
+#endif
                 Init(img, mipmapped, Target, mipmapped ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear, TextureMagFilter.Linear);
             }
         }

@@ -1,8 +1,6 @@
 ﻿using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
-using MartinZottmann.Game.Entities.Components;
-using MartinZottmann.Game.Graphics;
 using OpenTK;
 using System;
 using System.Drawing;
@@ -23,7 +21,7 @@ namespace MartinZottmann.Game.Entities.GUI
         {
             base.Start(resource_manager);
 
-            Scale = new Vector3d(1500.0);
+            Scale = new Vector3d(0.75);
             Position = new Vector3d(0.1, 0.9, 0.0);
             Model.Mesh(FontMeshBuilder.FromString(String.Format("FPS: {0:F}", counter)));
         }
