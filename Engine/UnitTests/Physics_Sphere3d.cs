@@ -23,13 +23,11 @@ namespace MartinZottmann.Engine.UnitTests
             Assert.AreEqual(new Vector3d(-1, 0, 0), c0.Normal);
             Assert.AreEqual(s0, c0.Object0);
             Assert.AreEqual(s1, c0.Object1);
-            Assert.AreEqual(null, c0.Parent);
             Assert.AreEqual(2, c0.PenetrationDepth);
             Assert.AreEqual(new Vector3d(-1, 0, 0), c1.HitPoint);
             Assert.AreEqual(new Vector3d(1, 0, 0), c1.Normal);
             Assert.AreEqual(s1, c1.Object0);
             Assert.AreEqual(s0, c1.Object1);
-            Assert.AreEqual(null, c1.Parent);
             Assert.AreEqual(2, c1.PenetrationDepth);
         }
 
@@ -48,7 +46,6 @@ namespace MartinZottmann.Engine.UnitTests
             Assert.AreEqual(new Vector3d(1, 0, 0), c0.Normal);
             Assert.AreEqual(s0, c0.Object0);
             Assert.AreEqual(r0, c0.Object1);
-            Assert.AreEqual(null, c0.Parent);
             Assert.AreEqual(0, c0.PenetrationDepth);
         }
     }

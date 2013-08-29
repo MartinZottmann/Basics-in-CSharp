@@ -81,6 +81,12 @@ namespace MartinZottmann.Game.Entities.Systems
                 var input_position = VectorToPoint(input_node.Base.Position);
                 foreach (var entitiy in entitiy_manager.Entities)
                 {
+                    if (entitiy.Has<CursorComponent>())
+                        continue;
+
+                    if (!entitiy.Has<BaseComponent>())
+                        continue;
+
                     var entity_position = VectorToPoint(entitiy.Get<BaseComponent>().Position);
                     foreach (var chunk in Chunks(input_position))
                         if (entity_position == chunk)

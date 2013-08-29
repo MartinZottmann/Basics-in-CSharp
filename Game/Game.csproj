@@ -61,7 +61,9 @@
     <Compile Include="Entities\Components\CollisionComponent.cs" />
     <Compile Include="Entities\Components\CursorComponent.cs" />
     <Compile Include="Entities\Components\GraphicComponent.cs" />
-    <Compile Include="Entities\Components\GUIComponent.cs" />
+    <Compile Include="Entities\Components\GUIComponent.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Entities\Components\InputComponent.cs" />
     <Compile Include="Entities\Components\ParticleEmitterComponent.cs" />
     <Compile Include="Entities\Components\PhysicComponent.cs" />

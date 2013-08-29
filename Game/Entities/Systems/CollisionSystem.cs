@@ -54,7 +54,6 @@ namespace MartinZottmann.Game.Entities.Systems
                             Normal = collision.Normal,
                             Object0 = e0,
                             Object1 = e1,
-                            Parent = this,
                             PenetrationDepth = collision.PenetrationDepth
                         }
                     );

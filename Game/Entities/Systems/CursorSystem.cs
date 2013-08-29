@@ -50,41 +50,7 @@ namespace MartinZottmann.Game.Entities.Systems
 
         public void SetCursor(CursorNode input_node)
         {
-            var window = Camera.Window;
-
-            var start = new Vector4d(
-                (window.Mouse.X / (double)window.Width - 0.5) * 2.0,
-                ((window.Height - window.Mouse.Y) / (double)window.Height - 0.5) * 2.0,
-                -1.0,
-                1.0
-            );
-            var end = new Vector4d(
-                (window.Mouse.X / (double)window.Width - 0.5) * 2.0,
-                ((window.Height - window.Mouse.Y) / (double)window.Height - 0.5) * 2.0,
-                0,
-                1.0
-            );
-
-            var IP = Camera.ProjectionMatrix.Inverted();
-            start = Vector4d.Transform(start, IP);
-            start /= start.W;
-            end = Vector4d.Transform(end, IP);
-            end /= end.W;
-
-            var IV = Camera.ViewMatrix.Inverted();
-            start = Vector4d.Transform(start, IV);
-            start /= start.W;
-            end = Vector4d.Transform(end, IV);
-            end /= end.W;
-
-            end = end - start;
-            end.W = 1;
-
-            Ray = new Ray3d(
-                new Vector3d(start.X, start.Y, start.Z),
-                Vector3d.Normalize(new Vector3d(end.X, end.Y, end.Z))
-            );
-
+            Ray = Camera.GetMouseRay();
             Ray.Intersect(Plane, out input_node.Base.Position);
         }
 
@@ -95,13 +61,10 @@ namespace MartinZottmann.Game.Entities.Systems
                 selection.ForEach(t => t.Base.Mark = OpenTK.Graphics.Color4.Pink);
                 selection.Clear();
                 foreach (var cursor_node in cursor_nodes)
-                    foreach (var hit in Intersections(cursor_node))
+                    foreach (var hit in Intersections())
                     {
                         selection.Add((PhysicNode)hit.Object1);
-                        if (hit.Parent == null)
-                            Console.WriteLine("{0}", hit.Object1);
-                        else
-                            Console.WriteLine("{0} > {1}", hit.Parent, hit.Object1);
+                        Console.WriteLine("Select: {0}", hit.Object1);
                     }
                 selection.ForEach(t => t.Base.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255));
             }
@@ -112,13 +75,13 @@ namespace MartinZottmann.Game.Entities.Systems
                             physic_node.Entity.Get<TargetComponent>().Position = cursor_node.Base.Position;
         }
 
-        protected SortedSet<Collision> Intersections(CursorNode cursor_node)
+        protected SortedSet<Collision> Intersections()
         {
             var hits = new SortedSet<Collision>();
 
             foreach (var physic_node in physic_nodes)
             {
-                var hit = physic_node.Physic.BoundingSphere.At(ref physic_node.Base.Position).Collides(ref Ray);
+                var hit = physic_node.Physic.BoundingBox.At(physic_node.Base.WorldPosition).Collides(ref Ray);
                 if (hit == null)
                     continue;
 

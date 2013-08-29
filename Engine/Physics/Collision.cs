@@ -13,8 +13,6 @@ namespace MartinZottmann.Engine.Physics
 
         public object Object1;
 
-        public object Parent;
-
         public double PenetrationDepth;
 
         public int CompareTo(Collision other)
@@ -25,13 +23,12 @@ namespace MartinZottmann.Engine.Physics
         public override string ToString()
         {
             return String.Format(
-                "{0}: ({1}, {2}, {3}, {4}, {5}, {6})",
+                "{0}: ({1}, {2}, {3}, {4}, {5})",
                 this.GetType(),
                 HitPoint,
                 Normal,
                 Object0,
                 Object1,
-                Parent,
                 PenetrationDepth
             );
         }

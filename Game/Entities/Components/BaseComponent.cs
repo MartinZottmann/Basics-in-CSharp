@@ -17,6 +17,8 @@ namespace MartinZottmann.Game.Entities.Components
 
         public Vector3d Position = Vector3d.Zero;
 
+        public Vector3d WorldPosition { get { return parent_base == null ? Position : Position + parent_base.Position; } }
+
         /// <summary>
         /// Model Matrix = Scale * Rotation * Translation
         /// </summary>

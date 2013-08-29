@@ -40,8 +40,8 @@ namespace MartinZottmann.Game.Entities
             var bb = g.Model.Mesh().BoundingBox;
             if (scale != null)
             {
-                bb.Max *= scale.Value.Length;
-                bb.Min *= scale.Value.Length;
+                bb.Max = Vector3d.Multiply(bb.Max, scale.Value);
+                bb.Min = Vector3d.Multiply(bb.Min, scale.Value);
             }
 
             var bs = g.Model.Mesh().BoundingSphere;
@@ -61,10 +61,7 @@ namespace MartinZottmann.Game.Entities
         {
             var scale = Random.NextDouble() * 5 + 1;
 
-            var e = Create("Resources/Models/sphere.obj");
-            var b = e.Get<BaseComponent>();
-            b.Position = new Vector3d((Random.NextDouble() - 0.5) * 100.0, (Random.NextDouble() - 0.5) * 100.0, (Random.NextDouble() - 0.5) * 100.0);
-            b.Scale = new Vector3d(scale);
+            var e = Create("Resources/Models/sphere.obj", new Vector3d((Random.NextDouble() - 0.5) * 100.0, (Random.NextDouble() - 0.5) * 100.0, (Random.NextDouble() - 0.5) * 100.0), new Vector3d(scale));
             var p = e.Get<PhysicComponent>();
             p.Mass *= scale;
             var I = 2 * p.Mass * Math.Pow(scale, 2) / 5;

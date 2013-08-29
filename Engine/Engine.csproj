@@ -52,6 +52,7 @@
     <Compile Include="Graphics\Mesh\IVertex.cs" />
     <Compile Include="Graphics\Mesh\IVertices.cs" />
     <Compile Include="Graphics\Mesh\Mesh.cs" />
+    <Compile Include="Graphics\Mesh\VertexP3.cs" />
     <Compile Include="Graphics\Mesh\VertexP3C4.cs" />
     <Compile Include="Graphics\Mesh\VertexP3N3.cs" />
     <Compile Include="Graphics\Mesh\VertexP3N3T2.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Physics\AABB3d.cs" />
     <Compile Include="Physics\Collision.cs" />
     <Compile Include="Physics\ICollidable.cs" />
+    <Compile Include="Physics\ICollider.cs" />
     <Compile Include="Physics\Plane3d.cs" />
     <Compile Include="Physics\Ray3d.cs" />
     <Compile Include="Physics\Sphere3d.cs" />

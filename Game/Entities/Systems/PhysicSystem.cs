@@ -50,7 +50,8 @@ namespace MartinZottmann.Game.Entities.Systems
 #if DEBUG
             foreach (var physic_node in physic_nodes)
             {
-                physic_node.DebugModel.Program.UniformLocations["in_ModelViewProjection"].Set(physic_node.Base.Model * Camera.ViewMatrix * Camera.ProjectionMatrix);
+                physic_node.DebugModel.Program.UniformLocations["in_Color"].Set(physic_node.Base.Mark);
+                physic_node.DebugModel.Program.UniformLocations["in_ModelViewProjection"].Set(Matrix4d.CreateTranslation(physic_node.Base.WorldPosition) * Camera.ViewMatrix * Camera.ProjectionMatrix);
                 physic_node.DebugModel.Draw();
             }
 #endif
@@ -74,40 +75,36 @@ namespace MartinZottmann.Game.Entities.Systems
             var x1 = (float)max.X;
             var y1 = (float)max.Y;
             var z1 = (float)max.Z;
-            var r = 1.0f;
-            var g = 0.0f;
-            var b = 1.0f;
-            var a = 1.0f;
-            var verticies = new VertexP3C4[] {
-                new VertexP3C4(x0, y0, z0, r, g, b, a),
-                new VertexP3C4(x0, y1, z0, r, g, b, a),
-                new VertexP3C4(x0, y0, z1, r, g, b, a),
-                new VertexP3C4(x0, y1, z1, r, g, b, a),
-                new VertexP3C4(x1, y0, z0, r, g, b, a),
-                new VertexP3C4(x1, y1, z0, r, g, b, a),
-                new VertexP3C4(x1, y0, z1, r, g, b, a),
-                new VertexP3C4(x1, y1, z1, r, g, b, a),
-                new VertexP3C4(x0, y0, z0, r, g, b, a),
-                new VertexP3C4(x1, y0, z0, r, g, b, a),
-                new VertexP3C4(x0, y1, z0, r, g, b, a),
-                new VertexP3C4(x1, y1, z0, r, g, b, a),
-                new VertexP3C4(x0, y0, z1, r, g, b, a),
-                new VertexP3C4(x1, y0, z1, r, g, b, a),
-                new VertexP3C4(x0, y1, z1, r, g, b, a),
-                new VertexP3C4(x1, y1, z1, r, g, b, a),
-                new VertexP3C4(x0, y0, z0, r, g, b, a),
-                new VertexP3C4(x0, y0, z1, r, g, b, a),
-                new VertexP3C4(x1, y0, z0, r, g, b, a),
-                new VertexP3C4(x1, y0, z1, r, g, b, a),
-                new VertexP3C4(x0, y1, z0, r, g, b, a),
-                new VertexP3C4(x0, y1, z1, r, g, b, a),
-                new VertexP3C4(x1, y1, z0, r, g, b, a),
-                new VertexP3C4(x1, y1, z1, r, g, b, a)
+            var verticies = new VertexP3[] {
+                new VertexP3(x0, y0, z0),
+                new VertexP3(x0, y1, z0),
+                new VertexP3(x0, y0, z1),
+                new VertexP3(x0, y1, z1),
+                new VertexP3(x1, y0, z0),
+                new VertexP3(x1, y1, z0),
+                new VertexP3(x1, y0, z1),
+                new VertexP3(x1, y1, z1),
+                new VertexP3(x0, y0, z0),
+                new VertexP3(x1, y0, z0),
+                new VertexP3(x0, y1, z0),
+                new VertexP3(x1, y1, z0),
+                new VertexP3(x0, y0, z1),
+                new VertexP3(x1, y0, z1),
+                new VertexP3(x0, y1, z1),
+                new VertexP3(x1, y1, z1),
+                new VertexP3(x0, y0, z0),
+                new VertexP3(x0, y0, z1),
+                new VertexP3(x1, y0, z0),
+                new VertexP3(x1, y0, z1),
+                new VertexP3(x0, y1, z0),
+                new VertexP3(x0, y1, z1),
+                new VertexP3(x1, y1, z0),
+                new VertexP3(x1, y1, z1)
             };
             physic_node.DebugModel = new Model();
-            physic_node.DebugModel.Mesh(new Mesh<VertexP3C4, uint>(verticies));
+            physic_node.DebugModel.Mesh(new Mesh<VertexP3, uint>(verticies));
             physic_node.DebugModel.Mode = BeginMode.Lines;
-            physic_node.DebugModel.Program = ResourceManager.Programs["normal"];
+            physic_node.DebugModel.Program = ResourceManager.Programs["primitive_colored"];
         }
 #endif
     }

@@ -2,21 +2,18 @@
 
 namespace MartinZottmann.Engine.Graphics.Mesh
 {
-    public struct VertexP3C4 : IVertex
+    public struct VertexP3 : IVertex
     {
         public Vector3 Position;
 
         public Vector3 PositionXyz { get { return Position; } }
 
-        public Color4 Color;
-
-        public VertexP3C4(Vector3 position, Color4 color)
+        public VertexP3(Vector3 position)
         {
             Position = position;
-            Color = color;
         }
 
-        public VertexP3C4(float x, float y, float z, float r, float g, float b, float a) : this(new Vector3(x, y, z), new Color4(r, g, b, a)) { }
+        public VertexP3(float x, float y, float z) : this(new Vector3(x, y, z)) { }
 
         public void Transform(Matrix4 matrix)
         {

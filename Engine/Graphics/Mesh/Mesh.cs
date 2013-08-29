@@ -1,5 +1,6 @@
 ﻿using MartinZottmann.Engine.Physics;
 using OpenTK;
+using System;
 
 namespace MartinZottmann.Engine.Graphics.Mesh
 {
@@ -26,13 +27,13 @@ namespace MartinZottmann.Engine.Graphics.Mesh
                 var bb = new AABB3d();
                 for (var i = 0; i < vertices.Length; i++)
                 {
-                    bb.Min.X = System.Math.Min(bb.Min.X, vertices[i].PositionXyz.X);
-                    bb.Min.Y = System.Math.Min(bb.Min.Y, vertices[i].PositionXyz.Y);
-                    bb.Min.Z = System.Math.Min(bb.Min.Z, vertices[i].PositionXyz.Z);
+                    bb.Min.X = Math.Min(bb.Min.X, vertices[i].PositionXyz.X);
+                    bb.Min.Y = Math.Min(bb.Min.Y, vertices[i].PositionXyz.Y);
+                    bb.Min.Z = Math.Min(bb.Min.Z, vertices[i].PositionXyz.Z);
 
-                    bb.Max.X = System.Math.Max(bb.Max.X, vertices[i].PositionXyz.X);
-                    bb.Max.Y = System.Math.Max(bb.Max.Y, vertices[i].PositionXyz.Y);
-                    bb.Max.Z = System.Math.Max(bb.Max.Z, vertices[i].PositionXyz.Z);
+                    bb.Max.X = Math.Max(bb.Max.X, vertices[i].PositionXyz.X);
+                    bb.Max.Y = Math.Max(bb.Max.Y, vertices[i].PositionXyz.Y);
+                    bb.Max.Z = Math.Max(bb.Max.Z, vertices[i].PositionXyz.Z);
                 }
                 return bb;
             }
@@ -44,7 +45,7 @@ namespace MartinZottmann.Engine.Graphics.Mesh
             {
                 float r = 0;
                 for (var i = 0; i < vertices.Length; i++)
-                    r = System.Math.Max(r, vertices[i].PositionXyz.Length);
+                    r = Math.Max(r, vertices[i].PositionXyz.Length);
 
                 return new Sphere3d(Vector3d.Zero, r);
             }

@@ -4,7 +4,7 @@ using System;
 namespace MartinZottmann.Engine.Physics
 {
     [Serializable]
-    public struct Sphere3d : ICollidable, ICollidable<Ray3d>, ICollidable<Sphere3d>
+    public struct Sphere3d : ICollidable, ICollidable<Ray3d>, ICollidable<Sphere3d>, ICollider<Sphere3d>
     {
         public Vector3d Origin;
 
@@ -16,11 +16,21 @@ namespace MartinZottmann.Engine.Physics
             Radius = radius;
         }
 
+        public Sphere3d At(Vector3d position_world)
+        {
+            return At(ref position_world);
+        }
+
         public Sphere3d At(ref Vector3d position_world)
         {
             var copy = this;
             Vector3d.Add(ref copy.Origin, ref position_world, out copy.Origin);
             return copy;
+        }
+
+        public Sphere3d At(Matrix4d model_world)
+        {
+            return At(ref model_world);
         }
 
         public Sphere3d At(ref Matrix4d model_world)
@@ -32,6 +42,9 @@ namespace MartinZottmann.Engine.Physics
 
         public Collision Collides(object @object)
         {
+            if (@object is Ray3d)
+                return Collides((Ray3d)@object);
+
             throw new NotImplementedException();
         }
 

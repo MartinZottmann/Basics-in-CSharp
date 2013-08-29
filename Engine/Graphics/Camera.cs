@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using MartinZottmann.Engine.Physics;
+using OpenTK;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -115,6 +116,21 @@ namespace MartinZottmann.Engine.Graphics
                 else
                     Cursor.Position = Window.PointToScreen(window_center);
             }
+        }
+
+        public Ray3d GetMouseRay()
+        {
+            var start = new Vector4d((Window.Mouse.X / (double)Window.Width - 0.5) * 2.0, ((Window.Height - Window.Mouse.Y) / (double)Window.Height - 0.5) * 2.0, 1.0, 1.0);
+            var end = new Vector4d((Window.Mouse.X / (double)Window.Width - 0.5) * 2.0, ((Window.Height - Window.Mouse.Y) / (double)Window.Height - 0.5) * 2.0, -1.0, 1.0);
+
+            var IPV = ProjectionMatrix.Inverted() * ViewMatrix.Inverted();
+            start = Vector4d.Transform(start, IPV);
+            start /= start.W;
+            end = Vector4d.Transform(end, IPV);
+            end /= end.W;
+            end -= start;
+
+            return new Ray3d(new Vector3d(start.X, start.Y, start.Z), new Vector3d(end.X, end.Y, end.Z).Normalized());
         }
     }
 }

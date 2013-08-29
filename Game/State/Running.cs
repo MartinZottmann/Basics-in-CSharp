@@ -86,7 +86,7 @@ namespace MartinZottmann.Game.State
             entity_manager.Add(new ParticleSystem(world_camera, resource_manager));
             entity_manager.Add(new PhysicSystem(world_camera, resource_manager));
             entity_manager.Add(new CollisionSystem());
-            entity_manager.Add(new GUISystem(screen_camera, resource_manager));
+            entity_manager.Add(new GUISystem(Window, screen_camera, resource_manager));
 
             world_render_context.Window = Window;
 

@@ -2,10 +2,13 @@
 using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
+using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.GUI;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
+using OpenTK.Input;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -23,10 +26,12 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected List<IGUIElement> gui_elements = new List<IGUIElement>();
 
-        public GUISystem(Camera camera, ResourceManager resource_manager)
+        public GUISystem(GameWindow window, Camera camera, ResourceManager resource_manager)
         {
             Camera = camera;
             ResourceManager = resource_manager;
+
+            window.Mouse.ButtonUp += OnButtonUp;
 
             FontStructure font_map;
             var font_texture = new Texture(new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.White, Color.Black, Color.Transparent, false, out font_map);
@@ -74,6 +79,39 @@ namespace MartinZottmann.Game.Entities.Systems
         public void Remove(IGUIElement gui_element)
         {
             gui_elements.Remove(gui_element);
+        }
+
+        protected void OnButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            foreach (var hit in Intersections())
+            {
+                Console.WriteLine("{0}", (IGUIElement)hit.Object1);
+            }
+        }
+
+        protected SortedSet<Collision> Intersections()
+        {
+            var ray = Camera.GetMouseRay();
+            var hits = new SortedSet<Collision>();
+
+            foreach (var gui_element in gui_elements)
+            {
+                var model_matrix = Matrix4d.Scale(1.0 / Camera.Window.ClientRectangle.Width, 1.0 / Camera.Window.ClientRectangle.Height, 1.0)
+                    * gui_element.ModelMatrix
+                    * Matrix4d.CreateTranslation(-0.5, -0.5, 0.0)
+                    * Matrix4d.Scale(2.0, 2.0, 1.0)
+                    * RenderContext.InvertedProjection;
+
+                var hit = gui_element.Model.Mesh().BoundingBox.At(ref model_matrix).Collides(ref ray);
+                if (hit == null)
+                    continue;
+
+                hit.Object0 = ray;
+                hit.Object1 = gui_element;
+                hits.Add(hit);
+            }
+
+            return hits;
         }
     }
 }

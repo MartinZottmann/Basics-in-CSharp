@@ -9,6 +9,6 @@
     {
         Collision Collides(T @object);
 
-        //Collision Collides(ref T @object);
+        Collision Collides(ref T @object);
     }
 }
