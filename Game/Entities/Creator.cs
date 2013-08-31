@@ -167,5 +167,14 @@ namespace MartinZottmann.Game.Entities
 
             return e;
         }
+
+        public Entity CreateGameState()
+        {
+            var e = new Entity("GameState")
+                .Add(new GameStateComponent());
+            EntityManager.Add(e);
+
+            return e;
+        }
     }
 }

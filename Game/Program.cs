@@ -12,7 +12,7 @@ namespace MartinZottmann.Game
 #if DEBUG
             Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
 #endif
-            using (Window game = new Window(new GraphicsMode(new ColorFormat(32), 24, 0, 2, new ColorFormat(32))))
+            using (Window game = new Window(new GraphicsMode(new ColorFormat(32), 24, 8, 4, new ColorFormat(32))))
                 game.Run();
         }
     }

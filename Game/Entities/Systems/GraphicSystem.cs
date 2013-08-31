@@ -4,6 +4,7 @@ using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.Mesh;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Entities.Nodes;
 using MartinZottmann.Game.Graphics;
 using OpenTK;
@@ -23,6 +24,8 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected NodeList<GraphicNode> graphic_nodes;
 
+        protected NodeList<GameStateNode> game_state_nodes;
+
         protected FrameBuffer frame_buffer;
 
         public GraphicSystem(Camera camera, ResourceManager resource_manager)
@@ -31,6 +34,7 @@ namespace MartinZottmann.Game.Entities.Systems
             ResourceManager = resource_manager;
 
             // @todo Remove
+            RenderContext.Window = Camera.Window;
             RenderContext.Projection = Camera.ProjectionMatrix;
             RenderContext.View = Camera.ViewMatrix;
 
@@ -64,6 +68,7 @@ namespace MartinZottmann.Game.Entities.Systems
         {
             graphic_nodes = entity_manager.Get<GraphicNode>();
             graphic_nodes.NodeAdded += OnNodeAdded;
+            game_state_nodes = entity_manager.Get<GameStateNode>();
         }
 
         public void Update(double delta_time)
@@ -84,8 +89,7 @@ namespace MartinZottmann.Game.Entities.Systems
                 //Projection = Matrix4d.Perspective(MathHelper.PiOver2, Camera.Aspect, 0.1, 30),
                 View = Matrix4d.LookAt(light, light_target, Vector3d.UnitY),
                 Model = Matrix4d.Identity,
-                Program = ResourceManager.Programs["depth"],
-                Debug = RenderContext.Debug
+                Program = ResourceManager.Programs["depth"]
             };
             var depth_bias = Matrix4d.Scale(0.5, 0.5, 0.5) * Matrix4d.CreateTranslation(0.5, 0.5, 0.5); // Map [-1, 1] to [0, 1]
             var depth_bias_MVP = RenderContext.InvertedView * depth_render_context.ProjectionViewModel * depth_bias;
@@ -106,24 +110,16 @@ namespace MartinZottmann.Game.Entities.Systems
             //GL.Disable(EnableCap.PolygonOffsetFill);
             #endregion
 
-            #region Accumulation
+            #region Render
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Viewport(0, 0, RenderContext.Window.Width, RenderContext.Window.Height);
-
-            RenderContext.alpha_cutoff = 0.35f;
             Draw(delta_time, RenderContext);
-            GL.Accum(AccumOp.Load, 0.5f);
-
-            RenderContext.alpha_cutoff = 0.65f;
-            Draw(delta_time, RenderContext);
-            GL.Accum(AccumOp.Accum, 0.5f);
-            GL.Accum(AccumOp.Return, 1f);
             #endregion
 
             //screen.Render(delta_time, screen_render_context);
 
             #region Debug
-            if (RenderContext.Debug)
+            if (game_state_nodes.First.GameState.Debug)
             {
                 GL.Viewport(0, 0, RenderContext.Window.Width, RenderContext.Window.Height);
                 var debug_render_context = new MartinZottmann.Game.Graphics.RenderContext()
@@ -153,7 +149,10 @@ namespace MartinZottmann.Game.Entities.Systems
         {
             LoadModel(e.Node);
 #if DEBUG
-            InitDebugModel(e.Node);
+            if (e.Node.Entity.Has<BaseComponent>())
+                InitModelDebugOrientation(e.Node);
+            if (e.Node.Entity.Has<PhysicComponent>())
+                InitModelDebugPhysic(e.Node);
 #endif
         }
 
@@ -177,14 +176,14 @@ namespace MartinZottmann.Game.Entities.Systems
         }
 
 #if DEBUG
-        protected void InitDebugModel(GraphicNode graphic_node)
+        protected void InitModelDebugOrientation(GraphicNode graphic_node)
         {
             var b = graphic_node.Base;
             var forward = new Color4(1.0f, 0.0f, 0.0f, 0.5f);
             var up = new Color4(0.0f, 1.0f, 0.0f, 0.5f);
             var right = new Color4(0.0f, 0.0f, 1.0f, 0.5f);
-            graphic_node.Graphic.DebugModel = new Model();
-            graphic_node.Graphic.DebugModel.Mesh(
+            graphic_node.ModelDebugOrientation = new Model();
+            graphic_node.ModelDebugOrientation.Mesh(
                 new Mesh<VertexP3C4, uint>()
                 {
                     Vertices = new VertexP3C4[] {
@@ -200,8 +199,51 @@ namespace MartinZottmann.Game.Entities.Systems
                         }
                 }
             );
-            graphic_node.Graphic.DebugModel.Mode = BeginMode.Lines;
-            graphic_node.Graphic.DebugModel.Program = ResourceManager.Programs["normal"];
+            graphic_node.ModelDebugOrientation.Mode = BeginMode.Lines;
+            graphic_node.ModelDebugOrientation.Program = ResourceManager.Programs["normal"];
+        }
+
+        protected void InitModelDebugPhysic(GraphicNode graphic_node)
+        {
+            var physic = graphic_node.Entity.Get<PhysicComponent>();
+            var min = physic.BoundingBox.Min;
+            var max = physic.BoundingBox.Max;
+            var x0 = (float)min.X;
+            var y0 = (float)min.Y;
+            var z0 = (float)min.Z;
+            var x1 = (float)max.X;
+            var y1 = (float)max.Y;
+            var z1 = (float)max.Z;
+            var verticies = new VertexP3[] {
+                new VertexP3(x0, y0, z0),
+                new VertexP3(x0, y1, z0),
+                new VertexP3(x0, y0, z1),
+                new VertexP3(x0, y1, z1),
+                new VertexP3(x1, y0, z0),
+                new VertexP3(x1, y1, z0),
+                new VertexP3(x1, y0, z1),
+                new VertexP3(x1, y1, z1),
+                new VertexP3(x0, y0, z0),
+                new VertexP3(x1, y0, z0),
+                new VertexP3(x0, y1, z0),
+                new VertexP3(x1, y1, z0),
+                new VertexP3(x0, y0, z1),
+                new VertexP3(x1, y0, z1),
+                new VertexP3(x0, y1, z1),
+                new VertexP3(x1, y1, z1),
+                new VertexP3(x0, y0, z0),
+                new VertexP3(x0, y0, z1),
+                new VertexP3(x1, y0, z0),
+                new VertexP3(x1, y0, z1),
+                new VertexP3(x0, y1, z0),
+                new VertexP3(x0, y1, z1),
+                new VertexP3(x1, y1, z0),
+                new VertexP3(x1, y1, z1)
+            };
+            graphic_node.ModelDebugPhysic = new Model();
+            graphic_node.ModelDebugPhysic.Mesh(new Mesh<VertexP3, uint>(verticies));
+            graphic_node.ModelDebugPhysic.Mode = BeginMode.Lines;
+            graphic_node.ModelDebugPhysic.Program = ResourceManager.Programs["primitive_colored"];
         }
 #endif
 
@@ -260,11 +302,21 @@ namespace MartinZottmann.Game.Entities.Systems
                     }
 
 #if DEBUG
-                if (render_context.Debug && graphic_node.Graphic.DebugModel != null)
+                if (game_state_nodes.First.GameState.Debug)
                 {
-                    GL.LineWidth(5);
-                    graphic_node.Graphic.DebugModel.Draw();
-                    GL.LineWidth(1);
+                    if (null != graphic_node.ModelDebugOrientation)
+                    {
+                        GL.LineWidth(5);
+                        graphic_node.ModelDebugOrientation.Program.UniformLocations["in_ModelViewProjection"].Set(Matrix4d.CreateTranslation(graphic_node.Base.WorldPosition) * Camera.ViewMatrix * Camera.ProjectionMatrix);
+                        graphic_node.ModelDebugOrientation.Draw();
+                        GL.LineWidth(1);
+                    }
+                    if (null != graphic_node.ModelDebugPhysic)
+                    {
+                        graphic_node.ModelDebugPhysic.Program.UniformLocations["in_Color"].Set(graphic_node.Base.Mark);
+                        graphic_node.ModelDebugPhysic.Program.UniformLocations["in_ModelViewProjection"].Set(Matrix4d.CreateTranslation(graphic_node.Base.WorldPosition) * Camera.ViewMatrix * Camera.ProjectionMatrix);
+                        graphic_node.ModelDebugPhysic.Draw();
+                    }
                 }
 #endif
             }

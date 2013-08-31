@@ -29,12 +29,14 @@ namespace MartinZottmann.Engine.Entities
                 node_list.MaybeAdd(entity);
         }
 
-        public void Add<T>(T system) where T : ISystem
+        public EntityManager Add<T>(T system) where T : ISystem
         {
             var t = typeof(T);
 
             systems.Add(t, system);
             system.Bind(this);
+
+            return this;
         }
 
         public void Remove(Entity entity)

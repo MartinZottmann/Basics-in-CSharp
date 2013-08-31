@@ -15,6 +15,10 @@ namespace MartinZottmann.Engine.Entities
 
         public event EventHandler<NodeEventArgs<T>> NodeRemoved;
 
+        public T First { get { return nodes[0]; } }
+
+        public T Last { get { return nodes[nodes.Count - 1]; } }
+
         public NodeList(Type node_type)
         {
             NodeType = node_type;

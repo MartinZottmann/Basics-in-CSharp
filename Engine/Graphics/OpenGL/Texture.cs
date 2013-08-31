@@ -205,7 +205,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         public void Bind()
         {
             BindId = bind_stack;
-            GL.Enable(gl_texture_capability);
             GL.ActiveTexture((TextureUnit)((uint)TextureUnit.Texture0 + bind_stack));
             GL.BindTexture(Target, Id);
             bind_stack++;
@@ -214,7 +213,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         public void UnBind()
         {
             GL.BindTexture(Target, 0);
-            GL.Disable(gl_texture_capability);
             bind_stack--;
             BindId = 0;
         }

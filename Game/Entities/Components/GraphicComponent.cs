@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace MartinZottmann.Game.Entities.Components
 {
     [Serializable]
-    public class GraphicComponent : IComponent, IDisposable
+    public class GraphicComponent : IComponent
     {
         public string ModelName;
 
@@ -16,18 +16,5 @@ namespace MartinZottmann.Game.Entities.Components
 
         [XmlIgnore]
         public Model Model;
-
-#if DEBUG
-        [XmlIgnore]
-        public Model DebugModel;
-#endif
-
-        public void Dispose()
-        {
-            Model.Dispose();
-#if DEBUG
-            DebugModel.Dispose();
-#endif
-        }
     }
 }

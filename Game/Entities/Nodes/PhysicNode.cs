@@ -1,5 +1,4 @@
 ﻿using MartinZottmann.Engine.Entities;
-using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Game.Entities.Components;
 using OpenTK;
 using System;
@@ -15,10 +14,6 @@ namespace MartinZottmann.Game.Entities.Nodes
         public Matrix4d InertiaWorld { get { return Base.OrientationMatrix * Physic.Inertia * Base.InverseOrientationMatrix; } }
 
         public Matrix4d InverseInertiaWorld { get { return Base.OrientationMatrix * Physic.InverseInertia * Base.InverseOrientationMatrix; } }
-
-#if DEBUG
-        public Model DebugModel;
-#endif
 
         //public void AddForceRelative(Vector3d point, Vector3d force)
         //{

@@ -14,7 +14,7 @@ namespace MartinZottmann.Game
     {
         public Game game;
 
-        public Window(GraphicsMode mode) : base(800, 600, mode, "Codename Void") { }
+        public Window(GraphicsMode mode) : base(800, 600, mode, "Codename Void", GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.Default) { }
 
         public Thread game_thread;
 
