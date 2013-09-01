@@ -84,14 +84,14 @@ namespace MartinZottmann.Game.Entities.Systems
                 {
                     while (running)
                     {
-                        Debug.WriteLine("Chunk loader: Loading");
+                        //Debug.WriteLine("Chunk loader: Loading");
                         foreach (var input_node in input_nodes)
                         {
                             var input_position = VectorToPoint(input_node.Base.Position);
 
                             LoadAround(input_position);
                         }
-                        Debug.WriteLine("Chunk loader: Loaded");
+                        //Debug.WriteLine("Chunk loader: Loaded");
                         Thread.Sleep(1000);
                     }
                 }

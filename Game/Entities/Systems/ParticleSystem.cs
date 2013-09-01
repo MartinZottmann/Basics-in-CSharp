@@ -79,6 +79,8 @@ namespace MartinZottmann.Game.Entities.Systems
 
         public void Render(double delta_time)
         {
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+            GL.DepthMask(false);
             foreach (var particle_emitter_node in particle_emitter_nodes)
             {
                 var p = particles[particle_emitter_node.Entity.Name];
@@ -87,10 +89,10 @@ namespace MartinZottmann.Game.Entities.Systems
                 p.Model.Program.UniformLocations["in_CameraUp"].Set(Camera.Up);
                 p.Model.Program.UniformLocations["in_ParticleSize"].Set(0.25f);
                 p.Model.Program.UniformLocations["in_Texture"].Set(0);
-                GL.DepthMask(false);
                 p.Model.Draw();
-                GL.DepthMask(true);
             }
+            GL.DepthMask(true);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
         }
 
         protected void Init(object sender, NodeEventArgs<ParticleEmitterNode> e)

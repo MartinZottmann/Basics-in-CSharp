@@ -2,15 +2,14 @@
 
 uniform sampler2D in_Texture;
 
-layout(location = 0) in vec4 Color;
-layout(location = 1) in vec2 texture_uv;
+layout(location = 0) in vec4 in_Color;
+layout(location = 1) in vec2 in_UV;
 
-layout(location = 0) out vec4 FragColor;
+layout(location = 0) out vec4 out_Color;
 
 void main(void) {
-    FragColor = Color * texture(in_Texture, texture_uv);
+    out_Color = in_Color * texture(in_Texture, in_UV);
 
-    if (FragColor.r == 0 && FragColor.g == 0 && FragColor.b == 0) {
+    if (out_Color.a == 0)
         discard;
-    }
 }

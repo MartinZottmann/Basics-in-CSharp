@@ -53,6 +53,10 @@ namespace MartinZottmann.Game
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.CullFace);
             GL.Enable(EnableCap.DepthTest);
+            GL.Hint(HintTarget.FragmentShaderDerivativeHint, HintMode.Nicest);
+            GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
+            GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
+            GL.Hint(HintTarget.TextureCompressionHint, HintMode.Nicest);
 
             Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
