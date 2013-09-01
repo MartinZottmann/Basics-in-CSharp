@@ -163,6 +163,11 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
                 switch (bmp.PixelFormat)
                 {
+                    case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+                        bmp_if = OpenTK.Graphics.OpenGL.PixelInternalFormat.Rgb8;
+                        bmp_pf = OpenTK.Graphics.OpenGL.PixelFormat.Bgr;
+                        bmp_pt = OpenTK.Graphics.OpenGL.PixelType.UnsignedByte;
+                        break;
                     case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
                         bmp_if = OpenTK.Graphics.OpenGL.PixelInternalFormat.Rgba;
                         bmp_pf = OpenTK.Graphics.OpenGL.PixelFormat.Bgra;

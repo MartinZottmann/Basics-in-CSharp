@@ -60,6 +60,9 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
                     case "f":
                         obj_file.f.Add(ParseFace(content));
                         break;
+                    case "g":
+                        // @todo
+                        break;
                     default:
                         throw new NotImplementedException();
                 }
@@ -81,25 +84,25 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
         {
             var tokens0 = content.Split(' ');
             var result = new FaceInfo();
-            result.v = new uint[tokens0.Length];
-            result.vt = new uint[tokens0.Length];
-            result.vn = new uint[tokens0.Length];
+            result.v = new int[tokens0.Length];
+            result.vt = new int[tokens0.Length];
+            result.vn = new int[tokens0.Length];
             for (var i = 0; i < tokens0.Length; i++)
             {
                 var tokens1 = tokens0[i].Split('/');
                 switch (tokens1.Length)
                 {
                     case 1:
-                        result.v[i] = UInt32.Parse(tokens1[0]);
+                        result.v[i] = Int32.Parse(tokens1[0]);
                         break;
                     case 2:
-                        result.v[i] = UInt32.Parse(tokens1[0]);
-                        result.vt[i] = UInt32.Parse(tokens1[1]);
+                        result.v[i] = Int32.Parse(tokens1[0]);
+                        result.vt[i] = Int32.Parse(tokens1[1]);
                         break;
                     case 3:
-                        result.v[i] = UInt32.Parse(tokens1[0]);
-                        result.vt[i] = tokens1[1] == "" ? 0 : UInt32.Parse(tokens1[1]);
-                        result.vn[i] = UInt32.Parse(tokens1[2]);
+                        result.v[i] = Int32.Parse(tokens1[0]);
+                        result.vt[i] = tokens1[1] == "" ? 0 : Int32.Parse(tokens1[1]);
+                        result.vn[i] = Int32.Parse(tokens1[2]);
                         break;
                     default:
                         throw new NotImplementedException();

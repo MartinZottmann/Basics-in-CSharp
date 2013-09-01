@@ -26,6 +26,12 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
                 if (null == line)
                     break;
 
+                if (0 == line.Length)
+                    continue;
+
+                if ('#' == line[0])
+                    continue;
+
                 string[] tokens = line.Split(new char[] { ' ' }, 2);
                 if (tokens.Length < 2)
                     continue;
@@ -35,8 +41,6 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
 
                 switch (token)
                 {
-                    case "#":
-                        break;
                     case "newmtl":
                         mtl_info = new MtlInfo(content);
                         mtl_file.Materials.Add(mtl_info.newmtl, mtl_info);
@@ -77,6 +81,12 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
                         break;
                     case "map_d":
                         mtl_info.map_d = texture_map_loader.Load(directory, content);
+                        break;
+                    case "Tf":
+                        mtl_info.Tf = ParseFloats(content, ' ');
+                        break;
+                    case "Ke":
+                        mtl_info.Ke = ParseFloats(content, ' ');
                         break;
                     default:
                         throw new NotImplementedException();

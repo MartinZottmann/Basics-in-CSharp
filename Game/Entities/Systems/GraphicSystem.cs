@@ -85,7 +85,7 @@ namespace MartinZottmann.Game.Entities.Systems
             var depth_render_context = new MartinZottmann.Game.Graphics.RenderContext()
             {
                 Window = RenderContext.Window,
-                Projection = Matrix4d.CreateOrthographicOffCenter(-10, 10, -10, 10, 0, 30),
+                Projection = Matrix4d.CreateOrthographicOffCenter(-10, 10, -10, 10, 0, 100),
                 //Projection = Matrix4d.Perspective(MathHelper.PiOver2, Camera.Aspect, 0.1, 30),
                 View = Matrix4d.LookAt(light, light_target, Vector3d.UnitY),
                 Model = Matrix4d.Identity,
@@ -190,16 +190,16 @@ namespace MartinZottmann.Game.Entities.Systems
                 new Mesh<VertexP3C4, uint>()
                 {
                     Vertices = new VertexP3C4[] {
-                            new VertexP3C4(Vector3.Zero, forward),
-                            new VertexP3C4((Vector3)b.Forward, forward),
-                            new VertexP3C4(Vector3.Zero, up),
-                            new VertexP3C4((Vector3)b.Up, up),
-                            new VertexP3C4(Vector3.Zero, right),
-                            new VertexP3C4((Vector3)b.Right, right),
-                        },
+                        new VertexP3C4(Vector3.Zero, forward),
+                        new VertexP3C4((Vector3)b.Forward, forward),
+                        new VertexP3C4(Vector3.Zero, up),
+                        new VertexP3C4((Vector3)b.Up, up),
+                        new VertexP3C4(Vector3.Zero, right),
+                        new VertexP3C4((Vector3)b.Right, right),
+                    },
                     Indices = new uint[] {
-                            0, 1, 2, 3, 4, 5
-                        }
+                        0, 1, 2, 3, 4, 5
+                    }
                 }
             );
             graphic_node.ModelDebugOrientation.Mode = BeginMode.Lines;

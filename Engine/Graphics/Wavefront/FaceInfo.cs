@@ -2,10 +2,10 @@
 {
     public struct FaceInfo
     {
-        public uint[] v;
+        public int[] v;
 
-        public uint[] vt;
+        public int[] vt;
 
-        public uint[] vn;
+        public int[] vn;
     }
 }

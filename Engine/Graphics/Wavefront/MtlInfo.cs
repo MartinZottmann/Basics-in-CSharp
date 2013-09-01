@@ -45,6 +45,13 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
         /// </summary>
         public TextureMapFile? map_d;
 
+        /// <summary>
+        /// Transmission filter
+        /// </summary>
+        public float[] Tf;
+
+        public float[] Ke;
+
         public MtlInfo(string name)
         {
             newmtl = name;
@@ -60,6 +67,8 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
             map_Ka = null;
             map_Bump = null;
             map_d = null;
+            Tf = null;
+            Ke = null;
         }
 
         public void Dispose()
