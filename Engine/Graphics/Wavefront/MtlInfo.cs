@@ -64,15 +64,15 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
 
         public void Dispose()
         {
-            if (map_Bump != null)
+            if (null != map_Bump)
                 map_Bump.Value.Dispose();
-            if (map_d != null)
+            if (null != map_d)
                 map_d.Value.Dispose();
-            if (map_Ka != null)
+            if (null != map_Ka)
                 map_Ka.Value.Dispose();
-            if (map_Kd != null)
+            if (null != map_Kd)
                 map_Kd.Value.Dispose();
-            if (map_Ks != null)
+            if (null != map_Ks)
                 map_Ks.Value.Dispose();
         }
     }

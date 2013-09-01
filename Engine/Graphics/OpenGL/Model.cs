@@ -39,7 +39,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public virtual void Draw()
         {
-            if (Program != null)
+            if (null != Program)
                 Program.CheckUniforms();
 
             using (new Bind(Texture))
@@ -53,7 +53,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public virtual void Draw(Program program)
         {
-            if (program != null)
+            if (null != program)
                 program.CheckUniforms();
 
             using (new Bind(program))

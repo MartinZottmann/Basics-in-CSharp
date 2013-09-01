@@ -95,7 +95,7 @@ namespace MartinZottmann.Game.State
             {
                 Console.WriteLine(e);
             }
-            if (entities == null)
+            if (null == entities)
             {
                 var creator = new Creator(entity_manager, resource_manager);
                 creator.CreateGameState();

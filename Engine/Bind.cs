@@ -9,13 +9,13 @@ namespace MartinZottmann.Engine
         public Bind(IBindable target)
         {
             context = target;
-            if (context != null)
+            if (null != context)
                 context.Bind();
         }
 
         public void Dispose()
         {
-            if (context != null)
+            if (null != context)
                 context.UnBind();
         }
     }

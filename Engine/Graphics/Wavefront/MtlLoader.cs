@@ -23,7 +23,7 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
             while (true)
             {
                 var line = stream_reader.ReadLine();
-                if (line == null)
+                if (null == line)
                     break;
 
                 string[] tokens = line.Split(new char[] { ' ' }, 2);

@@ -42,11 +42,11 @@ namespace MartinZottmann.Engine.Entities
                 return;
 
             var node = nodes.Find(s => s.Entity == entity);
-            if (node == null)
+            if (null == node)
                 throw new Exception();
 
             nodes.Remove(node);
-            if (NodeRemoved != null)
+            if (null != NodeRemoved)
                 NodeRemoved(this, new NodeEventArgs<T>(this, node));
         }
 
@@ -67,18 +67,18 @@ namespace MartinZottmann.Engine.Entities
                     }
 
             nodes.Add(node);
-            if (NodeAdded != null)
+            if (null != NodeAdded)
                 NodeAdded(this, new NodeEventArgs<T>(this, node));
         }
 
         protected internal override void MaybeRemove(Entity entity)
         {
             var node = nodes.Find(s => s.Entity == entity);
-            if (node == null)
+            if (null == node)
                 return;
 
             nodes.Remove(node);
-            if (NodeRemoved != null)
+            if (null != NodeRemoved)
                 NodeRemoved(this, new NodeEventArgs<T>(this, node));
 
             //foreach (var i in component_types)

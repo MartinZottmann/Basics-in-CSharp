@@ -12,13 +12,13 @@ namespace MartinZottmann.Engine.Graphics.Mesh
 
         public V[] Vertices { get { return vertices; } set { vertices = value; } }
 
-        public int VerticesLength { get { return vertices == null ? 0 : vertices.Length; } }
+        public int VerticesLength { get { return null == vertices ? 0 : vertices.Length; } }
 
         protected I[] indices;
 
         public I[] Indices { get { return indices; } set { indices = value; } }
 
-        public int IndicesLength { get { return indices == null ? 0 : indices.Length; } }
+        public int IndicesLength { get { return null == indices ? 0 : indices.Length; } }
 
         public AABB3d BoundingBox
         {
@@ -66,7 +66,7 @@ namespace MartinZottmann.Engine.Graphics.Mesh
 
         public void Translate(Matrix4 matrix)
         {
-            if (vertices == null)
+            if (null == vertices)
                 return;
 
             for (var i = 0; i < vertices.Length; i++)

@@ -82,7 +82,7 @@ namespace MartinZottmann.Game.Entities.Systems
             foreach (var physic_node in physic_nodes)
             {
                 var hit = physic_node.Physic.BoundingBox.At(physic_node.Base.WorldPosition).Collides(ref Ray);
-                if (hit == null)
+                if (null == hit)
                     continue;
 
                 hit.Object0 = Ray;

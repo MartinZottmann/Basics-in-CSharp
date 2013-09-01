@@ -9,7 +9,7 @@ namespace MartinZottmann.Engine.Resources
         public WavefrontObjFiles(ResourceManager resource_manager, ObjLoader obj_loader = null)
             : base(resource_manager)
         {
-            ObjLoader = obj_loader == null
+            ObjLoader = null == obj_loader
                 ? new ObjLoader()
                 : obj_loader;
         }

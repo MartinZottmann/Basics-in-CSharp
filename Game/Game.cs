@@ -12,7 +12,7 @@ namespace MartinZottmann.Game
             get { return state; }
             set
             {
-                if (state != null)
+                if (null != state)
                     state.Dispose();
 
                 state = value;

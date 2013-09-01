@@ -158,7 +158,10 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected void LoadModel(GraphicNode graphic_node)
         {
-            if (graphic_node.Graphic.Model != null)
+            if (null == graphic_node.Graphic.ModelName)
+                return;
+
+            if (null != graphic_node.Graphic.Model)
                 return;
 
             try
@@ -169,9 +172,9 @@ namespace MartinZottmann.Game.Entities.Systems
             {
                 graphic_node.Graphic.Model = ResourceManager.Models.Load(graphic_node.Graphic.ModelName);
             }
-            if (graphic_node.Graphic.ProgramName != null)
+            if (null != graphic_node.Graphic.ProgramName)
                 graphic_node.Graphic.Model.Program = ResourceManager.Programs[graphic_node.Graphic.ProgramName];
-            if (graphic_node.Graphic.TextureName != null)
+            if (null != graphic_node.Graphic.TextureName)
                 graphic_node.Graphic.Model.Texture = ResourceManager.Textures[graphic_node.Graphic.TextureName];
         }
 
@@ -251,56 +254,58 @@ namespace MartinZottmann.Game.Entities.Systems
         {
             foreach (var graphic_node in graphic_nodes)
             {
-                render_context.Model = graphic_node.Base.Model;
+                if (null != graphic_node.Graphic.Model)
+                {
+                    render_context.Model = graphic_node.Base.Model;
 
-                var program = render_context.Program == null
-                    ? graphic_node.Graphic.Model.Program
-                    : render_context.Program;
+                    var program = null == render_context.Program
+                        ? graphic_node.Graphic.Model.Program
+                        : render_context.Program;
 
-                foreach (var s in program.UniformLocations)
-                    switch (s.Key)
-                    {
-                        case "alpha_cutoff": s.Value.Set(render_context.alpha_cutoff); break;
-                        case "in_DepthBiasMVP": break;
-                        case "in_ShadowTexture":
-                            render_context.DepthTexture.Bind();
-                            s.Value.Set(render_context.DepthTexture.BindId);
-                            break;
-                        case "in_LightPosition": s.Value.Set(new Vector3d(10, 10, 10)); break; // @todo
-                        case "in_Model": s.Value.Set(render_context.Model); break;
-                        case "in_View": s.Value.Set(render_context.View); break;
-                        case "in_ModelView": s.Value.Set(render_context.ViewModel); break;
-                        case "in_ModelViewProjection": s.Value.Set(render_context.ProjectionViewModel); break;
-                        case "in_NormalView": s.Value.Set(render_context.Normal); break;
-                        case "in_Texture":
-                            graphic_node.Graphic.Model.Texture.Bind();
-                            s.Value.Set(graphic_node.Graphic.Model.Texture.BindId);
-                            break;
-                        default: throw new NotImplementedException(s.Key);
-                    }
+                    foreach (var s in program.UniformLocations)
+                        switch (s.Key)
+                        {
+                            case "alpha_cutoff": s.Value.Set(render_context.alpha_cutoff); break;
+                            case "in_DepthBiasMVP": break;
+                            case "in_ShadowTexture":
+                                render_context.DepthTexture.Bind();
+                                s.Value.Set(render_context.DepthTexture.BindId);
+                                break;
+                            case "in_LightPosition": s.Value.Set(new Vector3d(10, 10, 10)); break; // @todo
+                            case "in_Model": s.Value.Set(render_context.Model); break;
+                            case "in_View": s.Value.Set(render_context.View); break;
+                            case "in_ModelView": s.Value.Set(render_context.ViewModel); break;
+                            case "in_ModelViewProjection": s.Value.Set(render_context.ProjectionViewModel); break;
+                            case "in_NormalView": s.Value.Set(render_context.Normal); break;
+                            case "in_Texture":
+                                graphic_node.Graphic.Model.Texture.Bind();
+                                s.Value.Set(graphic_node.Graphic.Model.Texture.BindId);
+                                break;
+                            default: throw new NotImplementedException(s.Key);
+                        }
 
-                graphic_node.Graphic.Model.Draw(program);
+                    graphic_node.Graphic.Model.Draw(program);
 
-                foreach (var s in program.UniformLocations)
-                    switch (s.Key)
-                    {
-                        case "alpha_cutoff": break;
-                        case "in_DepthBiasMVP": break;
-                        case "in_ShadowTexture":
-                            render_context.DepthTexture.UnBind();
-                            break;
-                        case "in_LightPosition": break;
-                        case "in_Model": break;
-                        case "in_View": break;
-                        case "in_ModelView": break;
-                        case "in_ModelViewProjection": break;
-                        case "in_NormalView": break;
-                        case "in_Texture":
-                            graphic_node.Graphic.Model.Texture.UnBind();
-                            break;
-                        default: throw new NotImplementedException(s.Key);
-                    }
-
+                    foreach (var s in program.UniformLocations)
+                        switch (s.Key)
+                        {
+                            case "alpha_cutoff": break;
+                            case "in_DepthBiasMVP": break;
+                            case "in_ShadowTexture":
+                                render_context.DepthTexture.UnBind();
+                                break;
+                            case "in_LightPosition": break;
+                            case "in_Model": break;
+                            case "in_View": break;
+                            case "in_ModelView": break;
+                            case "in_ModelViewProjection": break;
+                            case "in_NormalView": break;
+                            case "in_Texture":
+                                graphic_node.Graphic.Model.Texture.UnBind();
+                                break;
+                            default: throw new NotImplementedException(s.Key);
+                        }
+                }
 #if DEBUG
                 if (game_state_nodes.First.GameState.Debug)
                 {

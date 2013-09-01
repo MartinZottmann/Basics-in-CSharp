@@ -44,7 +44,7 @@ namespace MartinZottmann.Game.Entities.Systems
                     //    continue;
 
                     var collision = e0.Physic.BoundingSphere.At(ref e0.Base.Position).Collides(e1.Physic.BoundingSphere.At(ref e1.Base.Position));
-                    if (collision == null)
+                    if (null == collision)
                         continue;
 
                     collisions.Add(

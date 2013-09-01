@@ -22,7 +22,7 @@ namespace MartinZottmann.Engine.Entities
             {
                 var old_name = name;
                 name = value;
-                if (NameChanged != null)
+                if (null != NameChanged)
                     NameChanged(this, new NameEventArgs(this, old_name, name));
             }
         }
@@ -69,7 +69,7 @@ namespace MartinZottmann.Engine.Entities
         public Entity Add<T>(T component) where T : IComponent
         {
             components.Add(component.GetType(), component);
-            if (ComponentAdded != null)
+            if (null != ComponentAdded)
                 ComponentAdded(this, new ComponentEventArgs(this, component.GetType()));
 
             return this;
@@ -88,14 +88,14 @@ namespace MartinZottmann.Engine.Entities
         public void Remove<T>() where T : IComponent
         {
             components.Remove(typeof(T));
-            if (ComponentRemoved != null)
+            if (null != ComponentRemoved)
                 ComponentRemoved(this, new ComponentEventArgs(this, typeof(T)));
         }
 
         public void Remove(Type component)
         {
             components.Remove(component);
-            if (ComponentRemoved != null)
+            if (null != ComponentRemoved)
                 ComponentRemoved(this, new ComponentEventArgs(this, component));
         }
 

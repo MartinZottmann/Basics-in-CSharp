@@ -22,7 +22,7 @@ namespace MartinZottmann.Game.Entities.Systems
         {
             foreach (var physic_node in physic_nodes)
             {
-                if (physic_node.Base.ParentName != null && physic_node.Base.parent_base == null)
+                if (null != physic_node.Base.ParentName && null == physic_node.Base.parent_base)
                     physic_node.Base.parent_base = EntityManager.Get(physic_node.Base.ParentName).Get<BaseComponent>();
 
                 physic_node.UpdateVelocity(delta_time);

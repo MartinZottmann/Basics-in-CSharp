@@ -32,20 +32,20 @@ namespace MartinZottmann.Game.Entities
             g.Model.Texture = ResourceManager.Textures[texture];
 
             var b = new BaseComponent();
-            if (scale != null)
+            if (null != scale)
                 b.Scale = scale.Value;
-            if (position != null)
+            if (null != position)
                 b.Position = position.Value;
 
             var bb = g.Model.Mesh().BoundingBox;
-            if (scale != null)
+            if (null != scale)
             {
                 bb.Max = Vector3d.Multiply(bb.Max, scale.Value);
                 bb.Min = Vector3d.Multiply(bb.Min, scale.Value);
             }
 
             var bs = g.Model.Mesh().BoundingSphere;
-            if (scale != null)
+            if (null != scale)
                 bs.Radius *= scale.Value.Length;
 
             var e = new Entity(filepath, true)
@@ -98,6 +98,7 @@ namespace MartinZottmann.Game.Entities
 
             var e = new Entity("Ship", true)
                 .Add(new BaseComponent() { Position = position })
+                .Add(new GraphicComponent())
                 .Add(p)
                 .Add(new TargetComponent());
 

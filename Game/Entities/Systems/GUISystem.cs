@@ -103,7 +103,7 @@ namespace MartinZottmann.Game.Entities.Systems
                     * RenderContext.InvertedProjection;
 
                 var hit = gui_element.Model.Mesh().BoundingBox.At(ref model_matrix).Collides(ref ray);
-                if (hit == null)
+                if (null == hit)
                     continue;
 
                 hit.Object0 = ray;

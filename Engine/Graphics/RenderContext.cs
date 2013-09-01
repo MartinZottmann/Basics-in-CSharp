@@ -15,7 +15,7 @@ namespace MartinZottmann.Engine.Graphics
         /// <summary>
         /// Set with Camera
         /// </summary>
-        public Matrix4d Projection { get { return Parent == null ? projection : projection * Parent.Projection; } set { projection = value; } }
+        public Matrix4d Projection { get { return null == Parent ? projection : projection * Parent.Projection; } set { projection = value; } }
 
         /// <summary>
         /// Calculated: P^-1
@@ -27,7 +27,7 @@ namespace MartinZottmann.Engine.Graphics
         /// <summary>
         /// Set with Camera
         /// </summary>
-        public Matrix4d View { get { return Parent == null ? view : view * Parent.View; } set { view = value; } }
+        public Matrix4d View { get { return null == Parent ? view : view * Parent.View; } set { view = value; } }
 
         /// <summary>
         /// Calculated: V^-1
@@ -39,7 +39,7 @@ namespace MartinZottmann.Engine.Graphics
         /// <summary>
         /// Set with Model/Entity
         /// </summary>
-        public Matrix4d Model { get { return Parent == null ? model : model * Parent.Model; } set { model = value; } }
+        public Matrix4d Model { get { return null == Parent ? model : model * Parent.Model; } set { model = value; } }
 
         /// <summary>
         /// Calculated: M^-1
