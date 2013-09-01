@@ -34,10 +34,10 @@ namespace MartinZottmann.Game.Entities.Systems
             Window.Mouse.ButtonUp += OnButtonUp;
         }
 
-        public void Bind(EntityManager entitiy_manager)
+        public void Bind(EntityManager entity_manager)
         {
-            cursor_nodes = entitiy_manager.Get<CursorNode>();
-            physic_nodes = entitiy_manager.Get<PhysicNode>();
+            cursor_nodes = entity_manager.Get<CursorNode>();
+            physic_nodes = entity_manager.Get<PhysicNode>();
         }
 
         public void Update(double delta_time)

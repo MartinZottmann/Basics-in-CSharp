@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MartinZottmann.Engine.Entities
 {
-    public class EntityManager
+    public class EntityManager : IDisposable
     {
         protected Dictionary<string, Entity> entity_names = new Dictionary<string, Entity>();
 
@@ -14,6 +15,15 @@ namespace MartinZottmann.Engine.Entities
         protected Dictionary<Type, ISystem> systems = new Dictionary<Type, ISystem>();
 
         public Entity[] Entities { get { return entities.ToArray(); } }
+
+        public void Dispose()
+        {
+            Debug.WriteLine("EntityManager.Disposing");
+            foreach (var system in systems)
+                if (system.Value is IDisposable)
+                    ((IDisposable)system.Value).Dispose();
+            Debug.WriteLine("EntityManager.Disposed");
+        }
 
         public void Add(Entity entity)
         {

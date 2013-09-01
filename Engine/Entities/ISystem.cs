@@ -2,7 +2,7 @@
 {
     public interface ISystem
     {
-        void Bind(EntityManager entitiy_manager);
+        void Bind(EntityManager entity_manager);
 
         void Update(double delta_time);
 

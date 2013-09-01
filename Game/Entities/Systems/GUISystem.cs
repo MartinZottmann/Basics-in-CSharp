@@ -39,7 +39,7 @@ namespace MartinZottmann.Game.Entities.Systems
             font_mesh_builder = new FontMeshBuilder(font_map);
         }
 
-        public void Bind(EntityManager entitiy_manager)
+        public void Bind(EntityManager entity_manager)
         {
             // @todo
         }

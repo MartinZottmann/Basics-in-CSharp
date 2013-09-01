@@ -12,9 +12,9 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected NodeList<PhysicNode> physic_nodes;
 
-        public void Bind(EntityManager entitiy_manager)
+        public void Bind(EntityManager entity_manager)
         {
-            EntityManager = entitiy_manager;
+            EntityManager = entity_manager;
             physic_nodes = EntityManager.Get<PhysicNode>();
         }
 

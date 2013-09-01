@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace MartinZottmann.Game.Entities.Systems
 {
@@ -58,20 +59,58 @@ namespace MartinZottmann.Game.Entities.Systems
         }
     }
 
-    public class ChunkSystem : ISystem
+    public class ChunkSystem : ISystem, IDisposable
     {
         public const uint CHUNK_SIZE = 100;
 
         public const uint LOADED_RADIUS = 200;
 
-        protected EntityManager entitiy_manager;
+        protected bool running = true;
+
+        protected Thread loader;
+
+        protected object loader_lock = new Object();
+
+        protected List<Entity> loader_entities = new List<Entity>();
+
+        protected EntityManager entity_manager;
 
         protected NodeList<InputNode> input_nodes;
 
-        public void Bind(EntityManager entitiy_manager)
+        public ChunkSystem()
         {
-            this.entitiy_manager = entitiy_manager;
-            input_nodes = this.entitiy_manager.Get<InputNode>();
+            loader = new Thread(
+                () =>
+                {
+                    while (running)
+                    {
+                        Debug.WriteLine("Chunk loader: Loading");
+                        foreach (var input_node in input_nodes)
+                        {
+                            var input_position = VectorToPoint(input_node.Base.Position);
+
+                            LoadAround(input_position);
+                        }
+                        Debug.WriteLine("Chunk loader: Loaded");
+                        Thread.Sleep(1000);
+                    }
+                }
+            );
+            loader.Start();
+        }
+
+        public void Dispose()
+        {
+            Debug.WriteLine("ChunkSystem.Disposing");
+            running = false;
+            loader.Join();
+            Debug.WriteLine("ChunkSystem.Disposed");
+        }
+
+        public void Bind(EntityManager entity_manager)
+        {
+            this.entity_manager = entity_manager;
+            input_nodes = this.entity_manager.Get<InputNode>();
         }
 
         public void Update(double delta_time)
@@ -79,25 +118,32 @@ namespace MartinZottmann.Game.Entities.Systems
             foreach (var input_node in input_nodes)
             {
                 var input_position = VectorToPoint(input_node.Base.Position);
-                foreach (var entitiy in entitiy_manager.Entities)
+                foreach (var entity in entity_manager.Entities)
                 {
-                    if (entitiy.Has<CursorComponent>())
+                    if (entity.Has<CursorComponent>())
                         continue;
 
-                    if (!entitiy.Has<BaseComponent>())
+                    if (!entity.Has<BaseComponent>())
                         continue;
 
-                    var entity_position = VectorToPoint(entitiy.Get<BaseComponent>().Position);
+                    var entity_position = VectorToPoint(entity.Get<BaseComponent>().Position);
                     foreach (var chunk in Chunks(input_position))
                         if (entity_position == chunk)
                             goto CHUNK_FOUND;
-                    Save(entity_position, entitiy);
-                    entitiy_manager.Remove(entitiy);
+                    entity_manager.Remove(entity);
+                    new Thread(s => Save(entity_position, entity)).Start();
                 CHUNK_FOUND:
                     ;
                 }
+            }
 
-                LoadAround(input_position);
+            lock (loader_lock)
+            {
+                foreach (var loader_entity in loader_entities)
+                {
+                    entity_manager.Add(loader_entity);
+                }
+                loader_entities.Clear();
             }
         }
 
@@ -144,13 +190,16 @@ namespace MartinZottmann.Game.Entities.Systems
             if (!directory_info.Exists)
                 return;
 
-            foreach (var file_info in directory_info.GetFiles("*.xml"))
+            lock (loader_lock)
             {
-                Debug.WriteLine("Load {0}: {1}", position, file_info.FullName);
-                var file = new FileSystem(file_info.FullName);
-                var entity = file.Load<Entity>();
-                entitiy_manager.Add(entity);
-                file_info.Delete();
+                foreach (var file_info in directory_info.GetFiles("*.xml"))
+                {
+                    Debug.WriteLine("Load {0}: {1}", position, file_info.FullName);
+                    var file = new FileSystem(file_info.FullName);
+                    var entity = file.Load<Entity>();
+                    file_info.Delete();
+                    loader_entities.Add(entity);
+                }
             }
         }
 

@@ -31,9 +31,9 @@ namespace MartinZottmann.Game.Entities.Systems
             key_bindings.Add(Key.ShiftLeft, InputControlCommand.StrafeDown);
         }
 
-        public void Bind(EntityManager entitiy_manager)
+        public void Bind(EntityManager entity_manager)
         {
-            input_nodes = entitiy_manager.Get<InputNode>();
+            input_nodes = entity_manager.Get<InputNode>();
         }
 
         public void Update(double delta_time)

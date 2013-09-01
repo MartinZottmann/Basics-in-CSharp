@@ -140,6 +140,7 @@ namespace MartinZottmann.Game.State
         {
             Debug.WriteLine(String.Format("Saving {0}", file_system.FilePath));
             file_system.Save(entity_manager.Entities);
+            entity_manager.Dispose();
 
             resource_manager.Dispose();
         }

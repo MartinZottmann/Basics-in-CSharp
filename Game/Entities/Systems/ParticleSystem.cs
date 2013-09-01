@@ -49,9 +49,9 @@ namespace MartinZottmann.Game.Entities.Systems
             ResourceManager = resource_manager;
         }
 
-        public void Bind(EntityManager entitiy_manager)
+        public void Bind(EntityManager entity_manager)
         {
-            particle_emitter_nodes = entitiy_manager.Get<ParticleEmitterNode>();
+            particle_emitter_nodes = entity_manager.Get<ParticleEmitterNode>();
             particle_emitter_nodes.NodeAdded += Init;
             particle_emitter_nodes.NodeRemoved += UnInit;
         }
