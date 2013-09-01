@@ -1,17 +1,17 @@
-#version 410 core
+#version 430 core
 
 uniform samplerCube in_Texture;
 uniform vec3 in_LightPosition;
 
-in vec3 UV;
-in vec3 Position_worldspace;
-in vec3 Normal_cameraspace;
-in vec3 EyeDirection_cameraspace;
-in vec3 LightDirection_cameraspace;
+layout(location = 0) in vec3 UV;
+layout(location = 1) in vec3 Position_worldspace;
+layout(location = 2) in vec3 Normal_cameraspace;
+layout(location = 3) in vec3 EyeDirection_cameraspace;
+layout(location = 4) in vec3 LightDirection_cameraspace;
 
-out vec4 color;
+layout(location = 0) out vec4 color;
 
-void main() {
+void main(void) {
     vec4 LightColor = vec4(1, 1, 1, 1);
     float LightPower = 50.0f;
 

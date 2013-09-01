@@ -1,4 +1,4 @@
-#version 410 core
+#version 430 core
 
 const float bias = 0.005;
 
@@ -7,16 +7,16 @@ uniform sampler2DShadow in_ShadowTexture;
 uniform vec3 in_LightPosition;
 uniform float alpha_cutoff;
 
-in vec2 UV;
-in vec3 Position_worldspace;
-in vec3 Normal_cameraspace;
-in vec3 EyeDirection_cameraspace;
-in vec3 LightDirection_cameraspace;
-in vec4 shadowUV;
+layout(location = 0) in vec2 UV;
+layout(location = 1) in vec3 Position_worldspace;
+layout(location = 2) in vec3 Normal_cameraspace;
+layout(location = 3) in vec3 EyeDirection_cameraspace;
+layout(location = 4) in vec3 LightDirection_cameraspace;
+layout(location = 5) in vec4 shadowUV;
 
-out vec4 color;
+layout(location = 0) out vec4 color;
 
-void main() {
+void main(void) {
     vec4 LightColor = vec4(1, 1, 1, 1);
     float LightPower = 50.0f;
 

@@ -1,4 +1,4 @@
-#version 410 core
+#version 430 core
 
 uniform mat4 in_ModelViewProjection;
 uniform mat4 in_ModelView;
@@ -10,13 +10,13 @@ uniform vec3 in_LightPosition;
 layout(location = 0) in vec3 in_Position;
 layout(location = 1) in vec3 in_Normal;
 
-out vec3 UV;
-out vec3 Position_worldspace;
-out vec3 Normal_cameraspace;
-out vec3 EyeDirection_cameraspace;
-out vec3 LightDirection_cameraspace;
+layout(location = 0) out vec3 UV;
+layout(location = 1) out vec3 Position_worldspace;
+layout(location = 2) out vec3 Normal_cameraspace;
+layout(location = 3) out vec3 EyeDirection_cameraspace;
+layout(location = 4) out vec3 LightDirection_cameraspace;
 
-void main() {
+void main(void) {
     gl_Position = in_ModelViewProjection * vec4(in_Position, 1);
 
     Position_worldspace = (in_Model * vec4(in_Position, 1)).xyz;
