@@ -2,6 +2,7 @@
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Graphics;
+using MartinZottmann.Game.Input;
 using OpenTK;
 using System;
 
@@ -110,11 +111,11 @@ namespace MartinZottmann.Game.Entities
             return e;
         }
 
-        public Entity CreateCamera()
+        public Entity CreateCamera(Vector3d position, Quaterniond orientation)
         {
             var e = new Entity("Camera")
-                .Add(new BaseComponent())
-                .Add(new InputComponent());
+                .Add(new BaseComponent() { Position = position, Orientation = orientation })
+                .Add(new InputComponent() { Speed = 100.0, Type = InputControlType.Direct });
             EntityManager.Add(e);
 
             return e;

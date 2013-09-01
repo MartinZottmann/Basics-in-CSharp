@@ -100,7 +100,7 @@ namespace MartinZottmann.Game.State
                 var creator = new Creator(entity_manager, resource_manager);
                 creator.CreateGameState();
                 creator.CreateCursor();
-                creator.CreateCamera();
+                creator.CreateCamera(world_camera.Position, world_camera.Orientation);
                 creator.CreateStarfield();
                 creator.CreateGrid();
                 for (var i = 0; i < 10; i++)

@@ -99,6 +99,8 @@
     <Compile Include="Graphics\Grid.cs" />
     <Compile Include="Graphics\RenderContext.cs" />
     <Compile Include="Graphics\Starfield.cs" />
+    <Compile Include="Input\InputControlCommand.cs" />
+    <Compile Include="Input\InputControlType.cs" />
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="State\GameState.cs" />
     <Compile Include="State\Running.cs" />
