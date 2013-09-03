@@ -101,7 +101,9 @@ namespace MartinZottmann.Game.Entities
                 .Add(new BaseComponent() { Position = position })
                 .Add(new GraphicComponent())
                 .Add(p)
-                .Add(new TargetComponent());
+                .Add(new TargetComponent())
+                .Add(new AIComponent())
+                .Add(new ChunkLoaderComponent());
 
             foreach (var i in c)
                 i.Get<BaseComponent>().ParentName = e.Name;
@@ -115,7 +117,8 @@ namespace MartinZottmann.Game.Entities
         {
             var e = new Entity("Camera")
                 .Add(new BaseComponent() { Position = position, Orientation = orientation })
-                .Add(new InputComponent() { Speed = 100.0, Type = InputControlType.Direct });
+                .Add(new InputComponent() { Speed = 100.0, Type = InputControlType.Direct })
+                .Add(new ChunkLoaderComponent());
             EntityManager.Add(e);
 
             return e;

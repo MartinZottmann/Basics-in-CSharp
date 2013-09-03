@@ -78,6 +78,7 @@ namespace MartinZottmann.Game.State
                 .Add(new InputSystem(Window, world_camera))
                 .Add(new CursorSystem(Window, world_camera))
                 .Add(new GameStateSystem())
+                .Add(new AISystem())
                 .Add(new PhysicSystem())
                 .Add(new CollisionSystem())
                 .Add(new ChunkSystem())

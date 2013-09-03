@@ -75,7 +75,7 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected EntityManager entity_manager;
 
-        protected NodeList<InputNode> input_nodes;
+        protected NodeList<ChunkLoaderNode> chunk_loader_nodes;
 
         public ChunkSystem()
         {
@@ -84,13 +84,12 @@ namespace MartinZottmann.Game.Entities.Systems
                 {
                     while (running)
                     {
-                        //Debug.WriteLine("Chunk loader: Loading");
-                        foreach (var input_node in input_nodes)
-                        {
-                            var input_position = VectorToPoint(input_node.Base.Position);
+                        if (null == chunk_loader_nodes)
+                            continue;
 
-                            LoadAround(input_position);
-                        }
+                        //Debug.WriteLine("Chunk loader: Loading");
+                        foreach (var chunk_loader_node in chunk_loader_nodes)
+                            LoadAround(VectorToPoint(chunk_loader_node.Base.Position));
                         //Debug.WriteLine("Chunk loader: Loaded");
                         Thread.Sleep(1000);
                     }
@@ -110,31 +109,53 @@ namespace MartinZottmann.Game.Entities.Systems
         public void Bind(EntityManager entity_manager)
         {
             this.entity_manager = entity_manager;
-            input_nodes = this.entity_manager.Get<InputNode>();
+            chunk_loader_nodes = this.entity_manager.Get<ChunkLoaderNode>();
         }
 
         public void Update(double delta_time)
         {
-            foreach (var input_node in input_nodes)
+            var entities = entity_manager.Entities;
+            var n = entities.Length;
+
+            foreach (var chunk_loader_node in chunk_loader_nodes)
             {
-                var input_position = VectorToPoint(input_node.Base.Position);
-                foreach (var entity in entity_manager.Entities)
+                var chunk_loader_position = VectorToPoint(chunk_loader_node.Base.Position);
+
+                for (var i = 0; i < n; i++)
                 {
-                    if (entity.Has<CursorComponent>())
+                    var entity = entities[i];
+
+                    if (null == entity)
                         continue;
+
+                    if (entity.Has<CursorComponent>())
+                    {
+                        entities[i] = null;
+                        continue;
+                    }
 
                     if (!entity.Has<BaseComponent>())
+                    {
+                        entities[i] = null;
                         continue;
+                    }
 
                     var entity_position = VectorToPoint(entity.Get<BaseComponent>().Position);
-                    foreach (var chunk in Chunks(input_position))
-                        if (entity_position == chunk)
-                            goto CHUNK_FOUND;
-                    entity_manager.Remove(entity);
-                    new Thread(s => Save(entity_position, entity)).Start();
-                CHUNK_FOUND:
-                    ;
+                    foreach (var chunk in Chunks(chunk_loader_position))
+                        if (chunk == entity_position)
+                            entities[i] = null;
                 }
+            }
+
+            for (var i = 0; i < n; i++)
+            {
+                var entity = entities[i];
+
+                if (null == entity)
+                    continue;
+
+                entity_manager.Remove(entity);
+                new Thread(() => { Save(VectorToPoint(entity.Get<BaseComponent>().Position), entity); }).Start();
             }
 
             lock (loader_lock)
