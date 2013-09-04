@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MartinZottmann.Engine.Graphics.Wavefront
 {
-    public struct ObjFile : IDisposable
+    public class ObjFile
     {
         public string Filename;
 
@@ -25,11 +25,6 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
             vn = new List<float[]>();
             mtllib = new List<MtlFile>();
             f = new List<FaceInfo>();
-        }
-
-        public void Dispose()
-        {
-            mtllib.ForEach(s => s.Dispose());
         }
     }
 }

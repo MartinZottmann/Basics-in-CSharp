@@ -6,7 +6,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class Shader : IDisposable
     {
-        public readonly uint Id;
+        public uint Id { get; protected set; }
 
         public readonly ShaderType Type;
 
@@ -40,9 +40,27 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 #endif
         }
 
+        ~Shader()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (0 != Id)
+                {
+                    GL.DeleteShader(Id);
+                    Id = 0;
+                }
+            }
+        }
+
         public void Dispose()
         {
-            GL.DeleteShader(Id);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

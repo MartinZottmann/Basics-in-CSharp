@@ -3,32 +3,36 @@ using System;
 
 namespace MartinZottmann.Game
 {
-    public class Game : IDisposable
+    public class Game
     {
         protected GameState state;
 
         public GameState State
         {
-            get { return state; }
+            get
+            {
+                return state;
+            }
             set
             {
-                if (null != state)
-                    state.Dispose();
-
-                state = value;
-
-                GC.Collect();
+                if (null == state)
+                {
+                    state = value;
+                }
+                else
+                {
+                    state.Stop();
+                    state = value;
+                    state.Start();
+                }
             }
         }
 
-        public Game(GameState state)
-        {
-            State = state;
-        }
+        public Game() { }
 
-        public void Dispose()
+        public void Start()
         {
-            State.Dispose();
+            State.Start();
         }
 
         public void Update(double delta_time)
@@ -39,6 +43,11 @@ namespace MartinZottmann.Game
         public void Render(double delta_time)
         {
             State.Render(delta_time);
+        }
+
+        public void Stop()
+        {
+            State.Stop();
         }
     }
 }

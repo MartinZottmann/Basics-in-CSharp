@@ -64,11 +64,11 @@ namespace MartinZottmann.Game.Entities.Systems
             frame_buffer.Dispose();
         }
 
-        public void Bind(EntityManager entity_manager)
+        public void Start(EntityManager entity_manager)
         {
-            graphic_nodes = entity_manager.Get<GraphicNode>();
+            graphic_nodes = entity_manager.GetNodeList<GraphicNode>();
             graphic_nodes.NodeAdded += OnNodeAdded;
-            game_state_nodes = entity_manager.Get<GameStateNode>();
+            game_state_nodes = entity_manager.GetNodeList<GameStateNode>();
         }
 
         public void Update(double delta_time)
@@ -143,6 +143,13 @@ namespace MartinZottmann.Game.Entities.Systems
                 debug_screen.Draw();
             }
             #endregion
+        }
+
+        public void Stop()
+        {
+            graphic_nodes.NodeAdded -= OnNodeAdded;
+            graphic_nodes = null;
+            game_state_nodes = null;
         }
 
         protected void OnNodeAdded(object sender, NodeEventArgs<GraphicNode> e)

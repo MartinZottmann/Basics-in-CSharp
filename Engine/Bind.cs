@@ -4,7 +4,7 @@ namespace MartinZottmann.Engine
 {
     public class Bind : IDisposable
     {
-        protected readonly IBindable context;
+        protected IBindable context;
 
         public Bind(IBindable target)
         {
@@ -13,10 +13,27 @@ namespace MartinZottmann.Engine
                 context.Bind();
         }
 
+        ~Bind()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (null != context)
+                {
+                    context.UnBind();
+                    context = null;
+                }
+            }
+        }
+
         public void Dispose()
         {
-            if (null != context)
-                context.UnBind();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

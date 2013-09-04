@@ -34,10 +34,10 @@ namespace MartinZottmann.Game.Entities.Systems
             Window.Mouse.ButtonUp += OnButtonUp;
         }
 
-        public void Bind(EntityManager entity_manager)
+        public void Start(EntityManager entity_manager)
         {
-            cursor_nodes = entity_manager.Get<CursorNode>();
-            physic_nodes = entity_manager.Get<PhysicNode>();
+            cursor_nodes = entity_manager.GetNodeList<CursorNode>();
+            physic_nodes = entity_manager.GetNodeList<PhysicNode>();
         }
 
         public void Update(double delta_time)
@@ -47,6 +47,12 @@ namespace MartinZottmann.Game.Entities.Systems
         }
 
         public void Render(double delta_time) { }
+
+        public void Stop()
+        {
+            cursor_nodes = null;
+            physic_nodes = null;
+        }
 
         public void SetCursor(CursorNode input_node)
         {

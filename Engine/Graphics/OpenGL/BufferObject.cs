@@ -8,7 +8,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public abstract class BufferObject : IBindable, IDisposable
     {
-        public readonly uint Id;
+        public uint Id { get; protected set; }
 
         public readonly BufferTarget Target;
 
@@ -24,11 +24,22 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             Size = size;
         }
 
+        ~BufferObject()
+        {
+            Dispose(false);
+        }
+
+        protected abstract void Dispose(bool disposing);
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         public abstract void Bind();
 
         public abstract void UnBind();
-
-        public abstract void Dispose();
     }
 
     public class BufferObject<T> : BufferObject, IBindable, IDisposable where T : struct
@@ -49,6 +60,18 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 GL.GetBufferParameter(target, BufferParameterName.BufferSize, out info);
                 Debug.Assert(Size == info);
 #endif
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (0 != Id)
+                {
+                    GL.DeleteBuffer(Id);
+                    Id = 0;
+                }
             }
         }
 
@@ -78,11 +101,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         public override void UnBind()
         {
             GL.BindBuffer(Target, 0);
-        }
-
-        public override void Dispose()
-        {
-            GL.DeleteBuffer(Id);
         }
     }
 }

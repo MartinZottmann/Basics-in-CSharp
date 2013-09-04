@@ -20,10 +20,10 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected NodeList<AINode> ai_nodes;
 
-        public void Bind(EntityManager entity_manager)
+        public void Start(EntityManager entity_manager)
         {
             this.entity_manager = entity_manager;
-            ai_nodes = this.entity_manager.Get<AINode>();
+            ai_nodes = this.entity_manager.GetNodeList<AINode>();
         }
 
         public void Update(double delta_time)
@@ -36,6 +36,12 @@ namespace MartinZottmann.Game.Entities.Systems
         }
 
         public void Render(double delta_time) { }
+
+        public void Stop()
+        {
+            entity_manager = null;
+            ai_nodes = null;
+        }
 
         protected void PickTarget(AINode ai_node)
         {

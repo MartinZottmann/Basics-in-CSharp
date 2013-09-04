@@ -7,9 +7,9 @@ namespace MartinZottmann.Game.Entities.Systems
     {
         protected NodeList<GameStateNode> game_state_nodes;
 
-        public void Bind(EntityManager entity_manager)
+        public void Start(EntityManager entity_manager)
         {
-            game_state_nodes = entity_manager.Get<GameStateNode>();
+            game_state_nodes = entity_manager.GetNodeList<GameStateNode>();
         }
 
         public void Update(double delta_time)
@@ -21,5 +21,10 @@ namespace MartinZottmann.Game.Entities.Systems
         }
 
         public void Render(double delta_time) { }
+
+        public void Stop()
+        {
+            game_state_nodes = null;
+        }
     }
 }

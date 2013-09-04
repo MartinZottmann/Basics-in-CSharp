@@ -27,8 +27,9 @@ namespace MartinZottmann.Game.State
 
         protected EntityManager entity_manager;
 
-        public Running(Window window)
-            : base(window)
+        public Running(Window window) : base(window) { }
+
+        public override void Start()
         {
             var shaders = new Dictionary<string, List<Shader>>();
             foreach (var filename in Directory.GetFiles("Resources/Shaders/", "*.glsl"))
@@ -74,22 +75,22 @@ namespace MartinZottmann.Game.State
             world_camera.LookAt = new Vector3d(0);
             var screen_camera = new Camera(Window);
 
-            entity_manager = new EntityManager()
-                .Add(new InputSystem(Window, world_camera))
-                .Add(new CursorSystem(Window, world_camera))
-                .Add(new GameStateSystem())
-                .Add(new AISystem())
-                .Add(new PhysicSystem())
-                .Add(new CollisionSystem())
-                .Add(new ChunkSystem())
-                .Add(new GraphicSystem(world_camera, resource_manager))
-                .Add(new ParticleSystem(world_camera, resource_manager))
-                .Add(new GUISystem(Window, screen_camera, resource_manager));
+            entity_manager = new EntityManager();
+            entity_manager.AddSystem(new InputSystem(Window, world_camera));
+            entity_manager.AddSystem(new CursorSystem(Window, world_camera));
+            entity_manager.AddSystem(new GameStateSystem());
+            entity_manager.AddSystem(new AISystem());
+            entity_manager.AddSystem(new PhysicSystem());
+            entity_manager.AddSystem(new CollisionSystem());
+            entity_manager.AddSystem(new ChunkSystem());
+            entity_manager.AddSystem(new GraphicSystem(world_camera, resource_manager));
+            entity_manager.AddSystem(new ParticleSystem(world_camera, resource_manager));
+            entity_manager.AddSystem(new GUISystem(Window, screen_camera, resource_manager));
 
             MartinZottmann.Engine.Entities.Entity[] entities = null;
             try
             {
-                Debug.WriteLine(String.Format("Loading {0}", file_system.FilePath));
+                Debug.WriteLine(String.Format("Loading {0}", file_system.FilePath), GetType().FullName);
                 //entities = file_system.Load<MartinZottmann.Engine.Entities.Entity[]>();
             }
             catch (Exception e)
@@ -123,9 +124,9 @@ namespace MartinZottmann.Game.State
             else
             {
                 foreach (var entity in entities)
-                    entity_manager.Add(entity);
+                    entity_manager.AddEntity(entity);
 
-                var camera_base = entity_manager.Get("Camera").Get<BaseComponent>();
+                var camera_base = entity_manager.GetEntity("Camera").Get<BaseComponent>();
                 world_camera.Position = camera_base.Position;
                 world_camera.Orientation = camera_base.Orientation;
             }
@@ -133,30 +134,8 @@ namespace MartinZottmann.Game.State
             entity_manager.GetSystem<GUISystem>().Add(new MartinZottmann.Game.Entities.GUI.Debugger(entity_manager));
             entity_manager.GetSystem<GUISystem>().Add(new FPSCounter());
 
-            Debug.WriteLine(String.Format("Saving {0}", file_system.FilePath));
+            Debug.WriteLine(String.Format("Saving {0}", file_system.FilePath), GetType().FullName);
             file_system.Save(entity_manager.Entities);
-        }
-
-        public override void Dispose()
-        {
-            Debug.WriteLine(String.Format("Saving {0}", file_system.FilePath));
-            file_system.Save(entity_manager.Entities);
-            entity_manager.Dispose();
-
-            resource_manager.Dispose();
-        }
-
-        protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
-        {
-            if (e.Key == Key.F3)
-            {
-                entity_manager.Get("GameState").Get<GameStateComponent>().Debug = !entity_manager.Get("GameState").Get<GameStateComponent>().Debug;
-            }
-            if (e.Key == Key.F10)
-            {
-                var camera = entity_manager.GetSystem<InputSystem>().Camera;
-                camera.MouseLook = !camera.MouseLook;
-            }
         }
 
         public override void Update(double delta_time)
@@ -169,6 +148,28 @@ namespace MartinZottmann.Game.State
             entity_manager.Render(delta_time);
 
             Window.SwapBuffers();
+        }
+
+        public override void Stop()
+        {
+            Debug.WriteLine(String.Format("Saving {0}", file_system.FilePath), GetType().FullName);
+            file_system.Save(entity_manager.Entities);
+
+            entity_manager.Clear();
+            resource_manager.Clear();
+        }
+
+        protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
+        {
+            if (e.Key == Key.F3)
+            {
+                entity_manager.GetEntity("GameState").Get<GameStateComponent>().Debug = !entity_manager.GetEntity("GameState").Get<GameStateComponent>().Debug;
+            }
+            if (e.Key == Key.F10)
+            {
+                var camera = entity_manager.GetSystem<InputSystem>().Camera;
+                camera.MouseLook = !camera.MouseLook;
+            }
         }
     }
 }

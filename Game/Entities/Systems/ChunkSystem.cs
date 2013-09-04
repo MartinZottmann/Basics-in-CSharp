@@ -59,13 +59,13 @@ namespace MartinZottmann.Game.Entities.Systems
         }
     }
 
-    public class ChunkSystem : ISystem, IDisposable
+    public class ChunkSystem : ISystem
     {
         public const uint CHUNK_SIZE = 100;
 
         public const uint LOADED_RADIUS = 200;
 
-        protected bool running = true;
+        protected bool running;
 
         protected Thread loader;
 
@@ -77,8 +77,15 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected NodeList<ChunkLoaderNode> chunk_loader_nodes;
 
-        public ChunkSystem()
+        public ChunkSystem()        {        }
+
+        public void Start(EntityManager entity_manager)
         {
+            this.entity_manager = entity_manager;
+            chunk_loader_nodes = this.entity_manager.GetNodeList<ChunkLoaderNode>();
+
+            running = true;
+
             loader = new Thread(
                 () =>
                 {
@@ -96,20 +103,6 @@ namespace MartinZottmann.Game.Entities.Systems
                 }
             );
             loader.Start();
-        }
-
-        public void Dispose()
-        {
-            Debug.WriteLine("ChunkSystem.Disposing");
-            running = false;
-            loader.Join();
-            Debug.WriteLine("ChunkSystem.Disposed");
-        }
-
-        public void Bind(EntityManager entity_manager)
-        {
-            this.entity_manager = entity_manager;
-            chunk_loader_nodes = this.entity_manager.Get<ChunkLoaderNode>();
         }
 
         public void Update(double delta_time)
@@ -154,7 +147,7 @@ namespace MartinZottmann.Game.Entities.Systems
                 if (null == entity)
                     continue;
 
-                entity_manager.Remove(entity);
+                entity_manager.RemoveEntity(entity);
                 new Thread(() => { Save(VectorToPoint(entity.Get<BaseComponent>().Position), entity); }).Start();
             }
 
@@ -162,13 +155,22 @@ namespace MartinZottmann.Game.Entities.Systems
             {
                 foreach (var loader_entity in loader_entities)
                 {
-                    entity_manager.Add(loader_entity);
+                    entity_manager.AddEntity(loader_entity);
                 }
                 loader_entities.Clear();
             }
         }
 
         public void Render(double delta_time) { }
+
+        public void Stop()
+        {
+            running = false;
+
+            loader.Join();
+
+            chunk_loader_nodes = null;
+        }
 
         public Point3i VectorToPoint(Vector3d vector)
         {

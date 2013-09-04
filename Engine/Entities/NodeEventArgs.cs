@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MartinZottmann.Engine.Entities
 {
-    public class NodeEventArgs<T> where T : Node
+    public class NodeEventArgs<T> : EventArgs where T : Node
     {
         public readonly NodeList<T> NodeList;
 

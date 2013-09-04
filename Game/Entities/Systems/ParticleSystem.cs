@@ -49,9 +49,9 @@ namespace MartinZottmann.Game.Entities.Systems
             ResourceManager = resource_manager;
         }
 
-        public void Bind(EntityManager entity_manager)
+        public void Start(EntityManager entity_manager)
         {
-            particle_emitter_nodes = entity_manager.Get<ParticleEmitterNode>();
+            particle_emitter_nodes = entity_manager.GetNodeList<ParticleEmitterNode>();
             particle_emitter_nodes.NodeAdded += Init;
             particle_emitter_nodes.NodeRemoved += UnInit;
         }
@@ -93,6 +93,13 @@ namespace MartinZottmann.Game.Entities.Systems
             }
             GL.DepthMask(true);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+        }
+
+        public void Stop()
+        {
+            particle_emitter_nodes.NodeAdded -= Init;
+            particle_emitter_nodes.NodeRemoved -= UnInit;
+            particle_emitter_nodes = null;
         }
 
         protected void Init(object sender, NodeEventArgs<ParticleEmitterNode> e)

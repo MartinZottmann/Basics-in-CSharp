@@ -22,12 +22,6 @@ namespace MartinZottmann.Game
 
         protected Object request_context_lock = new Object();
 
-        public override void Dispose()
-        {
-            game.Dispose();
-            base.Dispose();
-        }
-
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -61,7 +55,7 @@ namespace MartinZottmann.Game
             Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
 
             // Subscribe to mouse events
-            game = new Game(new Running(this));
+            game = new Game();
 
             Context.MakeCurrent(null);
 
@@ -96,6 +90,9 @@ namespace MartinZottmann.Game
             const double target_delta_time = 30.0 / 1000.0;
 
             MakeCurrent();
+
+            game.State = new Running(this);
+            game.Start();
 
             Stopwatch update_time = new Stopwatch();
             update_time.Start();
@@ -133,6 +130,8 @@ namespace MartinZottmann.Game
             }
 
             Context.MakeCurrent(null);
+
+            game.Stop();
         }
 
         public void RequestContext()

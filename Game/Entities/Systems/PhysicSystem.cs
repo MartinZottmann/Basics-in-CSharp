@@ -12,10 +12,10 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected NodeList<PhysicNode> physic_nodes;
 
-        public void Bind(EntityManager entity_manager)
+        public void Start(EntityManager entity_manager)
         {
             EntityManager = entity_manager;
-            physic_nodes = EntityManager.Get<PhysicNode>();
+            physic_nodes = EntityManager.GetNodeList<PhysicNode>();
         }
 
         public void Update(double delta_time)
@@ -23,7 +23,7 @@ namespace MartinZottmann.Game.Entities.Systems
             foreach (var physic_node in physic_nodes)
             {
                 if (null != physic_node.Base.ParentName && null == physic_node.Base.parent_base)
-                    physic_node.Base.parent_base = EntityManager.Get(physic_node.Base.ParentName).Get<BaseComponent>();
+                    physic_node.Base.parent_base = EntityManager.GetEntity(physic_node.Base.ParentName).Get<BaseComponent>();
 
                 physic_node.UpdateVelocity(delta_time);
                 physic_node.UpdatePosition(delta_time);
@@ -31,5 +31,11 @@ namespace MartinZottmann.Game.Entities.Systems
         }
 
         public void Render(double delta_time) { }
+
+        public void Stop()
+        {
+            EntityManager = null;
+            physic_nodes = null;
+        }
     }
 }

@@ -9,9 +9,9 @@ namespace MartinZottmann.Game.Entities.Systems
     {
         protected NodeList<CollisionNode> collision_nodes;
 
-        public void Bind(EntityManager entity_manager)
+        public void Start(EntityManager entity_manager)
         {
-            collision_nodes = entity_manager.Get<CollisionNode>();
+            collision_nodes = entity_manager.GetNodeList<CollisionNode>();
         }
 
         public void Update(double delta_time)
@@ -22,6 +22,11 @@ namespace MartinZottmann.Game.Entities.Systems
         }
 
         public void Render(double delta_time) { }
+
+        public void Stop()
+        {
+            collision_nodes = null;
+        }
 
         protected List<Collision> DetectCollisions()
         {

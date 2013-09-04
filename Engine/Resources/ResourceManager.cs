@@ -2,7 +2,7 @@
 
 namespace MartinZottmann.Engine.Resources
 {
-    public class ResourceManager : IDisposable
+    public class ResourceManager
     {
         public Models Models { get; set; }
 
@@ -23,13 +23,13 @@ namespace MartinZottmann.Engine.Resources
             WavefrontObjFiles = new WavefrontObjFiles(this);
         }
 
-        public void Dispose()
+        public void Clear()
         {
-            Models.Dispose();
-            Programs.Dispose();
-            Shaders.Dispose();
-            Textures.Dispose();
-            WavefrontObjFiles.Dispose();
+            Models.Clear();
+            Programs.Clear();
+            Shaders.Clear();
+            Textures.Clear();
+            WavefrontObjFiles.Clear();
         }
     }
 }

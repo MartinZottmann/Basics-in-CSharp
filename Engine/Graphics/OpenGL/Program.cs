@@ -7,7 +7,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class Program : IBindable, IDisposable
     {
-        public uint Id;
+        public uint Id { get; protected set; }
 
         public IDictionary<string, UniformBlockIndex> UniformBlockIndices = new Dictionary<string, UniformBlockIndex>();
 
@@ -64,6 +64,29 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             }
         }
 
+        ~Program()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (0 != Id)
+                {
+                    GL.DeleteProgram(Id);
+                    Id = 0;
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         public void Bind()
         {
             GL.UseProgram(Id);
@@ -72,11 +95,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         public void UnBind()
         {
             GL.UseProgram(0);
-        }
-
-        public void Dispose()
-        {
-            GL.DeleteProgram(Id);
         }
 
         public void CheckUniforms()

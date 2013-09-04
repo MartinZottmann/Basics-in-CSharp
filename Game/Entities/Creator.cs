@@ -53,7 +53,7 @@ namespace MartinZottmann.Game.Entities
                 .Add(b)
                 .Add(new PhysicComponent() { BoundingBox = bb, BoundingSphere = bs })
                 .Add(g);
-            EntityManager.Add(e);
+            EntityManager.AddEntity(e);
 
             return e;
         }
@@ -108,7 +108,7 @@ namespace MartinZottmann.Game.Entities
             foreach (var i in c)
                 i.Get<BaseComponent>().ParentName = e.Name;
 
-            EntityManager.Add(e);
+            EntityManager.AddEntity(e);
 
             return e;
         }
@@ -119,7 +119,7 @@ namespace MartinZottmann.Game.Entities
                 .Add(new BaseComponent() { Position = position, Orientation = orientation })
                 .Add(new InputComponent() { Speed = 100.0, Type = InputControlType.Direct })
                 .Add(new ChunkLoaderComponent());
-            EntityManager.Add(e);
+            EntityManager.AddEntity(e);
 
             return e;
         }
@@ -135,7 +135,7 @@ namespace MartinZottmann.Game.Entities
             var e = new Entity("Starfield")
                 .Add(new BaseComponent())
                 .Add(g);
-            EntityManager.Add(e);
+            EntityManager.AddEntity(e);
 
             return e;
         }
@@ -151,7 +151,7 @@ namespace MartinZottmann.Game.Entities
             var e = new Entity("Grid")
                 .Add(new BaseComponent())
                 .Add(g);
-            EntityManager.Add(e);
+            EntityManager.AddEntity(e);
 
             return e;
         }
@@ -168,7 +168,7 @@ namespace MartinZottmann.Game.Entities
                 .Add(new BaseComponent())
                 .Add(new CursorComponent())
                 .Add(g);
-            EntityManager.Add(e);
+            EntityManager.AddEntity(e);
 
             return e;
         }
@@ -177,7 +177,7 @@ namespace MartinZottmann.Game.Entities
         {
             var e = new Entity("GameState")
                 .Add(new GameStateComponent());
-            EntityManager.Add(e);
+            EntityManager.AddEntity(e);
 
             return e;
         }

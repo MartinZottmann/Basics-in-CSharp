@@ -38,7 +38,6 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityManager.cs" />
     <Compile Include="Entities\IComponent.cs" />
-    <Compile Include="Entities\INodeList.cs" />
     <Compile Include="Entities\ISystem.cs" />
     <Compile Include="Entities\Node.cs" />
     <Compile Include="Entities\NodeEventArgs.cs" />

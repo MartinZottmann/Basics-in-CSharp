@@ -7,13 +7,36 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class VertexArrayObject : IBindable, IDisposable
     {
-        protected uint id;
+        public uint Id { get; protected set; }
 
         public List<BufferObject> BufferObjects = new List<BufferObject>();
 
         public VertexArrayObject()
         {
-            GL.GenVertexArrays(1, out id);
+            Id = (uint)GL.GenVertexArray();
+        }
+
+        ~VertexArrayObject()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (0 != Id)
+                {
+                    GL.DeleteVertexArray(Id);
+                    Id = 0;
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void Add<U>(BufferObject<U> bo) where U : struct
@@ -62,17 +85,12 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public void Bind()
         {
-            GL.BindVertexArray(id);
+            GL.BindVertexArray(Id);
         }
 
         public void UnBind()
         {
             GL.BindVertexArray(0);
-        }
-
-        public void Dispose()
-        {
-            GL.DeleteVertexArrays(1, ref id);
         }
     }
 }

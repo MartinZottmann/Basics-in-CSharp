@@ -8,7 +8,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class Texture : IBindable, IDisposable
     {
-        public readonly uint Id;
+        public uint Id { get; protected set; }
 
 #if DEBUG
         public readonly string Name;
@@ -153,6 +153,29 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             }
         }
 
+        ~Texture()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (0 != Id)
+                {
+                    GL.DeleteTexture(Id);
+                    Id = 0;
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         protected void Init(Bitmap bmp, bool mipmapped, TextureTarget target, TextureMinFilter min_filter = TextureMinFilter.Nearest, TextureMagFilter mag_filter = TextureMagFilter.Nearest)
         {
             using (new Bind(this))
@@ -220,11 +243,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             GL.BindTexture(Target, 0);
             bind_stack--;
             BindId = 0;
-        }
-
-        public void Dispose()
-        {
-            GL.DeleteTexture(Id);
         }
     }
 }

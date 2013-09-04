@@ -12,12 +12,37 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public Texture Texture { get; set; }
 
-        public readonly VertexArrayObject VertexArrayObject = new VertexArrayObject();
+        public VertexArrayObject VertexArrayObject { get; protected set; }
 
         protected IMesh mesh;
 
-        public Model() : base() {
+        public Model()
+        {
             Mode = BeginMode.Triangles;
+            VertexArrayObject = new VertexArrayObject();
+        }
+
+        ~Model()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (null != VertexArrayObject)
+                {
+                    VertexArrayObject.Dispose();
+                    VertexArrayObject = null;
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public IMesh Mesh() { return mesh; }
@@ -30,11 +55,6 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             VertexArrayObject.Add(new BufferObject<V>(BufferTarget.ArrayBuffer, mesh.Vertices));
             if (mesh.IndicesLength != 0)
                 VertexArrayObject.Add(new BufferObject<I>(BufferTarget.ElementArrayBuffer, mesh.Indices));
-        }
-
-        public void Dispose()
-        {
-            VertexArrayObject.Dispose();
         }
 
         public virtual void Draw()

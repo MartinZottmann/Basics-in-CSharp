@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MartinZottmann.Engine.Graphics.Wavefront
 {
-    public class MtlFile : IDisposable
+    public class MtlFile
     {
         public string Filename;
 
@@ -13,12 +13,6 @@ namespace MartinZottmann.Engine.Graphics.Wavefront
         {
             Filename = filename;
             Materials = new Dictionary<string, MtlInfo>();
-        }
-
-        public void Dispose()
-        {
-            foreach (var material in Materials)
-                material.Value.Dispose();
         }
     }
 }

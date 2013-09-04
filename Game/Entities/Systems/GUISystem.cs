@@ -39,7 +39,7 @@ namespace MartinZottmann.Game.Entities.Systems
             font_mesh_builder = new FontMeshBuilder(font_map);
         }
 
-        public void Bind(EntityManager entity_manager)
+        public void Start(EntityManager entity_manager)
         {
             // @todo
         }
@@ -68,6 +68,11 @@ namespace MartinZottmann.Game.Entities.Systems
                 gui_element.Model.Program.UniformLocations["in_Texture"].Set(0);
                 gui_element.Render(delta_time);
             }
+        }
+
+        public void Stop()
+        {
+            // @todo
         }
 
         public void Add(IGUIElement gui_element)
