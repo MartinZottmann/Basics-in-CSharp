@@ -41,7 +41,7 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected NodeList<ParticleEmitterNode> particle_emitter_nodes;
 
-        protected internal Dictionary<string, ParticleList> particles = new Dictionary<string, ParticleList>();
+        protected Dictionary<string, ParticleList> particles = new Dictionary<string, ParticleList>();
 
         public ParticleSystem(Camera camera, ResourceManager resource_manager)
         {
@@ -84,9 +84,8 @@ namespace MartinZottmann.Game.Entities.Systems
             foreach (var particle_emitter_node in particle_emitter_nodes)
             {
                 var p = particles[particle_emitter_node.Entity.Name];
-                p.Model.Program.UniformLocations["in_ModelViewProjection"].Set(Matrix4d.CreateTranslation(particle_emitter_node.Base.Position) * Camera.ViewMatrix * Camera.ProjectionMatrix);
-                p.Model.Program.UniformLocations["in_CameraPosition"].Set(Camera.Position);
-                p.Model.Program.UniformLocations["in_CameraUp"].Set(Camera.Up);
+                p.Model.Program.UniformLocations["in_ModelView"].Set(Matrix4d.CreateTranslation(particle_emitter_node.Base.Position) * Camera.ViewMatrix);
+                p.Model.Program.UniformLocations["in_Projection"].Set(Camera.ProjectionMatrix);
                 p.Model.Program.UniformLocations["in_ParticleSize"].Set(0.25f);
                 p.Model.Program.UniformLocations["in_Texture"].Set(0);
                 p.Model.Draw();

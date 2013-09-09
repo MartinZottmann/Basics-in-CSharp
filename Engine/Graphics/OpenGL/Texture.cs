@@ -119,20 +119,20 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             }
         }
 
-        public Texture(string filename, bool mipmapped, TextureTarget target = TextureTarget.Texture2D)
+        public Texture(string filename, bool mipmapped, TextureTarget target = TextureTarget.Texture2D, TextureMinFilter min_filter = TextureMinFilter.Nearest, TextureMagFilter mag_filter = TextureMagFilter.Nearest)
             : this(target)
         {
 #if DEBUG
             Name = filename;
 #endif
             using (var img = new Bitmap(filename))
-                Init(img, mipmapped, target);
+                Init(img, mipmapped, target, min_filter, mag_filter);
         }
 
-        public Texture(Bitmap bmp, bool mipmapped = false, TextureTarget target = TextureTarget.Texture2D)
+        public Texture(Bitmap bmp, bool mipmapped = false, TextureTarget target = TextureTarget.Texture2D, TextureMinFilter min_filter = TextureMinFilter.Nearest, TextureMagFilter mag_filter = TextureMagFilter.Nearest)
             : this(target)
         {
-            Init(bmp, mipmapped, target);
+            Init(bmp, mipmapped, target, min_filter, mag_filter);
         }
 
         public Texture(TextureTarget target = TextureTarget.Texture2D)

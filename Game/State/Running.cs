@@ -66,7 +66,10 @@ namespace MartinZottmann.Game.State
             }
 
             foreach (var filename in Directory.GetFiles("Resources/Textures/", "*.png"))
-                resource_manager.Textures.Load(filename, true, TextureTarget.Texture2D);
+                if (filename.Contains("/debug-"))
+                    resource_manager.Textures.Load(filename);
+                else
+                    resource_manager.Textures.Load(filename, true, TextureTarget.Texture2D, TextureMinFilter.Linear, TextureMagFilter.Linear);
 
             Window.Keyboard.KeyUp += OnKeyUp;
 
