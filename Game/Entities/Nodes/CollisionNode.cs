@@ -36,8 +36,8 @@ namespace MartinZottmann.Game.Entities.Nodes
                     + p1.InverseMass
                     + Vector3d.Dot(
                         n,
-                        Vector3d.Cross(Vector3d.Cross(r0, n) * i0, r0)
-                        + Vector3d.Cross(Vector3d.Cross(r1, n) * i1, r1)
+                        Vector3d.Cross(Vector3d.Transform(Vector3d.Cross(r0, n), i0), r0)
+                        + Vector3d.Cross(Vector3d.Transform(Vector3d.Cross(r1, n), i1), r1)
                     );
                 var dvn = Vector3d.Dot(dv, n);
 
@@ -69,8 +69,8 @@ namespace MartinZottmann.Game.Entities.Nodes
                     + p1.InverseMass
                     + Vector3d.Dot(
                         tangent,
-                        Vector3d.Cross(Vector3d.Cross(r0, tangent) * i0, r0)
-                        + Vector3d.Cross(Vector3d.Cross(r1, tangent) * i1, r1)
+                        Vector3d.Cross(Vector3d.Transform(Vector3d.Cross(r0, tangent), i0), r0)
+                        + Vector3d.Cross(Vector3d.Transform(Vector3d.Cross(r1, tangent), i1), r1)
                     );
                 var dvt = Vector3d.Dot(dv, tangent);
                 var P = -dvt / kt;

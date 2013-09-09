@@ -45,7 +45,7 @@ namespace MartinZottmann.Game.Entities.Nodes
             if (Double.IsNaN(Physic.Velocity.X))
                 throw new Exception();
 #endif
-            Physic.AngularVelocity += Vector3d.Cross(point, force) * InverseInertiaWorld;
+            Physic.AngularVelocity += Vector3d.Transform(Vector3d.Cross(point, force), InverseInertiaWorld);
 #if DEBUG
             if (Double.IsNaN(Physic.AngularVelocity.X))
                 throw new Exception();
@@ -65,7 +65,7 @@ namespace MartinZottmann.Game.Entities.Nodes
                 throw new Exception();
 #endif
 
-            Physic.AngularVelocity += Physic.Torque * Physic.InverseInertia * delta_time;
+            Physic.AngularVelocity += Vector3d.Transform(Physic.Torque, Physic.InverseInertia) * delta_time;
 #if DEBUG
             if (Double.IsNaN(Physic.AngularVelocity.X))
                 throw new Exception();
