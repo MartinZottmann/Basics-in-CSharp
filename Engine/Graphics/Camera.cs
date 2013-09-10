@@ -120,7 +120,7 @@ namespace MartinZottmann.Engine.Graphics
 
         public Ray3d GetMouseRay()
         {
-            var start = new Vector4d((Window.Mouse.X / (double)Window.Width - 0.5) * 2.0, ((Window.Height - Window.Mouse.Y) / (double)Window.Height - 0.5) * 2.0, 1.0, 1.0);
+            var start = new Vector4d((Window.Mouse.X / (double)Window.Width - 0.5) * 2.0, ((Window.Height - Window.Mouse.Y) / (double)Window.Height - 0.5) * 2.0, 0.0, 1.0);
             var end = new Vector4d((Window.Mouse.X / (double)Window.Width - 0.5) * 2.0, ((Window.Height - Window.Mouse.Y) / (double)Window.Height - 0.5) * 2.0, -1.0, 1.0);
 
             var IPV = ProjectionMatrix.Inverted() * ViewMatrix.Inverted();

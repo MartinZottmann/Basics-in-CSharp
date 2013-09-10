@@ -45,26 +45,29 @@ namespace MartinZottmann.Game.Entities.Systems
         protected void OnButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (e.Button == MouseButton.Left)
-            {
-                selection.ForEach(t => t.Base.Mark = OpenTK.Graphics.Color4.Pink);
-                selection.Clear();
-                foreach (var hit in Intersections())
-                {
-                    selection.Add((PhysicNode)hit.Object1);
-                    Console.WriteLine("Select: {0}", hit.Object1);
-                }
-                selection.ForEach(t => t.Base.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255));
-            }
+                Select();
             //if (e.Button == MouseButton.Right){
             //    foreach (var physic_node in selection)
             //        if (physic_node.Entity.Has<TargetComponent>())
             //            physic_node.Entity.Get<TargetComponent>().Position = cursor_node.Base.Position;}
         }
 
-        protected SortedSet<Collision> Intersections()
+        protected void Select()
+        {
+            selection.ForEach(t => t.Base.Mark = OpenTK.Graphics.Color4.Pink);
+            selection.Clear();
+            foreach (var hit in Intersections())
+            {
+                selection.Add((PhysicNode)hit.Value.Object1);
+                Console.WriteLine("Select: {0}, {1}", hit.Key, hit.Value.Object1);
+            }
+            selection.ForEach(t => t.Base.Mark = new OpenTK.Graphics.Color4(255, 255, 0, 255));
+        }
+
+        protected SortedList<double, Collision> Intersections()
         {
             var ray = Camera.GetMouseRay();
-            var hits = new SortedSet<Collision>();
+            var hits = new SortedList<double, Collision>();
 
             foreach (var physic_node in physic_nodes)
             {
@@ -74,7 +77,7 @@ namespace MartinZottmann.Game.Entities.Systems
 
                 hit.Object0 = ray;
                 hit.Object1 = physic_node;
-                hits.Add(hit);
+                hits.Add((physic_node.Base.Position - ray.Origin).Length, hit);
             }
 
             return hits;
