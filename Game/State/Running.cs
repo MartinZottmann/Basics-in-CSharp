@@ -71,8 +71,6 @@ namespace MartinZottmann.Game.State
                 else
                     resource_manager.Textures.Load(filename, true, TextureTarget.Texture2D, TextureMinFilter.Linear, TextureMagFilter.Linear);
 
-            Window.Keyboard.KeyUp += OnKeyUp;
-
             var world_camera = new Camera(Window);
             world_camera.Position = new Vector3d(10);
             world_camera.LookAt = new Vector3d(0);
@@ -163,19 +161,6 @@ namespace MartinZottmann.Game.State
 
             entity_manager.Clear();
             resource_manager.Clear();
-        }
-
-        protected void OnKeyUp(object sender, KeyboardKeyEventArgs e)
-        {
-            if (e.Key == Key.F3)
-            {
-                entity_manager.GetEntity("GameState").Get<GameStateComponent>().Debug = !entity_manager.GetEntity("GameState").Get<GameStateComponent>().Debug;
-            }
-            if (e.Key == Key.F10)
-            {
-                var camera = entity_manager.GetSystem<InputSystem>().Camera;
-                camera.MouseLook = !camera.MouseLook;
-            }
         }
     }
 }

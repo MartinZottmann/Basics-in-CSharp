@@ -31,6 +31,9 @@ namespace MartinZottmann.Game.Entities.Systems
             key_bindings.Add(Key.D, InputControlCommand.StrafeRight);
             key_bindings.Add(Key.Space, InputControlCommand.StrafeUp);
             key_bindings.Add(Key.ShiftLeft, InputControlCommand.StrafeDown);
+
+            Window.Keyboard.KeyUp += OnKeyboardKeyUp;
+            Window.Mouse.ButtonUp += OnMouseButtonUp;
         }
 
         public void Start(EntityManager entity_manager)
@@ -60,6 +63,19 @@ namespace MartinZottmann.Game.Entities.Systems
         {
             game_state_nodes = null;
             input_nodes = null;
+        }
+
+        protected void OnKeyboardKeyUp(object sender, KeyboardKeyEventArgs e)
+        {
+            if (e.Key == Key.F3)
+                foreach (var game_state_node in game_state_nodes)
+                    game_state_node.GameState.Debug = !game_state_node.GameState.Debug;
+        }
+
+        protected void OnMouseButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Button == MouseButton.Right)
+                Camera.MouseLook = !Camera.MouseLook;
         }
     }
 }

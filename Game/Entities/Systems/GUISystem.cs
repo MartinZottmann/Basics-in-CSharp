@@ -87,10 +87,9 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected void OnButtonUp(object sender, MouseButtonEventArgs e)
         {
-            foreach (var hit in Intersections())
-            {
-                Console.WriteLine("{0}", (IGUIElement)hit.Object1);
-            }
+            if (e.Button == MouseButton.Left)
+                foreach (var hit in Intersections())
+                    Console.WriteLine("GUI Select: {0}", (IGUIElement)hit.Object1);
         }
 
         protected SortedSet<Collision> Intersections()

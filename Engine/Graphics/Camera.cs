@@ -66,7 +66,9 @@ namespace MartinZottmann.Engine.Graphics
 
         public Point WindowCenter { get { return new Point((Window.ClientRectangle.Left + Window.ClientRectangle.Right) / 2, (Window.ClientRectangle.Top + Window.ClientRectangle.Bottom) / 2); } }
 
-        bool mouse_look = false;
+        protected Point mouse_position;
+
+        protected bool mouse_look = false;
 
         public bool MouseLook
         {
@@ -75,9 +77,16 @@ namespace MartinZottmann.Engine.Graphics
             {
                 mouse_look = value;
                 if (value)
+                {
+                    mouse_position = Cursor.Position;
+                    Cursor.Position = Window.PointToScreen(WindowCenter);
                     Cursor.Hide();
+                }
                 else
+                {
                     Cursor.Show();
+                    Cursor.Position = mouse_position;
+                }
             }
         }
 
