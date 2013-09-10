@@ -7,5 +7,9 @@ namespace MartinZottmann.Game.Entities.Components
     public class GameStateComponent : IComponent
     {
         public bool Debug = false;
+
+        public string CameraEntityName = "Camera";
+
+        protected internal Entity camera_entity;
     }
 }

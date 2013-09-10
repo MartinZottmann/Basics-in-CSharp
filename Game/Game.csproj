@@ -89,6 +89,7 @@
     <Compile Include="Entities\Nodes\ParticleEmitterNode.cs" />
     <Compile Include="Entities\Nodes\PhysicNode.cs" />
     <Compile Include="Entities\Systems\AISystem.cs" />
+    <Compile Include="Entities\Systems\CameraSystem.cs" />
     <Compile Include="Entities\Systems\ChunkSystem.cs" />
     <Compile Include="Entities\Systems\CollisionSystem.cs" />
     <Compile Include="Entities\Systems\CursorSystem.cs" />

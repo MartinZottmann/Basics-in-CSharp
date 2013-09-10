@@ -5,18 +5,23 @@ namespace MartinZottmann.Game.Entities.Systems
 {
     public class GameStateSystem : ISystem
     {
+        protected EntityManager entity_manager;
+
         protected NodeList<GameStateNode> game_state_nodes;
 
         public void Start(EntityManager entity_manager)
         {
-            game_state_nodes = entity_manager.GetNodeList<GameStateNode>();
+            this.entity_manager = entity_manager;
+
+            game_state_nodes = this.entity_manager.GetNodeList<GameStateNode>();
         }
 
         public void Update(double delta_time)
         {
             foreach (var game_state_node in game_state_nodes)
             {
-                // @todo
+                if (null == game_state_node.GameState.camera_entity)
+                    game_state_node.GameState.camera_entity = entity_manager.GetEntity(game_state_node.GameState.CameraEntityName);
             }
         }
 

@@ -38,26 +38,14 @@ namespace MartinZottmann.Game.Entities.Systems
 
         public void Update(double delta_time)
         {
-            Camera.Update(delta_time);
-            var window = Camera.Window;
-
             foreach (var input_node in input_nodes)
-            {
-                //var forward = Camera.MouseLook
-                //    ? Camera.ForwardRelative
-                //    : (Camera.ForwardRelative - Vector3d.Dot(Camera.ForwardRelative, Camera.Up) * Camera.Up).Normalized();
-
                 foreach (var key_binding in key_bindings)
-                    if (window.Keyboard[key_binding.Key])
+                    if (Window.Keyboard[key_binding.Key])
                         input_node.Control(delta_time, key_binding.Value);
 
-                Camera.Position = input_node.Base.Position;
-                input_node.Base.Orientation = Camera.Orientation;
-            }
-
-            if (window.Keyboard[Key.KeypadPlus])
+            if (Window.Keyboard[Key.KeypadPlus])
                 Camera.Fov += MathHelper.PiOver6 * delta_time;
-            if (window.Keyboard[Key.KeypadSubtract])
+            if (Window.Keyboard[Key.KeypadSubtract])
                 Camera.Fov -= MathHelper.PiOver6 * delta_time;
         }
 

@@ -79,9 +79,10 @@ namespace MartinZottmann.Game.State
             var screen_camera = new Camera(Window);
 
             entity_manager = new EntityManager();
-            entity_manager.AddSystem(new InputSystem(Window, world_camera));
-            entity_manager.AddSystem(new CursorSystem(Window, world_camera));
             entity_manager.AddSystem(new GameStateSystem());
+            entity_manager.AddSystem(new InputSystem(Window, world_camera));
+            entity_manager.AddSystem(new CameraSystem(world_camera));
+            entity_manager.AddSystem(new CursorSystem(Window, world_camera));
             entity_manager.AddSystem(new AISystem());
             entity_manager.AddSystem(new PhysicSystem());
             entity_manager.AddSystem(new CollisionSystem());
@@ -115,13 +116,13 @@ namespace MartinZottmann.Game.State
                 //var a1 = creator.Create("Resources/Models/sphere.obj", new Vector3d(5, 0, 0));
                 //a1.Add(new CollisionComponent() { Group = CollisionGroups.Space });
                 //a1.Get<PhysicComponent>().Velocity = new Vector3d(-1, 0, 0);
-                creator.CreateShip(new Vector3d(-5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitX;
-                creator.CreateShip(new Vector3d(0, 0, 0))
-                    //.Add(new ParticleEmitterComponent())
-                    .Get<PhysicComponent>().AngularVelocity = Vector3d.UnitY;
-                creator.CreateShip(new Vector3d(5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitZ;
+                //creator.CreateShip(new Vector3d(-5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitX;
+                //creator.CreateShip(new Vector3d(0, 0, 0))
+                //    .Add(new ParticleEmitterComponent())
+                //    .Get<PhysicComponent>().AngularVelocity = Vector3d.UnitY;
+                //creator.CreateShip(new Vector3d(5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitZ;
                 for (var i = 0; i < 10; i++)
-                    creator.CreateShip(new Vector3d(0, 5 * i, 0));
+                    creator.CreateShip(new Vector3d(5 * i, 0, 0));
                 //creator.Create("Resources/Models/cube.obj", new Vector3d(0, -20, 0), new Vector3d(10));
                 //creator.Create("Resources/Models/cube.obj", new Vector3d(-20, 0, 0), new Vector3d(10));
             }
