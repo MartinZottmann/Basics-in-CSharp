@@ -36,6 +36,7 @@ namespace MartinZottmann.Game.Entities.GUI
 
         public virtual void Render(double delta_time)
         {
+            Model.Program.UniformLocations["in_Texture"].Set(0);
             Model.Draw();
         }
 

@@ -103,7 +103,8 @@ namespace MartinZottmann.Game.Entities
                 .Add(p)
                 .Add(new TargetComponent())
                 .Add(new AIComponent())
-                .Add(new ChunkLoaderComponent());
+                .Add(new ChunkLoaderComponent())
+                .Add(new CollisionComponent() { Group = CollisionGroups.All });
 
             foreach (var i in c)
                 i.Get<BaseComponent>().ParentName = e.Name;
@@ -150,23 +151,6 @@ namespace MartinZottmann.Game.Entities
 
             var e = new Entity("Grid")
                 .Add(new BaseComponent())
-                .Add(g);
-            EntityManager.AddEntity(e);
-
-            return e;
-        }
-
-        public Entity CreateCursor()
-        {
-            var g = new GraphicComponent();
-            g.ModelName = typeof(Cursor).FullName;
-            g.ProgramName = "normal";
-            //g.Model = new MartinZottmann.Game.Graphics.Cursor();
-            //g.Model.Program = ResourceManager.Programs["normal"];
-
-            var e = new Entity("Cursor")
-                .Add(new BaseComponent())
-                .Add(new CursorComponent())
                 .Add(g);
             EntityManager.AddEntity(e);
 

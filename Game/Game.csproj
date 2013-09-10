@@ -61,7 +61,6 @@
     <Compile Include="Entities\Components\BaseComponent.cs" />
     <Compile Include="Entities\Components\ChunkLoaderComponent.cs" />
     <Compile Include="Entities\Components\CollisionComponent.cs" />
-    <Compile Include="Entities\Components\CursorComponent.cs" />
     <Compile Include="Entities\Components\GameStateComponent.cs" />
     <Compile Include="Entities\Components\GraphicComponent.cs" />
     <Compile Include="Entities\Components\GUIComponent.cs">
@@ -73,6 +72,7 @@
     <Compile Include="Entities\Components\TargetComponent.cs" />
     <Compile Include="Entities\Creator.cs" />
     <Compile Include="Entities\GUI\Abstract.cs" />
+    <Compile Include="Entities\GUI\Crosshair.cs" />
     <Compile Include="Entities\GUI\Debugger.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -83,7 +83,6 @@
     <Compile Include="Entities\Nodes\AINode.cs" />
     <Compile Include="Entities\Nodes\ChunkLoaderNode.cs" />
     <Compile Include="Entities\Nodes\CollisionNode.cs" />
-    <Compile Include="Entities\Nodes\CursorNode.cs" />
     <Compile Include="Entities\Nodes\GameStateNode.cs" />
     <Compile Include="Entities\Nodes\GraphicNode.cs" />
     <Compile Include="Entities\Nodes\InputNode.cs" />
@@ -100,7 +99,6 @@
     <Compile Include="Entities\Systems\ParticleSystem.cs" />
     <Compile Include="Entities\Systems\PhysicSystem.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="Graphics\Cursor.cs" />
     <Compile Include="Graphics\Grid.cs" />
     <Compile Include="Graphics\RenderContext.cs" />
     <Compile Include="Graphics\Starfield.cs" />

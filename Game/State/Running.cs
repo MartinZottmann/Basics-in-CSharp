@@ -104,7 +104,6 @@ namespace MartinZottmann.Game.State
             {
                 var creator = new Creator(entity_manager, resource_manager);
                 creator.CreateGameState();
-                creator.CreateCursor();
                 creator.CreateCamera(world_camera.Position, world_camera.Orientation);
                 creator.CreateStarfield();
                 creator.CreateGrid();
@@ -118,11 +117,13 @@ namespace MartinZottmann.Game.State
                 //a1.Get<PhysicComponent>().Velocity = new Vector3d(-1, 0, 0);
                 creator.CreateShip(new Vector3d(-5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitX;
                 creator.CreateShip(new Vector3d(0, 0, 0))
-                    .Add(new ParticleEmitterComponent())
+                    //.Add(new ParticleEmitterComponent())
                     .Get<PhysicComponent>().AngularVelocity = Vector3d.UnitY;
                 creator.CreateShip(new Vector3d(5, 0, 0)).Get<PhysicComponent>().AngularVelocity = Vector3d.UnitZ;
-                creator.Create("Resources/Models/cube.obj", new Vector3d(0, -20, 0), new Vector3d(10));
-                creator.Create("Resources/Models/cube.obj", new Vector3d(-20, 0, 0), new Vector3d(10));
+                for (var i = 0; i < 10; i++)
+                    creator.CreateShip(new Vector3d(0, 5 * i, 0));
+                //creator.Create("Resources/Models/cube.obj", new Vector3d(0, -20, 0), new Vector3d(10));
+                //creator.Create("Resources/Models/cube.obj", new Vector3d(-20, 0, 0), new Vector3d(10));
             }
             else
             {
@@ -136,6 +137,7 @@ namespace MartinZottmann.Game.State
 
             entity_manager.GetSystem<GUISystem>().Add(new MartinZottmann.Game.Entities.GUI.Debugger(entity_manager));
             entity_manager.GetSystem<GUISystem>().Add(new FPSCounter());
+            entity_manager.GetSystem<GUISystem>().Add(new Crosshair());
 
             Debug.WriteLine(String.Format("Saving {0}", file_system.FilePath), GetType().FullName);
             file_system.Save(entity_manager.Entities);

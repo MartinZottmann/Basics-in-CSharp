@@ -121,12 +121,6 @@ namespace MartinZottmann.Game.Entities.Systems
                     if (null == entity)
                         continue;
 
-                    if (entity.Has<CursorComponent>())
-                    {
-                        entities[i] = null;
-                        continue;
-                    }
-
                     if (!entity.Has<BaseComponent>())
                     {
                         entities[i] = null;

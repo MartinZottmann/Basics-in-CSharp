@@ -65,7 +65,6 @@ namespace MartinZottmann.Game.Entities.Systems
                     * RenderContext.InvertedProjection;
 
                 gui_element.Model.Program.UniformLocations["in_ModelViewProjection"].Set(RenderContext.ProjectionViewModel);
-                gui_element.Model.Program.UniformLocations["in_Texture"].Set(0);
                 gui_element.Render(delta_time);
             }
         }
