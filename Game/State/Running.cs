@@ -82,7 +82,7 @@ namespace MartinZottmann.Game.State
             entity_manager.AddSystem(new GameStateSystem());
             entity_manager.AddSystem(new InputSystem(Window, world_camera));
             entity_manager.AddSystem(new CameraSystem(world_camera));
-            entity_manager.AddSystem(new CursorSystem(Window, world_camera));
+            entity_manager.AddSystem(new SelectionSystem(Window, world_camera));
             entity_manager.AddSystem(new AISystem());
             entity_manager.AddSystem(new PhysicSystem());
             entity_manager.AddSystem(new CollisionSystem());

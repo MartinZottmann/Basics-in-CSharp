@@ -63,9 +63,6 @@
     <Compile Include="Entities\Components\CollisionComponent.cs" />
     <Compile Include="Entities\Components\GameStateComponent.cs" />
     <Compile Include="Entities\Components\GraphicComponent.cs" />
-    <Compile Include="Entities\Components\GUIComponent.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Entities\Components\InputComponent.cs" />
     <Compile Include="Entities\Components\ParticleEmitterComponent.cs" />
     <Compile Include="Entities\Components\PhysicComponent.cs" />
@@ -92,7 +89,7 @@
     <Compile Include="Entities\Systems\CameraSystem.cs" />
     <Compile Include="Entities\Systems\ChunkSystem.cs" />
     <Compile Include="Entities\Systems\CollisionSystem.cs" />
-    <Compile Include="Entities\Systems\CursorSystem.cs" />
+    <Compile Include="Entities\Systems\SelectionSystem.cs" />
     <Compile Include="Entities\Systems\GameStateSystem.cs" />
     <Compile Include="Entities\Systems\GraphicSystem.cs" />
     <Compile Include="Entities\Systems\GUISystem.cs" />

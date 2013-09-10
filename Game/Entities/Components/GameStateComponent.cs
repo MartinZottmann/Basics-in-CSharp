@@ -11,5 +11,9 @@ namespace MartinZottmann.Game.Entities.Components
         public string CameraEntityName = "Camera";
 
         protected internal Entity camera_entity;
+
+        public string InputEntityName = "Camera";
+
+        protected internal Entity input_entity;
     }
 }

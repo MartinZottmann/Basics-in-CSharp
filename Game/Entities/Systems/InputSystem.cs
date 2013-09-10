@@ -16,6 +16,8 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected Dictionary<Key, InputControlCommand> key_bindings = new Dictionary<Key, InputControlCommand>();
 
+        protected NodeList<GameStateNode> game_state_nodes;
+
         protected NodeList<InputNode> input_nodes;
 
         public InputSystem(GameWindow window, Camera camera)
@@ -33,15 +35,18 @@ namespace MartinZottmann.Game.Entities.Systems
 
         public void Start(EntityManager entity_manager)
         {
+            game_state_nodes = entity_manager.GetNodeList<GameStateNode>();
             input_nodes = entity_manager.GetNodeList<InputNode>();
         }
 
         public void Update(double delta_time)
         {
-            foreach (var input_node in input_nodes)
-                foreach (var key_binding in key_bindings)
-                    if (Window.Keyboard[key_binding.Key])
-                        input_node.Control(delta_time, key_binding.Value);
+            foreach (var game_state_node in game_state_nodes)
+                foreach (var input_node in input_nodes)
+                    if (game_state_node.GameState.input_entity == input_node.Entity)
+                        foreach (var key_binding in key_bindings)
+                            if (Window.Keyboard[key_binding.Key])
+                                input_node.Control(delta_time, key_binding.Value);
 
             if (Window.Keyboard[Key.KeypadPlus])
                 Camera.Fov += MathHelper.PiOver6 * delta_time;
@@ -53,6 +58,7 @@ namespace MartinZottmann.Game.Entities.Systems
 
         public void Stop()
         {
+            game_state_nodes = null;
             input_nodes = null;
         }
     }

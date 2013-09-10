@@ -99,6 +99,7 @@ namespace MartinZottmann.Game.Entities
 
             var e = new Entity("Ship", true)
                 .Add(new BaseComponent() { Position = position })
+                .Add(new InputComponent() { Speed = 10.0, Type = InputControlType.Force })
                 .Add(new GraphicComponent())
                 .Add(p)
                 .Add(new TargetComponent())

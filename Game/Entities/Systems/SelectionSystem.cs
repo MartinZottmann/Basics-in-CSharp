@@ -1,7 +1,6 @@
 ﻿using MartinZottmann.Engine.Entities;
 using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Physics;
-using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Entities.Nodes;
 using OpenTK;
 using OpenTK.Input;
@@ -10,7 +9,7 @@ using System.Collections.Generic;
 
 namespace MartinZottmann.Game.Entities.Systems
 {
-    public class CursorSystem : ISystem
+    public class SelectionSystem : ISystem
     {
         public Camera Camera;
 
@@ -20,7 +19,7 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected List<PhysicNode> selection = new List<PhysicNode>();
 
-        public CursorSystem(GameWindow window, Camera camera)
+        public SelectionSystem(GameWindow window, Camera camera)
         {
             Window = window;
             Camera = camera;

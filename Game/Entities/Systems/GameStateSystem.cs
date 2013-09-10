@@ -22,6 +22,9 @@ namespace MartinZottmann.Game.Entities.Systems
             {
                 if (null == game_state_node.GameState.camera_entity)
                     game_state_node.GameState.camera_entity = entity_manager.GetEntity(game_state_node.GameState.CameraEntityName);
+
+                if (null == game_state_node.GameState.input_entity)
+                    game_state_node.GameState.input_entity = entity_manager.GetEntity(game_state_node.GameState.InputEntityName);
             }
         }
 
