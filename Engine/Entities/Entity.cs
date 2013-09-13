@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MartinZottmann.Engine.States;
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace MartinZottmann.Engine.Entities
 {
     [Serializable]
-    public class Entity
+    public class Entity : IStatable<IComponent>
     {
         protected static uint id = 0;
 
@@ -85,18 +86,32 @@ namespace MartinZottmann.Engine.Entities
             return components[component];
         }
 
-        public void Remove<T>() where T : IComponent
+        public Entity Remove<T>() where T : IComponent
         {
             components.Remove(typeof(T));
             if (null != ComponentRemoved)
                 ComponentRemoved(this, new ComponentEventArgs(this, typeof(T)));
+
+            return this;
         }
 
-        public void Remove(Type component)
+        public Entity Remove(IComponent component)
+        {
+            var type = component.GetType();
+            components.Remove(type);
+            if (null != ComponentRemoved)
+                ComponentRemoved(this, new ComponentEventArgs(this, type));
+
+            return this;
+        }
+
+        public Entity Remove(Type component)
         {
             components.Remove(component);
             if (null != ComponentRemoved)
                 ComponentRemoved(this, new ComponentEventArgs(this, component));
+
+            return this;
         }
 
         public bool Has<T>() where T : IComponent
@@ -112,6 +127,21 @@ namespace MartinZottmann.Engine.Entities
         public override string ToString()
         {
             return String.Format("{0} of type {1}", Name, base.ToString());
+        }
+
+        void IStatable<IComponent>.Add(IComponent instance)
+        {
+            Add(instance);
+        }
+
+        void IStatable<IComponent>.Remove(IComponent instance)
+        {
+            Remove(instance);
+        }
+
+        void IStatable<IComponent>.Remove(Type type)
+        {
+            Remove(type);
         }
     }
 }

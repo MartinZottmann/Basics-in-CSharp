@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MartinZottmann.Engine.States;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace MartinZottmann.Engine.Entities
 {
-    public class EntityManager
+    public class EntityManager : IStatable<Entity>, IStatable<ISystem>
     {
         protected Dictionary<string, Entity> entity_names = new Dictionary<string, Entity>();
 
@@ -73,39 +74,58 @@ namespace MartinZottmann.Engine.Entities
 
         public NodeList<T> GetNodeList<T>() where T : Node
         {
-            var t = typeof(T);
+            var type = typeof(T);
 
-            if (node_lists.ContainsKey(t))
-                return (NodeList<T>)node_lists[t];
+            if (node_lists.ContainsKey(type))
+                return (NodeList<T>)node_lists[type];
 
-            var node_list = new NodeList<T>(t);
-            node_lists[t] = node_list;
+            var node_list = new NodeList<T>(type);
+            node_lists[type] = node_list;
             foreach (var entity in entities)
                 node_list.MaybeAdd(entity);
 
-            return (NodeList<T>)node_lists[t];
+            return (NodeList<T>)node_lists[type];
         }
 
         public void AddSystem<T>(T system) where T : ISystem
         {
-            var t = typeof(T);
+            var type = typeof(T);
 
-            systems.Add(t, system);
+            systems.Add(type, system);
             system.Start(this);
         }
 
         public T GetSystem<T>() where T : ISystem
         {
-            return (T)systems[typeof(T)];
+            var type = typeof(T);
+
+            return (T)systems[type];
+        }
+
+        public void RemoveSystem(ISystem system)
+        {
+            var type = system.GetType();
+
+            if (system != systems[type])
+                throw new Exception();
+            system.Stop();
+            systems.Remove(type);
+        }
+
+        public void RemoveSystem(Type type)
+        {
+            var system = systems[type];
+            system.Stop();
+            systems.Remove(type);
         }
 
         public void RemoveSystem<T>() where T : ISystem
         {
-            var t = typeof(T);
+            var type = typeof(T);
 
-            var system = systems[t];
+            var system = systems[type];
             system.Stop();
-            systems.Remove(t);
+            systems.Remove(type);
         }
 
         public void ClearSystems()
@@ -147,6 +167,36 @@ namespace MartinZottmann.Engine.Entities
         {
             foreach (var system in systems.Values)
                 system.Render(delta_time);
+        }
+
+        void IStatable<Entity>.Add(Entity instance)
+        {
+            AddEntity(instance);
+        }
+
+        void IStatable<Entity>.Remove(Entity instance)
+        {
+            RemoveEntity(instance);
+        }
+
+        void IStatable<Entity>.Remove(Type type)
+        {
+            throw new Exception("Cannot remove entity by type.");
+        }
+
+        void IStatable<ISystem>.Add(ISystem instance)
+        {
+            AddSystem(instance);
+        }
+
+        void IStatable<ISystem>.Remove(ISystem instance)
+        {
+            RemoveSystem(instance);
+        }
+
+        void IStatable<ISystem>.Remove(Type type)
+        {
+            RemoveSystem(type);
         }
     }
 }

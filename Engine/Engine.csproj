@@ -42,6 +42,12 @@
     <Compile Include="Entities\Node.cs" />
     <Compile Include="Entities\NodeEventArgs.cs" />
     <Compile Include="Entities\NodeList.cs" />
+    <Compile Include="States\InstanceProvider.cs" />
+    <Compile Include="States\IProvider.cs" />
+    <Compile Include="States\IStatable.cs" />
+    <Compile Include="States\State.cs" />
+    <Compile Include="States\StateMachine.cs" />
+    <Compile Include="States\TypeProvider.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="Graphics\FontStructure.cs" />
