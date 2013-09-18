@@ -66,6 +66,7 @@
     <Compile Include="Entities\Components\InputComponent.cs" />
     <Compile Include="Entities\Components\ParticleEmitterComponent.cs" />
     <Compile Include="Entities\Components\PhysicComponent.cs" />
+    <Compile Include="Entities\Components\StateComponent.cs" />
     <Compile Include="Entities\Components\TargetComponent.cs" />
     <Compile Include="Entities\Creator.cs" />
     <Compile Include="Entities\GUI\Abstract.cs" />

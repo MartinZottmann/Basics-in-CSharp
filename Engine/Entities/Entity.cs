@@ -39,23 +39,6 @@ namespace MartinZottmann.Engine.Entities
 
         protected internal Dictionary<Type, IComponent> components = new Dictionary<Type, IComponent>();
 
-        [XmlArray("Components")]
-        [XmlArrayItem("Component")]
-        public object[] Components
-        {
-            get
-            {
-                IComponent[] r = new IComponent[components.Count];
-                components.Values.CopyTo(r, 0);
-                return r;
-            }
-            set
-            {
-                foreach (var component in value)
-                    Add((IComponent)component);
-            }
-        }
-
         public Entity() : this("Entity", true) { }
 
         public Entity(string name, bool append_number = false)

@@ -21,9 +21,9 @@ namespace MartinZottmann.Game
                 }
                 else
                 {
-                    state.Stop();
+                    Stop();
                     state = value;
-                    state.Start();
+                    Start();
                 }
             }
         }

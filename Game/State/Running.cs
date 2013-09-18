@@ -2,6 +2,7 @@
 using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Engine.States;
 using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Entities.GUI;
@@ -101,6 +102,36 @@ namespace MartinZottmann.Game.State
             }
             if (null == entities)
             {
+                var state_entity = new Entity();
+
+                var entity_state_machine = new StateMachine<Entity, IComponent>(state_entity);
+                entity_state_machine
+                    .CreateState("A")
+                    .Add<BaseComponent>()
+                    .Add<GraphicComponent>();
+
+                entity_state_machine
+                    .CreateState("B")
+                    .Add<GraphicComponent>()
+                    .Add<PhysicComponent>();
+
+                entity_state_machine
+                    .CreateState("C")
+                    .Add(new PhysicComponent() { Velocity = Vector3d.UnitX });
+
+                state_entity.Add(new TargetComponent());
+                state_entity.Add(new StateComponent() { State = entity_state_machine });
+
+                ;
+                entity_state_machine.ChangeState("A");
+                ;
+                entity_state_machine.ChangeState("B");
+                ;
+                entity_state_machine.ChangeState("C");
+                ;
+
+                entity_manager.AddEntity(state_entity);
+
                 var creator = new Creator(entity_manager, resource_manager);
                 creator.CreateGameState();
                 creator.CreateCamera(world_camera.Position, world_camera.Orientation);

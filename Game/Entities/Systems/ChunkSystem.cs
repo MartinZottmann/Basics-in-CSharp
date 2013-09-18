@@ -77,7 +77,7 @@ namespace MartinZottmann.Game.Entities.Systems
 
         protected NodeList<ChunkLoaderNode> chunk_loader_nodes;
 
-        public ChunkSystem()        {        }
+        public ChunkSystem() { }
 
         public void Start(EntityManager entity_manager)
         {
@@ -102,6 +102,7 @@ namespace MartinZottmann.Game.Entities.Systems
                     }
                 }
             );
+            loader.IsBackground = true;
             loader.Start();
         }
 
@@ -142,7 +143,10 @@ namespace MartinZottmann.Game.Entities.Systems
                     continue;
 
                 entity_manager.RemoveEntity(entity);
-                new Thread(() => { Save(VectorToPoint(entity.Get<BaseComponent>().Position), entity); }).Start();
+
+                var thread = new Thread(() => { Save(VectorToPoint(entity.Get<BaseComponent>().Position), entity); });
+                thread.IsBackground = true;
+                thread.Start();
             }
 
             lock (loader_lock)

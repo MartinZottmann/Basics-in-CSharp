@@ -42,6 +42,11 @@
     <Compile Include="Entities\Node.cs" />
     <Compile Include="Entities\NodeEventArgs.cs" />
     <Compile Include="Entities\NodeList.cs" />
+    <Compile Include="Serialization\ObjectReference.cs" />
+    <Compile Include="Serialization\SerializationReader.cs" />
+    <Compile Include="Serialization\SerializationWriter.cs" />
+    <Compile Include="Serialization\Serializer.cs" />
+    <Compile Include="Serialization\XmlNode.cs" />
     <Compile Include="States\InstanceProvider.cs" />
     <Compile Include="States\IProvider.cs" />
     <Compile Include="States\IStatable.cs" />
@@ -103,6 +108,7 @@
     <Compile Include="Resources\WavefrontObjFiles.cs" />
     <Compile Include="UnitTests\Graphics_Camera.cs" />
     <Compile Include="UnitTests\Physics_Sphere3d.cs" />
+    <Compile Include="UnitTests\Serialization_Serializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
