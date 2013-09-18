@@ -2,8 +2,15 @@
 
 namespace MartinZottmann.Engine.States
 {
-    public interface IProvider<T> : IEquatable<IProvider<T>>
+    public interface IProvider<TValue> : IEquatable<IProvider<TValue>>
     {
-        T Get();
+        TValue Value { get; }
+    }
+
+    public interface IProvider<TKey, TValue> : IEquatable<IProvider<TKey, TValue>>
+    {
+        TKey Key { get; }
+
+        TValue Value { get; }
     }
 }

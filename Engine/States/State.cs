@@ -4,40 +4,53 @@ using System.Collections.Generic;
 namespace MartinZottmann.Engine.States
 {
     [Serializable]
-    public class State<T>
+    public class State<TValue>
     {
-        protected Dictionary<Type, IProvider<T>> providers = new Dictionary<Type, IProvider<T>>();
+        public HashSet<IProvider<TValue>> Providers = new HashSet<IProvider<TValue>>();
 
-        public Dictionary<Type, IProvider<T>> Providers { get { return new Dictionary<Type, IProvider<T>>(providers); } }
-
-        public State<T> Add(T instance)
+        public HashSet<IProvider<TValue>> ProvidersCloneFlat()
         {
-            providers.Add(instance.GetType(), new InstanceProvider<T>(instance));
+            return new HashSet<IProvider<TValue>>(Providers);
+        }
+
+        public State<TValue> Add(TValue value)
+        {
+            Providers.Add(new InstanceProvider<TValue>(value));
             return this;
         }
 
-        public State<T> Add(Type type)
+        public State<TValue> Add(Type type)
         {
-            providers.Add(type, new TypeProvider<T>(type));
+            Providers.Add(new TypeProvider<TValue>(type));
             return this;
         }
 
-        public State<T> Add<U>() where U : class
+        public State<TValue> Add<T>() where T : TValue
         {
-            var type = typeof(U);
-            providers.Add(type, new TypeProvider<T>(type));
+            Providers.Add(new TypeProvider<TValue>(typeof(T)));
+            return this;
+        }
+    }
+
+    [Serializable]
+    public class State<TKey, TValue>
+    {
+        public HashSet<IProvider<TKey, TValue>> Providers = new HashSet<IProvider<TKey, TValue>>();
+
+        public HashSet<IProvider<TKey, TValue>> ProvidersCloneFlat()
+        {
+            return new HashSet<IProvider<TKey, TValue>>(Providers);
+        }
+
+        public State<TKey, TValue> Add(TKey key, TValue value)
+        {
+            Providers.Add(new InstanceProvider<TKey, TValue>(key, value));
             return this;
         }
 
-        public State<T> Remove(T instance)
+        public State<TKey, TValue> Add(TKey key, Type type)
         {
-            providers.Remove(instance.GetType());
-            return this;
-        }
-
-        public State<T> Remove(Type type)
-        {
-            providers.Remove(type);
+            Providers.Add(new TypeProvider<TKey, TValue>(key, type));
             return this;
         }
     }

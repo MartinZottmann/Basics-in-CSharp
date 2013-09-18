@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace MartinZottmann.Engine.Entities
 {
     [Serializable]
-    public class Entity : IStatable<IComponent>
+    public class Entity
     {
         protected static uint id = 0;
 
@@ -112,19 +112,13 @@ namespace MartinZottmann.Engine.Entities
             return String.Format("{0} of type {1}", Name, base.ToString());
         }
 
-        void IStatable<IComponent>.Add(IComponent instance)
+        public StateMachine<Entity, IComponent> GetComponentStateMachine()
         {
-            Add(instance);
-        }
-
-        void IStatable<IComponent>.Remove(IComponent instance)
-        {
-            Remove(instance);
-        }
-
-        void IStatable<IComponent>.Remove(Type type)
-        {
-            Remove(type);
+            return new StateMachine<Entity, IComponent>(
+                this,
+                (IComponent s) => Add(s),
+                (IComponent s) => Remove(s.GetType())
+            );
         }
     }
 }

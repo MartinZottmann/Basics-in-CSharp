@@ -192,7 +192,7 @@ namespace MartinZottmann.Engine.Serialization
 
         public void WriteStartElement(Type type, string name)
         {
-            Writer.WriteStartElement(null == name ? "Object" : name);
+            Writer.WriteStartElement(name ?? "Object");
             Writer.WriteAttributeString(Prefix, TypeAttributeName, Namespace, null == type ? NullType : type.FullName);
         }
 

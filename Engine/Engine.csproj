@@ -47,11 +47,10 @@
     <Compile Include="Serialization\SerializationWriter.cs" />
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Serialization\XmlNode.cs" />
+    <Compile Include="States\StateMachine.cs" />
     <Compile Include="States\InstanceProvider.cs" />
     <Compile Include="States\IProvider.cs" />
-    <Compile Include="States\IStatable.cs" />
     <Compile Include="States\State.cs" />
-    <Compile Include="States\StateMachine.cs" />
     <Compile Include="States\TypeProvider.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\Color.cs" />
@@ -109,6 +108,7 @@
     <Compile Include="UnitTests\Graphics_Camera.cs" />
     <Compile Include="UnitTests\Physics_Sphere3d.cs" />
     <Compile Include="UnitTests\Serialization_Serializer.cs" />
+    <Compile Include="UnitTests\States.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />

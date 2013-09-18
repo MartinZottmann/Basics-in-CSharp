@@ -2,7 +2,6 @@
 using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
-using MartinZottmann.Engine.States;
 using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Entities.GUI;
@@ -10,7 +9,6 @@ using MartinZottmann.Game.Entities.Systems;
 using MartinZottmann.Game.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -104,7 +102,7 @@ namespace MartinZottmann.Game.State
             {
                 var state_entity = new Entity();
 
-                var entity_state_machine = new StateMachine<Entity, IComponent>(state_entity);
+                var entity_state_machine = state_entity.GetComponentStateMachine();
                 entity_state_machine
                     .CreateState("A")
                     .Add<BaseComponent>()
