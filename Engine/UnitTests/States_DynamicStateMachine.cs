@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace MartinZottmann.Engine.UnitTests
 {
     [TestClass]
-    public class States
+    public class States_DynamicStateMachine
     {
         public class Component1 : IComponent { }
 
@@ -16,57 +16,6 @@ namespace MartinZottmann.Engine.UnitTests
         public class Component3 : IComponent { }
 
         public class Component4 : IComponent { }
-
-        [TestMethod]
-        public void StateMachine_Type()
-        {
-            // Arrange
-            var entity = new Entity();
-            var component1_at_arrange = new Component1();
-            entity.Add(component1_at_arrange);
-            var machine = new StateMachine<Entity, IComponent>(entity);
-            machine
-                .CreateState("A")
-                .Add(typeof(Component2));
-            machine
-                .CreateState("B")
-                .Add(typeof(Component3))
-                .Add<Component4>();
-            machine
-                .CreateState("C")
-                .Add(typeof(Component3));
-
-            // Act & Assert
-            Assert.AreEqual(entity.components.Count, 1);
-            Assert.AreEqual(entity.Get<Component1>(), component1_at_arrange);
-
-            machine.ChangeState("A");
-            Assert.AreEqual(entity.components.Count, 2);
-            Assert.AreEqual(entity.Get<Component1>(), component1_at_arrange);
-            var component2_at_first = entity.Get<Component2>();
-            Assert.AreEqual(component2_at_first.GetType(), typeof(Component2));
-
-            machine.ChangeState("B");
-            Assert.AreEqual(entity.components.Count, 3);
-            Assert.AreEqual(entity.Get<Component1>(), component1_at_arrange);
-            var component3_at_first = entity.Get<Component3>();
-            Assert.AreEqual(component3_at_first.GetType(), typeof(Component3));
-            Assert.AreEqual(entity.Get<Component4>().GetType(), typeof(Component4));
-
-            machine.ChangeState("C");
-            Assert.AreEqual(entity.components.Count, 2);
-            Assert.AreEqual(entity.Get<Component1>(), component1_at_arrange);
-            var component3_at_second = entity.Get<Component3>();
-            Assert.AreEqual(component3_at_second.GetType(), typeof(Component3));
-            Assert.AreEqual(component3_at_first, component3_at_second);
-
-            machine.ChangeState("A");
-            Assert.AreEqual(entity.components.Count, 2);
-            Assert.AreEqual(entity.Get<Component1>(), component1_at_arrange);
-            var component2_at_second = entity.Get<Component2>();
-            Assert.AreEqual(component2_at_second.GetType(), typeof(Component2));
-            Assert.AreNotEqual(component2_at_first, component2_at_second);
-        }
 
         [TestMethod]
         public void DynamicStateMachine_Type()
@@ -117,36 +66,6 @@ namespace MartinZottmann.Engine.UnitTests
             var component2_at_second = entity.Get<Component2>();
             Assert.AreEqual(component2_at_second.GetType(), typeof(Component2));
             Assert.AreNotEqual(component2_at_first, component2_at_second);
-        }
-
-        [TestMethod]
-        public void StateMachine_Instance()
-        {
-            // Arrange
-            var entity = new Entity();
-            var machine = new StateMachine<Entity, IComponent>(entity);
-            var component2_at_arrange = new Component2() { };
-            machine.CreateState("A").Add(component2_at_arrange);
-            machine.CreateState("B").Add(new Component3() { });
-
-            // Act & Assert
-            Assert.AreEqual(entity.components.Count, 0);
-
-            machine.ChangeState("A");
-            Assert.AreEqual(entity.components.Count, 1);
-            var component2_at_first = entity.Get<Component2>();
-            Assert.AreEqual(component2_at_first.GetType(), typeof(Component2));
-            Assert.AreEqual(component2_at_first, component2_at_arrange);
-
-            machine.ChangeState("B");
-            Assert.AreEqual(entity.components.Count, 1);
-            Assert.AreEqual(entity.Get<Component3>().GetType(), typeof(Component3));
-
-            machine.ChangeState("A");
-            Assert.AreEqual(entity.components.Count, 1);
-            var component2_at_second = entity.Get<Component2>();
-            Assert.AreEqual(component2_at_second.GetType(), typeof(Component2));
-            Assert.AreEqual(component2_at_second, component2_at_first);
         }
 
         [TestMethod]

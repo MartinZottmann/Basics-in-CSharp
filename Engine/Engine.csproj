@@ -109,10 +109,14 @@
     <Compile Include="Resources\Shaders.cs" />
     <Compile Include="Resources\Textures.cs" />
     <Compile Include="Resources\WavefrontObjFiles.cs" />
+    <Compile Include="UnitTests\Helper.cs" />
+    <Compile Include="UnitTests\Serialization_TestObject.cs" />
+    <Compile Include="UnitTests\States_Inception.cs" />
+    <Compile Include="UnitTests\States_StateMachine.cs" />
     <Compile Include="UnitTests\Graphics_Camera.cs" />
     <Compile Include="UnitTests\Physics_Sphere3d.cs" />
     <Compile Include="UnitTests\Serialization_Serializer.cs" />
-    <Compile Include="UnitTests\States.cs" />
+    <Compile Include="UnitTests\States_DynamicStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />

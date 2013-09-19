@@ -10,6 +10,8 @@ namespace MartinZottmann.Engine.States
 
         protected Dictionary<string, State<TValue>> states = new Dictionary<string, State<TValue>>();
 
+        public int Count { get { return states.Count; } }
+
         protected State<TValue> current_state;
 
         public AbstractStateMachine(TObject @object)
@@ -59,6 +61,20 @@ namespace MartinZottmann.Engine.States
         abstract protected void AddProviderToObject(IProvider<TValue> provider);
 
         abstract protected void RemoveProviderFromObject(IProvider<TValue> provider);
+
+        #region IStatable<IStateMachine<TObject,TValue>,string,IProvider<TValue>> Members
+
+        void IStatable<IStateMachine<TObject, TValue>, string, State<TValue>>.Add(string key, State<TValue> value)
+        {
+            AddState(key, value);
+        }
+
+        void IStatable<IStateMachine<TObject, TValue>, string, State<TValue>>.Remove(string key)
+        {
+            RemoveState(key);
+        }
+
+        #endregion
     }
 
     [Serializable]
@@ -67,6 +83,8 @@ namespace MartinZottmann.Engine.States
         public TObject @object;
 
         protected Dictionary<string, State<TKey, TValue>> states = new Dictionary<string, State<TKey, TValue>>();
+
+        public int Count { get { return states.Count; } }
 
         protected State<TKey, TValue> current_state;
 
@@ -117,5 +135,19 @@ namespace MartinZottmann.Engine.States
         abstract protected void AddProviderToObject(IProvider<TKey, TValue> provider);
 
         abstract protected void RemoveProviderFromObject(IProvider<TKey, TValue> provider);
+
+        #region IStatable<IStateMachine<TObject,TKey,TValue>,string,State<TKey,TValue>> Members
+
+        void IStatable<IStateMachine<TObject, TKey, TValue>, string, State<TKey, TValue>>.Add(string key, State<TKey, TValue> value)
+        {
+            AddState(key, value);
+        }
+
+        void IStatable<IStateMachine<TObject, TKey, TValue>, string, State<TKey, TValue>>.Remove(string key)
+        {
+            RemoveState(key);
+        }
+
+        #endregion
     }
 }
