@@ -2,6 +2,7 @@
 using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Graphics.OpenGL;
 using MartinZottmann.Engine.Resources;
+using MartinZottmann.Engine.States;
 using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Entities.GUI;
@@ -102,7 +103,7 @@ namespace MartinZottmann.Game.State
             {
                 var state_entity = new Entity();
 
-                var entity_state_machine = state_entity.GetComponentStateMachine();
+                var entity_state_machine = new StateMachine<Entity, IComponent>(state_entity);
                 entity_state_machine
                     .CreateState("A")
                     .Add<BaseComponent>()

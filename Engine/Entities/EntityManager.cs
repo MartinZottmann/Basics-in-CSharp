@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace MartinZottmann.Engine.Entities
 {
-    public class EntityManager
+    public class EntityManager : IStatable<EntityManager, Entity>, IStatable<EntityManager, ISystem>
     {
         protected Dictionary<string, Entity> entity_names = new Dictionary<string, Entity>();
 
@@ -169,14 +169,32 @@ namespace MartinZottmann.Engine.Entities
                 system.Render(delta_time);
         }
 
-        public StateMachine<EntityManager, Entity> GetEntityStateMachine()
+        #region IStatable<EntityManager,Entity> Members
+
+        void IStatable<EntityManager, Entity>.Add(Entity value)
         {
-            return new StateMachine<EntityManager, Entity>(this, AddEntity, RemoveEntity);
+            AddEntity(value);
         }
 
-        public StateMachine<EntityManager, ISystem> GetSystemStateMachine()
+        void IStatable<EntityManager, Entity>.Remove(Entity value)
         {
-            return new StateMachine<EntityManager, ISystem>(this, AddSystem, RemoveSystem);
+            RemoveEntity(value);
         }
+
+        #endregion
+
+        #region IStatable<EntityManager,ISystem> Members
+
+        void IStatable<EntityManager, ISystem>.Add(ISystem value)
+        {
+            AddSystem(value);
+        }
+
+        void IStatable<EntityManager, ISystem>.Remove(ISystem value)
+        {
+            RemoveSystem(value);
+        }
+
+        #endregion
     }
 }

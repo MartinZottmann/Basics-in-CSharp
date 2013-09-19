@@ -100,10 +100,13 @@ namespace MartinZottmann.Engine.Serialization
         public void SerializeClass(object @object)
         {
             var type = @object.GetType();
+            var context = new StreamingContext(StreamingContextStates.All);
 
             if (references.Contains(@object))
             {
+                CallOnSerializingMethods(@object, context);
                 WriteReferenceIDAttribute(@object);
+                CallOnSerializedMethods(@object, context);
                 return;
             }
 
@@ -111,34 +114,59 @@ namespace MartinZottmann.Engine.Serialization
 
             if (@object is ISerializable)
             {
-                SerializerISerializable(@object);
+                SerializerISerializable(@object, context);
                 return;
             }
 
+            CallOnSerializingMethods(@object, context);
             WriteMembers(@object);
+            CallOnSerializedMethods(@object, context);
         }
 
         public void SerializeValueType(object @object)
         {
             var type = @object.GetType();
+            var context = new StreamingContext(StreamingContextStates.All);
 
             if (@object is ISerializable)
             {
-                SerializerISerializable(@object);
+                SerializerISerializable(@object, context);
                 return;
             }
 
+            CallOnSerializingMethods(@object, context);
             WriteMembers(@object);
+            CallOnSerializedMethods(@object, context);
         }
 
-        public void SerializerISerializable(object @object)
+        public void SerializerISerializable(object @object, StreamingContext context)
         {
             var type = @object.GetType();
-
             var info = new SerializationInfo(type, new FormatterConverter());
+
+            CallOnSerializingMethods(@object, context);
             ((ISerializable)@object).GetObjectData(info, new StreamingContext(StreamingContextStates.All));
             foreach (var entry in info)
                 SerializeObject(entry.Value, null, entry.Name);
+            CallOnSerializedMethods(@object, context);
+        }
+
+        protected void CallOnSerializingMethods(object @object, StreamingContext context)
+        {
+            @object
+                .GetType()
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(s => null != s.GetCustomAttribute<OnSerializingAttribute>())
+                .Select(s => s.Invoke(@object, new object[] { context }));
+        }
+
+        protected void CallOnSerializedMethods(object @object, StreamingContext context)
+        {
+            @object
+                .GetType()
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(s => null != s.GetCustomAttribute<OnSerializedAttribute>())
+                .Select(s => s.Invoke(@object, new object[] { context }));
         }
 
         public void WriteMembers(object @object)

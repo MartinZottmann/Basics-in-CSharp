@@ -47,7 +47,11 @@
     <Compile Include="Serialization\SerializationWriter.cs" />
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Serialization\XmlNode.cs" />
+    <Compile Include="States\AbstractStateMachine.cs" />
+    <Compile Include="States\IStateMachine.cs" />
     <Compile Include="States\StateMachine.cs" />
+    <Compile Include="States\IStatable.cs" />
+    <Compile Include="States\DynamicStateMachine.cs" />
     <Compile Include="States\InstanceProvider.cs" />
     <Compile Include="States\IProvider.cs" />
     <Compile Include="States\State.cs" />

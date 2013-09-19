@@ -2,9 +2,12 @@
 
 namespace MartinZottmann.Engine.States
 {
+    [Serializable]
     public class TypeProvider<TValue> : IProvider<TValue>, IEquatable<TypeProvider<TValue>>
     {
-        public Type Type { get; protected set; }
+        protected Type type;
+
+        public Type Type { get { return type; } protected set { type = value; } }
 
         public TValue Value { get { return (TValue)Activator.CreateInstance(Type); } }
 
@@ -62,11 +65,16 @@ namespace MartinZottmann.Engine.States
         }
     }
 
+    [Serializable]
     public class TypeProvider<TKey, TValue> : IProvider<TKey, TValue>, IEquatable<TypeProvider<TKey, TValue>>
     {
-        public Type Type { get; protected set; }
+        protected Type type;
 
-        public TKey Key { get; protected set; }
+        public Type Type { get { return type; } protected set { type = value; } }
+
+        protected TKey key;
+
+        public TKey Key { get { return key; } protected set { key = value; } }
 
         public TValue Value { get { return (TValue)Activator.CreateInstance(Type); } }
 

@@ -7,6 +7,6 @@ namespace MartinZottmann.Game.Entities.Components
     [Serializable]
     public class StateComponent : IComponent
     {
-        public StateMachine<Entity, IComponent> State;
+        public IStateMachine<Entity, IComponent> State;
     }
 }

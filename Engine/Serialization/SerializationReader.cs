@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -168,52 +169,86 @@ namespace MartinZottmann.Engine.Serialization
             if (node.Attributes.ContainsKey(ReferenceIdAttributeName))
                 return references[Int32.Parse(node.Attributes[ReferenceIdAttributeName])];
 
+            var context = new StreamingContext(StreamingContextStates.All);
             if (typeof(ISerializable).IsAssignableFrom(node.Type))
-                return DeserializeISerializable(node);
+                return DeserializeISerializable(node, context, true);
 
-            var @object = CreateObject(node.Type);
-            references.Add(Int32.Parse(node.Attributes[IdAttributeName]), @object);
-
-            if (!node.IsEmptyElement)
-                node.Values = GetValues();
-            DeserializeFields(node, @object);
-            DeserializeProperties(node, @object);
-
-            return @object;
+            return CreateObjectAndCallHooks(node, context, true);
         }
 
         public object DeserializeValueType(XmlNode node)
         {
+            var context = new StreamingContext(StreamingContextStates.All);
             if (typeof(ISerializable).IsAssignableFrom(node.Type))
-                return DeserializeISerializable(node);
+                return DeserializeISerializable(node, context, false);
 
-            var @object = CreateObject(node.Type);
-
-            if (!node.IsEmptyElement)
-                node.Values = GetValues();
-            DeserializeFields(node, @object);
-            DeserializeProperties(node, @object);
-
-            return @object;
+            return CreateObjectAndCallHooks(node, context, false);
         }
 
-        public object DeserializeISerializable(XmlNode node)
+        public object DeserializeISerializable(XmlNode node, StreamingContext context, bool add_reference)
         {
+            var constructor = node.Type.GetConstructor(BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, null, new[] { typeof(SerializationInfo), typeof(StreamingContext) }, null);
+            if (null == constructor)
+                throw new Exception();
+
             var @object = CreateObject(node.Type);
             references.Add(Int32.Parse(node.Attributes[IdAttributeName]), @object);
-
-            var constructor = node.Type.GetConstructor(BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance, null, new[] { typeof(SerializationInfo), typeof(StreamingContext) }, null);
+            CallOnDeserializingMethods(node, @object, context);
             if (!node.IsEmptyElement)
                 node.Values = GetValues();
             var info = new SerializationInfo(node.Type, new FormatterConverter());
             foreach (var value in node.Values)
                 info.AddValue(value.Key, value.Value);
-            constructor.Invoke(@object, new object[] { info, new StreamingContext(StreamingContextStates.All) });
-            var on_deserialization = node.Type.GetMethod("OnDeserialization", BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(Object) }, null);
-            if (null != on_deserialization)
-                on_deserialization.Invoke(@object, new[] { this });
+            constructor.Invoke(@object, new object[] { info, context });
+            CallOnDeserializedMethods(node, @object, context);
+            CallIDeserializationCallbackMethod(node, @object);
 
             return @object;
+        }
+
+        protected object CreateObjectAndCallHooks(XmlNode node, StreamingContext context, bool add_reference)
+        {
+            var @object = CreateObject(node.Type);
+            if (add_reference)
+                references.Add(Int32.Parse(node.Attributes[IdAttributeName]), @object);
+            CallOnDeserializingMethods(node, @object, context);
+            if (!node.IsEmptyElement)
+                node.Values = GetValues();
+            DeserializeFields(node, @object);
+            DeserializeProperties(node, @object);
+            CallOnDeserializedMethods(node, @object, context);
+            CallIDeserializationCallbackMethod(node, @object);
+
+            return @object;
+        }
+
+        protected void CallOnDeserializingMethods(XmlNode node, object @object, StreamingContext context)
+        {
+            node
+                .Type
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(s => null != s.GetCustomAttribute<OnDeserializingAttribute>())
+                .Select(s => s.Invoke(@object, new object[] { context }));
+        }
+
+        protected void CallOnDeserializedMethods(XmlNode node, object @object, StreamingContext context)
+        {
+            node
+                .Type
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(s => null != s.GetCustomAttribute<OnDeserializedAttribute>())
+                .Select(s => s.Invoke(@object, new object[] { context }));
+        }
+
+        protected void CallIDeserializationCallbackMethod(XmlNode node, object @object)
+        {
+            if (!typeof(IDeserializationCallback).IsAssignableFrom(node.Type))
+                return;
+
+            node
+                .Type
+                .GetMethod("OnDeserialization", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[] { typeof(object) }, null)
+                .Invoke(@object, new[] { this });
         }
 
         public void DeserializeFields(XmlNode node, object @object)

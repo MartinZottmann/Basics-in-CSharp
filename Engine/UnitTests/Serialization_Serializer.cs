@@ -1,5 +1,6 @@
 ﻿using MartinZottmann.Engine.Entities;
 using MartinZottmann.Engine.Serialization;
+using MartinZottmann.Engine.States;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenTK;
 using System;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace MartinZottmann.Engine.UnitTests
@@ -40,7 +42,7 @@ namespace MartinZottmann.Engine.UnitTests
         }
 
         [TestMethod]
-        public void SerializeDeserialize()
+        public void SerializeDeserialize_Common()
         {
             // Arrange
             var encoding = Encoding.UTF8;
@@ -151,23 +153,80 @@ namespace MartinZottmann.Engine.UnitTests
             }
         }
 
+        protected class StateDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializable, IStatable<StateDictionary<TKey, TValue>, TKey, TValue>
+        {
+            public StateDictionary() : base() { }
+
+            protected StateDictionary(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+            #region IStatable<StateDictionary<TKey,TValue>,TKey,TValue> Members
+
+            void IStatable<StateDictionary<TKey, TValue>, TKey, TValue>.Add(TKey key, TValue value)
+            {
+                Add(key, value);
+            }
+
+            void IStatable<StateDictionary<TKey, TValue>, TKey, TValue>.Remove(TKey key)
+            {
+                Remove(key);
+            }
+
+            #endregion
+        }
+
+        [TestMethod]
+        public void SerializeDeserialize_StateMachine()
+        {
+            // Arrange
+            var encoding = Encoding.UTF8;
+            var serializer = new Serializer();
+            var target = new StateDictionary<string, string>();
+            var subject = new StateMachine<StateDictionary<string, string>, string, string>(target);
+            subject.CreateState("Hex2Dec")
+                .Add("A", "10")
+                .Add("B", "11");
+            subject.CreateState("Dec2Hex")
+                .Add("10", "A")
+                .Add("11", "B");
+            subject.ChangeState("Hex2Dec");
+            var @object = new TestObject(subject);
+
+            // Act #1
+            using (var stream = new MemoryStream())
+            {
+                serializer.Serialize(stream, @object.Object);
+                @object.Serialized = encoding.GetString(stream.ToArray());
+            }
+
+            // Act #2
+            var buffer = encoding.GetBytes(@object.Serialized);
+            using (var stream = new MemoryStream(buffer))
+                @object.Deserialized = serializer.Deserialize(stream);
+
+            // Assert
+            Assert.IsTrue(EqualsDeep(subject, @object.Object));
+        }
+
         public bool EqualsDeep(object a, object b)
         {
-            var stack = new Stack();
-            stack.Push(a);
-            stack.Push(b);
-            var result = EqualsDeep(a, b, stack);
-            stack.Pop();
-            stack.Pop();
+            var terminators = new HashSet<object>();
+            terminators.Add(a);
+            terminators.Add(b);
+            var result = EqualsDeep(a, b, terminators);
+            terminators.Remove(b);
+            terminators.Remove(a);
             return result;
         }
 
-        protected bool EqualsDeep(object a, object b, Stack stack)
+        protected bool EqualsDeep(object a, object b, HashSet<object> terminators)
         {
             if (null == a && null == b)
                 return true;
 
             if (null == a || null == b)
+                return false;
+
+            if (a is IntPtr || b is IntPtr || a is UIntPtr || b is UIntPtr)
                 return false;
 
             var type_a = a.GetType();
@@ -176,29 +235,32 @@ namespace MartinZottmann.Engine.UnitTests
             if (type_a != type_b)
                 return false;
 
-            if (type_a.IsEnum || type_a.IsPrimitive || type_a == typeof(String))
+            if (type_a.IsPointer || type_b.IsPointer)
+                return false;
+
+            if (type_a.IsEnum || type_a.IsPrimitive || typeof(String) == type_a)
                 return Object.Equals(a, b);
 
-            var fields = type_a.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            var fields = type_a.GetFields(BindingFlags.Instance | BindingFlags.Public);
 
             foreach (var field in fields)
             {
                 var value_a = field.GetValue(a);
                 var value_b = field.GetValue(b);
 
-                if (stack.Contains(value_a) && stack.Contains(value_b))
+                if (terminators.Contains(value_a) && terminators.Contains(value_b))
                     continue;
 
-                stack.Push(value_a);
-                stack.Push(value_b);
-                var result = EqualsDeep(value_a, value_b, stack);
-                stack.Pop();
-                stack.Pop();
+                terminators.Add(value_a);
+                terminators.Add(value_b);
+                var result = EqualsDeep(value_a, value_b, terminators);
+                terminators.Remove(value_b);
+                terminators.Remove(value_a);
                 if (!result)
                     return false;
             }
 
-            var properties = type_a.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var properties = type_a.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
             foreach (var property in properties)
             {
@@ -214,14 +276,14 @@ namespace MartinZottmann.Engine.UnitTests
                 var value_a = property.GetValue(a);
                 var value_b = property.GetValue(b);
 
-                if (stack.Contains(value_a) && stack.Contains(value_b))
+                if (terminators.Contains(value_a) && terminators.Contains(value_b))
                     continue;
 
-                stack.Push(value_a);
-                stack.Push(value_b);
-                var result = EqualsDeep(value_a, value_b, stack);
-                stack.Pop();
-                stack.Pop();
+                terminators.Add(value_a);
+                terminators.Add(value_b);
+                var result = EqualsDeep(value_a, value_b, terminators);
+                terminators.Remove(value_b);
+                terminators.Remove(value_a);
                 if (!result)
                     return false;
             }
