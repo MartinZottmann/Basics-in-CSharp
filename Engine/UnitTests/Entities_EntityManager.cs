@@ -49,8 +49,9 @@ namespace MartinZottmann.Engine.UnitTests
             var component_b = new ComponentB();
             var component_c = new ComponentC();
 
-            // Act
+            // Act #1
             var node_ab = m.GetNodeList<NodeAB>();
+            var node_bc = m.GetNodeList<NodeBC>();
             var node_abc = m.GetNodeList<NodeAbC>();
             e1.Add(component_a);
             e1.Add(component_b);
@@ -66,21 +67,56 @@ namespace MartinZottmann.Engine.UnitTests
             e4.Add(component_c);
             m.AddEntity(e4);
 
-            // Assert
-            Assert.AreEqual(node_ab.First.Entity, e1);
-            Assert.AreEqual(node_ab.First.A, component_a);
-            Assert.AreEqual(node_ab.First.B, component_b);
-            Assert.AreEqual(node_ab.Last.Entity, e4);
-            Assert.AreEqual(node_ab.Last.A, component_a);
-            Assert.AreEqual(node_ab.Last.B, component_b);
-            Assert.AreEqual(node_abc.First.Entity, e3);
-            Assert.AreEqual(node_abc.First.A, component_a);
-            Assert.AreEqual(node_abc.First.B, null);
-            Assert.AreEqual(node_abc.First.C, component_c);
-            Assert.AreEqual(node_abc.Last.Entity, e4);
-            Assert.AreEqual(node_abc.Last.A, component_a);
-            Assert.AreEqual(node_abc.Last.B, component_b);
-            Assert.AreEqual(node_abc.Last.C, component_c);
+            // Assert #
+            Assert.AreEqual(node_ab.Nodes.Length, 2);
+            Assert.AreEqual(node_ab.Nodes[0].Entity, e1);
+            Assert.AreEqual(node_ab.Nodes[0].A, component_a);
+            Assert.AreEqual(node_ab.Nodes[0].B, component_b);
+            Assert.AreEqual(node_ab.Nodes[1].Entity, e4);
+            Assert.AreEqual(node_ab.Nodes[1].A, component_a);
+            Assert.AreEqual(node_ab.Nodes[1].B, component_b);
+
+            Assert.AreEqual(node_bc.Nodes.Length, 2);
+            Assert.AreEqual(node_bc.Nodes[0].Entity, e2);
+            Assert.AreEqual(node_bc.Nodes[0].B, component_b);
+            Assert.AreEqual(node_bc.Nodes[0].C, component_c);
+            Assert.AreEqual(node_bc.Nodes[1].Entity, e4);
+            Assert.AreEqual(node_bc.Nodes[1].B, component_b);
+            Assert.AreEqual(node_bc.Nodes[1].C, component_c);
+
+            Assert.AreEqual(node_abc.Nodes.Length, 2);
+            Assert.AreEqual(node_abc.Nodes[0].Entity, e3);
+            Assert.AreEqual(node_abc.Nodes[0].A, component_a);
+            Assert.AreEqual(node_abc.Nodes[0].B, null);
+            Assert.AreEqual(node_abc.Nodes[0].C, component_c);
+            Assert.AreEqual(node_abc.Nodes[1].Entity, e4);
+            Assert.AreEqual(node_abc.Nodes[1].A, component_a);
+            Assert.AreEqual(node_abc.Nodes[1].B, component_b);
+            Assert.AreEqual(node_abc.Nodes[1].C, component_c);
+
+            // Act #2
+            e4.Remove(component_b);
+
+            // Assert #2
+            Assert.AreEqual(node_ab.Nodes.Length, 1);
+            Assert.AreEqual(node_ab.Nodes[0].Entity, e1);
+            Assert.AreEqual(node_ab.Nodes[0].A, component_a);
+            Assert.AreEqual(node_ab.Nodes[0].B, component_b);
+
+            Assert.AreEqual(node_bc.Nodes.Length, 1);
+            Assert.AreEqual(node_bc.Nodes[0].Entity, e2);
+            Assert.AreEqual(node_bc.Nodes[0].B, component_b);
+            Assert.AreEqual(node_bc.Nodes[0].C, component_c);
+
+            Assert.AreEqual(node_abc.Nodes.Length, 2);
+            Assert.AreEqual(node_abc.Nodes[0].Entity, e3);
+            Assert.AreEqual(node_abc.Nodes[0].A, component_a);
+            Assert.AreEqual(node_abc.Nodes[0].B, null);
+            Assert.AreEqual(node_abc.Nodes[0].C, component_c);
+            Assert.AreEqual(node_abc.Nodes[1].Entity, e4);
+            Assert.AreEqual(node_abc.Nodes[1].A, component_a);
+            Assert.AreEqual(node_abc.Nodes[1].B, null);
+            Assert.AreEqual(node_abc.Nodes[1].C, component_c);
         }
     }
 }

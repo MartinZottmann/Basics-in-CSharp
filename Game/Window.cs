@@ -52,7 +52,7 @@ namespace MartinZottmann.Game
             GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
             GL.Hint(HintTarget.TextureCompressionHint, HintMode.Nicest);
 
-            Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(OnKeyUp);
+            Keyboard.KeyUp += OnKeyUp;
 
             // Subscribe to mouse events
             game = new Game();
