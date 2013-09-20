@@ -212,11 +212,11 @@ namespace MartinZottmann.Game.Entities.Systems
                 {
                     Vertices = new VertexP3C4[] {
                         new VertexP3C4(Vector3.Zero, forward),
-                        new VertexP3C4((Vector3)b.Forward, forward),
+                        new VertexP3C4((Vector3)b.Forward, forward.Inverted()),
                         new VertexP3C4(Vector3.Zero, up),
-                        new VertexP3C4((Vector3)b.Up, up),
+                        new VertexP3C4((Vector3)b.Up, up.Inverted()),
                         new VertexP3C4(Vector3.Zero, right),
-                        new VertexP3C4((Vector3)b.Right, right),
+                        new VertexP3C4((Vector3)b.Right, right.Inverted()),
                     },
                     Indices = new uint[] {
                         0, 1, 2, 3, 4, 5
