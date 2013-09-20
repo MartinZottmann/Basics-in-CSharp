@@ -131,8 +131,6 @@ namespace MartinZottmann.Game.Entities
             var g = new GraphicComponent();
             g.ModelName = typeof(Starfield).FullName;
             g.ProgramName = "normal";
-            //g.Model = new Starfield();
-            //g.Model.Program = ResourceManager.Programs["normal"];
 
             var e = new Entity("Starfield")
                 .Add(new BaseComponent())
@@ -147,8 +145,6 @@ namespace MartinZottmann.Game.Entities
             var g = new GraphicComponent();
             g.ModelName = typeof(Grid).FullName;
             g.ProgramName = "normal";
-            //g.Model = new Grid();
-            //g.Model.Program = ResourceManager.Programs["normal"];
 
             var e = new Entity("Grid")
                 .Add(new BaseComponent())

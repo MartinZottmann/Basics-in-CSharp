@@ -62,6 +62,7 @@ namespace MartinZottmann.Game.Entities.Components
 
         public string ParentName;
 
+        [NonSerialized]
         protected internal BaseComponent parent_base;
     }
 }

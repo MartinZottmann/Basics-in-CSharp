@@ -1,6 +1,4 @@
 ﻿using MartinZottmann.Engine.Entities;
-using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Entities.Nodes;
 

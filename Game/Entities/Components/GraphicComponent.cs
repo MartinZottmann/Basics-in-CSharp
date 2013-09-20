@@ -14,6 +14,7 @@ namespace MartinZottmann.Game.Entities.Components
 
         public string TextureName;
 
+        [NonSerialized]
         [XmlIgnore]
         public Model Model;
     }
