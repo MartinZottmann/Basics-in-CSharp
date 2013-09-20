@@ -59,9 +59,23 @@ namespace MartinZottmann.Game.Entities.Systems
             frame_buffer.CheckStatus();
         }
 
+        ~GraphicSystem()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                frame_buffer.Dispose();
+            }
+        }
+
         public void Dispose()
         {
-            frame_buffer.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void Start(EntityManager entity_manager)
