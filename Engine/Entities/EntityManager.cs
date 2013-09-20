@@ -11,7 +11,7 @@ namespace MartinZottmann.Engine.Entities
 
         protected List<Entity> entities = new List<Entity>();
 
-        protected Dictionary<Type, NodeList> node_lists = new Dictionary<Type, NodeList>();
+        protected Dictionary<Type, INodeList> node_lists = new Dictionary<Type, INodeList>();
 
         protected Dictionary<Type, ISystem> systems = new Dictionary<Type, ISystem>();
 
@@ -79,7 +79,7 @@ namespace MartinZottmann.Engine.Entities
             if (node_lists.ContainsKey(type))
                 return (NodeList<T>)node_lists[type];
 
-            var node_list = new NodeList<T>(type);
+            var node_list = new NodeList<T>();
             node_lists[type] = node_list;
             foreach (var entity in entities)
                 node_list.MaybeAdd(entity);

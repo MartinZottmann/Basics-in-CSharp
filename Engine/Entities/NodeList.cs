@@ -1,24 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace MartinZottmann.Engine.Entities
 {
-    abstract public class NodeList
+    public class NodeList<T> : INodeList, IEnumerable<T> where T : Node
     {
-        abstract protected internal void ComponentAdded(Entity entity, Type component_type);
+        protected Delegate node_contructor;
 
-        abstract protected internal void ComponentRemoved(Entity entity, Type component_type);
+        protected IEnumerable<FieldInfo> fields;
 
-        abstract protected internal void MaybeAdd(Entity entity);
-
-        abstract protected internal void MaybeRemove(Entity entity);
-    }
-
-    public class NodeList<T> : NodeList, IEnumerable<T> where T : Node
-    {
-        public readonly Type NodeType;
-
-        protected HashSet<Type> component_types = new HashSet<Type>();
+        protected Dictionary<Type, bool> component_types = new Dictionary<Type, bool>();
 
         protected List<T> nodes = new List<T>();
 
@@ -30,26 +25,29 @@ namespace MartinZottmann.Engine.Entities
 
         public T Last { get { return nodes[nodes.Count - 1]; } }
 
-        public NodeList(Type node_type)
+        public NodeList()
         {
-            NodeType = node_type;
-            foreach (var field in NodeType.GetFields())
-                foreach (var @interface in field.FieldType.GetInterfaces())
-                    if (@interface.FullName == typeof(IComponent).FullName)
-                        component_types.Add(field.FieldType);
+            node_contructor = Expression.Lambda(Expression.New(typeof(T))).Compile();
+
+            fields = typeof(T)
+                .GetFields(BindingFlags.Instance | BindingFlags.Public)
+                .Where(s => typeof(IComponent).IsAssignableFrom(s.FieldType));
+
+            foreach (var field in fields)
+                component_types.Add(field.FieldType, null == field.GetCustomAttribute<OptionalComponentAttribute>());
         }
 
-        protected internal override void ComponentAdded(Entity entity, Type component_type)
+        public void ComponentAdded(Entity entity, Type component_type)
         {
-            if (!component_types.Contains(component_type))
+            if (!component_types.ContainsKey(component_type))
                 return;
 
             MaybeAdd(entity);
         }
 
-        protected internal override void ComponentRemoved(Entity entity, Type component_type)
+        public void ComponentRemoved(Entity entity, Type component_type)
         {
-            if (!component_types.Contains(component_type))
+            if (!component_types.ContainsKey(component_type))
                 return;
 
             var node = nodes.Find(s => s.Entity == entity);
@@ -61,28 +59,24 @@ namespace MartinZottmann.Engine.Entities
                 NodeRemoved(this, new NodeEventArgs<T>(this, node));
         }
 
-        protected internal override void MaybeAdd(Entity entity)
+        public void MaybeAdd(Entity entity)
         {
-            foreach (var i in component_types)
-                if (!entity.Has(i))
+            foreach (var component_type in component_types)
+                if (component_type.Value && !entity.Has(component_type.Key))
                     return;
 
-            var node = (T)Activator.CreateInstance(NodeType);
+            var node = (T)node_contructor.DynamicInvoke();
             node.Entity = entity;
-            foreach (var i in node.GetType().GetFields())
-                foreach (var j in component_types)
-                    if (i.FieldType == j)
-                    {
-                        i.SetValue(node, entity.Get(j));
-                        break;
-                    }
+            foreach (var field in fields)
+                if (entity.Has(field.FieldType))
+                    field.SetValue(node, entity.Get(field.FieldType));
 
             nodes.Add(node);
             if (null != NodeAdded)
                 NodeAdded(this, new NodeEventArgs<T>(this, node));
         }
 
-        protected internal override void MaybeRemove(Entity entity)
+        public void MaybeRemove(Entity entity)
         {
             var node = nodes.Find(s => s.Entity == entity);
             if (null == node)
@@ -91,13 +85,6 @@ namespace MartinZottmann.Engine.Entities
             nodes.Remove(node);
             if (null != NodeRemoved)
                 NodeRemoved(this, new NodeEventArgs<T>(this, node));
-
-            //foreach (var i in component_types)
-            //    if (!entity.Has(i))
-            //    {
-            //        entities.Remove(entity);
-            //        return;
-            //    }
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -105,9 +92,9 @@ namespace MartinZottmann.Engine.Entities
             return nodes.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return nodes.GetEnumerator();
+            return GetEnumerator();
         }
     }
 }

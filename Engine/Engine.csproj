@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="Bind.cs" />
     <Compile Include="Entities\ComponentEventArgs.cs" />
+    <Compile Include="Entities\INodeList.cs" />
     <Compile Include="Entities\NameEventArgs.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityManager.cs" />
@@ -42,6 +43,7 @@
     <Compile Include="Entities\Node.cs" />
     <Compile Include="Entities\NodeEventArgs.cs" />
     <Compile Include="Entities\NodeList.cs" />
+    <Compile Include="Entities\OptionalComponentAttribute.cs" />
     <Compile Include="Serialization\ObjectReference.cs" />
     <Compile Include="Serialization\SerializationReader.cs" />
     <Compile Include="Serialization\SerializationWriter.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Resources\Shaders.cs" />
     <Compile Include="Resources\Textures.cs" />
     <Compile Include="Resources\WavefrontObjFiles.cs" />
+    <Compile Include="UnitTests\Entities_EntityManager.cs" />
     <Compile Include="UnitTests\Helper.cs" />
     <Compile Include="UnitTests\Serialization_TestObject.cs" />
     <Compile Include="UnitTests\States_Inception.cs" />
