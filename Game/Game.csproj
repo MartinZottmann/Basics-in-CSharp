@@ -104,6 +104,7 @@
     <Compile Include="Input\InputControlCommand.cs" />
     <Compile Include="Input\InputControlType.cs" />
     <Compile Include="IO\FileSystem.cs" />
+    <Compile Include="Resources\ResourceLoader.cs" />
     <Compile Include="State\GameState.cs" />
     <Compile Include="State\Running.cs" />
     <Compile Include="Window.cs" />

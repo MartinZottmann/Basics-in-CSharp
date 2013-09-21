@@ -1,75 +1,35 @@
 ﻿using MartinZottmann.Engine.Entities;
 using MartinZottmann.Engine.Graphics;
-using MartinZottmann.Engine.Graphics.OpenGL;
-using MartinZottmann.Engine.Resources;
-using MartinZottmann.Engine.States;
 using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Entities.GUI;
 using MartinZottmann.Game.Entities.Systems;
 using MartinZottmann.Game.IO;
+using MartinZottmann.Game.Resources;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 
 namespace MartinZottmann.Game.State
 {
     public class Running : GameState
     {
-        protected ResourceManager resource_manager = new ResourceManager();
+        protected ResourceLoader resource_loader;
 
         protected FileSystem file_system = new FileSystem("save.xml");
 
-        protected MartinZottmann.Game.Graphics.RenderContext screen_render_context = new MartinZottmann.Game.Graphics.RenderContext();
-
         protected EntityManager entity_manager;
 
-        public Running(Window window) : base(window) { }
+        public Running(Window window)
+            : base(window)
+        {
+            resource_loader = new ResourceLoader();
+        }
 
         public override void Start()
         {
-            var shaders = new Dictionary<string, List<Shader>>();
-            foreach (var filename in Directory.GetFiles("Resources/Shaders/", "*.glsl"))
-            {
-                Console.WriteLine(filename);
-                var chunks = filename.Split(new char[] { '/', '.' });
-                var name = chunks[chunks.Length - 3];
-                var type = chunks[chunks.Length - 2];
-                Shader shader;
-
-                switch (type)
-                {
-                    case "vs":
-                        shader = resource_manager.Shaders.Load(ShaderType.VertexShader, filename);
-                        break;
-                    case "gs":
-                        shader = resource_manager.Shaders.Load(ShaderType.GeometryShader, filename);
-                        break;
-                    case "fs":
-                        shader = resource_manager.Shaders.Load(ShaderType.FragmentShader, filename);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-
-                if (!shaders.ContainsKey(name))
-                    shaders.Add(name, new List<Shader>());
-                shaders[name].Add(shader);
-            }
-            foreach (var shader in shaders)
-            {
-                Console.WriteLine(shader.Key);
-                resource_manager.Programs.Load(shader.Key, shader.Value.ToArray());
-            }
-
-            foreach (var filename in Directory.GetFiles("Resources/Textures/", "*.png"))
-                if (filename.Contains("/debug-"))
-                    resource_manager.Textures.Load(filename);
-                else
-                    resource_manager.Textures.Load(filename, true, TextureTarget.Texture2D, TextureMinFilter.Linear, TextureMagFilter.Linear);
+            resource_loader.LoadPrograms("Resources/Shaders/", "*.glsl");
+            resource_loader.LoadTextures("Resources/Textures/", "*.png");
 
             var world_camera = new Camera(Window);
             world_camera.Position = new Vector3d(10);
@@ -85,15 +45,15 @@ namespace MartinZottmann.Game.State
             entity_manager.AddSystem(new PhysicSystem());
             entity_manager.AddSystem(new CollisionSystem());
             entity_manager.AddSystem(new ChunkSystem());
-            entity_manager.AddSystem(new GraphicSystem(world_camera, resource_manager));
-            entity_manager.AddSystem(new ParticleSystem(world_camera, resource_manager));
-            entity_manager.AddSystem(new GUISystem(Window, screen_camera, resource_manager));
+            entity_manager.AddSystem(new GraphicSystem(world_camera, resource_loader.Manager));
+            entity_manager.AddSystem(new ParticleSystem(world_camera, resource_loader.Manager));
+            entity_manager.AddSystem(new GUISystem(Window, screen_camera, resource_loader.Manager));
 
-            MartinZottmann.Engine.Entities.Entity[] entities = null;
+            Entity[] entities = null;
             try
             {
                 Debug.WriteLine(String.Format("Loading {0}", file_system.FilePath), GetType().FullName);
-                //entities = file_system.Load<MartinZottmann.Engine.Entities.Entity[]>();
+                //entities = file_system.Load<Entity[]>();
             }
             catch (Exception e)
             {
@@ -101,37 +61,7 @@ namespace MartinZottmann.Game.State
             }
             if (null == entities)
             {
-                var state_entity = new Entity();
-
-                var entity_state_machine = new StateMachine<Entity, IComponent>(state_entity);
-                entity_state_machine
-                    .CreateState("A")
-                    .Add<BaseComponent>()
-                    .Add<GraphicComponent>();
-
-                entity_state_machine
-                    .CreateState("B")
-                    .Add<GraphicComponent>()
-                    .Add<PhysicComponent>();
-
-                entity_state_machine
-                    .CreateState("C")
-                    .Add(new PhysicComponent() { Velocity = Vector3d.UnitX });
-
-                state_entity.Add(new TargetComponent());
-                state_entity.Add(new StateComponent() { State = entity_state_machine });
-
-                ;
-                entity_state_machine.ChangeState("A");
-                ;
-                entity_state_machine.ChangeState("B");
-                ;
-                entity_state_machine.ChangeState("C");
-                ;
-
-                entity_manager.AddEntity(state_entity);
-
-                var creator = new Creator(entity_manager, resource_manager);
+                var creator = new Creator(entity_manager, resource_loader.Manager);
                 creator.CreateGameState();
                 creator.CreateCamera(world_camera.Position, world_camera.Orientation);
                 creator.CreateStarfield();
@@ -190,7 +120,7 @@ namespace MartinZottmann.Game.State
             file_system.Save(entity_manager.Entities);
 
             entity_manager.Clear();
-            resource_manager.Clear();
+            resource_loader.Manager.Clear();
         }
     }
 }
