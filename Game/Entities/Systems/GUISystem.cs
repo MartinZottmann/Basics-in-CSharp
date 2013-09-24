@@ -6,6 +6,7 @@ using MartinZottmann.Engine.Physics;
 using MartinZottmann.Engine.Resources;
 using MartinZottmann.Game.Entities.GUI;
 using MartinZottmann.Game.Graphics;
+using MartinZottmann.Game.Input;
 using OpenTK;
 using OpenTK.Input;
 using System;
@@ -18,20 +19,19 @@ namespace MartinZottmann.Game.Entities.Systems
     {
         public MartinZottmann.Game.Graphics.RenderContext RenderContext = new MartinZottmann.Game.Graphics.RenderContext();
 
-        public Camera Camera;
+        public readonly Camera Camera;
 
-        public ResourceManager ResourceManager;
+        public readonly ResourceManager ResourceManager;
 
         protected FontMeshBuilder font_mesh_builder;
 
         protected List<IGUIElement> gui_elements = new List<IGUIElement>();
 
-        public GUISystem(GameWindow window, Camera camera, ResourceManager resource_manager)
+        public GUISystem(InputManager input_manager, Camera camera, ResourceManager resource_manager)
         {
+            input_manager.ButtonUp += OnButtonUp;
             Camera = camera;
             ResourceManager = resource_manager;
-
-            window.Mouse.ButtonUp += OnButtonUp;
 
             FontStructure font_map;
             var font_texture = new Texture(new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel, (byte)0), Color.White, Color.Black, Color.Transparent, false, out font_map);
@@ -85,11 +85,17 @@ namespace MartinZottmann.Game.Entities.Systems
             gui_elements.Remove(gui_element);
         }
 
-        protected void OnButtonUp(object sender, MouseButtonEventArgs e)
+        protected void OnButtonUp(object sender, InputMouseEventArgs e)
         {
+            if (e.Handled)
+                return;
+
             if (e.Button == MouseButton.Left)
                 foreach (var hit in Intersections())
+                {
                     Console.WriteLine("GUI Select: {0}", (IGUIElement)hit.Object1);
+                    e.Handled = true;
+                }
         }
 
         protected SortedSet<Collision> Intersections()

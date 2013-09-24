@@ -10,30 +10,31 @@ namespace MartinZottmann.Game.Entities.Systems
 {
     public class InputSystem : ISystem
     {
-        public Camera Camera;
+        public readonly InputManager InputManager;
 
-        public GameWindow Window;
+        public readonly Camera Camera;
 
-        protected Dictionary<Key, InputControlCommand> key_bindings = new Dictionary<Key, InputControlCommand>();
+        protected readonly Dictionary<Key, InputControlCommand> key_bindings;
 
         protected NodeList<GameStateNode> game_state_nodes;
 
         protected NodeList<InputNode> input_nodes;
 
-        public InputSystem(GameWindow window, Camera camera)
+        public InputSystem(InputManager input_manager, Camera camera)
         {
-            Window = window;
+            InputManager = input_manager;
+            InputManager.KeyUp += OnKeyboardKeyUp;
+            InputManager.ButtonUp += OnMouseButtonUp;
+
             Camera = camera;
 
+            key_bindings = new Dictionary<Key, InputControlCommand>();
             key_bindings.Add(Key.W, InputControlCommand.Forward);
             key_bindings.Add(Key.S, InputControlCommand.Backward);
             key_bindings.Add(Key.A, InputControlCommand.StrafeLeft);
             key_bindings.Add(Key.D, InputControlCommand.StrafeRight);
             key_bindings.Add(Key.Space, InputControlCommand.StrafeUp);
             key_bindings.Add(Key.ShiftLeft, InputControlCommand.StrafeDown);
-
-            Window.Keyboard.KeyUp += OnKeyboardKeyUp;
-            Window.Mouse.ButtonUp += OnMouseButtonUp;
         }
 
         public void Start(EntityManager entity_manager)
@@ -48,12 +49,12 @@ namespace MartinZottmann.Game.Entities.Systems
                 foreach (var input_node in input_nodes)
                     if (game_state_node.GameState.input_entity == input_node.Entity)
                         foreach (var key_binding in key_bindings)
-                            if (Window.Keyboard[key_binding.Key])
+                            if (InputManager[key_binding.Key])
                                 input_node.Control(delta_time, key_binding.Value);
 
-            if (Window.Keyboard[Key.KeypadPlus])
+            if (InputManager[Key.KeypadPlus])
                 Camera.Fov += MathHelper.PiOver6 * delta_time;
-            if (Window.Keyboard[Key.KeypadSubtract])
+            if (InputManager[Key.KeypadSubtract])
                 Camera.Fov -= MathHelper.PiOver6 * delta_time;
         }
 
@@ -65,17 +66,29 @@ namespace MartinZottmann.Game.Entities.Systems
             input_nodes = null;
         }
 
-        protected void OnKeyboardKeyUp(object sender, KeyboardKeyEventArgs e)
+        protected void OnKeyboardKeyUp(object sender, InputKeyboardEventArgs e)
         {
+            if (e.Handled)
+                return;
+
             if (e.Key == Key.F3)
                 foreach (var game_state_node in game_state_nodes)
+                {
                     game_state_node.GameState.Debug = !game_state_node.GameState.Debug;
+                    e.Handled = true;
+                }
         }
 
-        protected void OnMouseButtonUp(object sender, MouseButtonEventArgs e)
+        protected void OnMouseButtonUp(object sender, InputMouseEventArgs e)
         {
+            if (e.Handled)
+                return;
+
             if (e.Button == MouseButton.Right)
+            {
                 Camera.MouseLook = !Camera.MouseLook;
+                e.Handled = true;
+            }
         }
     }
 }

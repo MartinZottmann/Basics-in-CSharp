@@ -2,7 +2,7 @@
 using MartinZottmann.Engine.Graphics;
 using MartinZottmann.Engine.Physics;
 using MartinZottmann.Game.Entities.Nodes;
-using OpenTK;
+using MartinZottmann.Game.Input;
 using OpenTK.Input;
 using System;
 using System.Collections.Generic;
@@ -11,20 +11,20 @@ namespace MartinZottmann.Game.Entities.Systems
 {
     public class SelectionSystem : ISystem
     {
-        public Camera Camera;
+        public readonly InputManager InputManager;
 
-        public GameWindow Window;
+        public readonly Camera Camera;
 
         protected NodeList<PhysicNode> physic_nodes;
 
         protected List<PhysicNode> selection = new List<PhysicNode>();
 
-        public SelectionSystem(GameWindow window, Camera camera)
+        public SelectionSystem(InputManager input_manager, Camera camera)
         {
-            Window = window;
-            Camera = camera;
+            InputManager = input_manager;
+            InputManager.ButtonUp += OnButtonUp;
 
-            Window.Mouse.ButtonUp += OnButtonUp;
+            Camera = camera;
         }
 
         public void Start(EntityManager entity_manager)
@@ -41,14 +41,17 @@ namespace MartinZottmann.Game.Entities.Systems
             physic_nodes = null;
         }
 
-        protected void OnButtonUp(object sender, MouseButtonEventArgs e)
+        protected void OnButtonUp(object sender, InputMouseEventArgs e)
         {
+            if (e.Handled)
+                return;
+
             if (e.Button == MouseButton.Left)
+            {
                 Select();
-            //if (e.Button == MouseButton.Right){
-            //    foreach (var physic_node in selection)
-            //        if (physic_node.Entity.Has<TargetComponent>())
-            //            physic_node.Entity.Get<TargetComponent>().Position = cursor_node.Base.Position;}
+                if (0 != selection.Count)
+                    e.Handled = true;
+            }
         }
 
         protected void Select()

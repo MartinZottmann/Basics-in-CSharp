@@ -4,6 +4,7 @@ using MartinZottmann.Game.Entities;
 using MartinZottmann.Game.Entities.Components;
 using MartinZottmann.Game.Entities.GUI;
 using MartinZottmann.Game.Entities.Systems;
+using MartinZottmann.Game.Input;
 using MartinZottmann.Game.IO;
 using MartinZottmann.Game.Resources;
 using OpenTK;
@@ -36,18 +37,20 @@ namespace MartinZottmann.Game.State
             world_camera.LookAt = new Vector3d(0);
             var screen_camera = new Camera(Window);
 
+            var input_manager = new InputManager(Window);
+
             entity_manager = new EntityManager();
             entity_manager.AddSystem(new GameStateSystem());
-            entity_manager.AddSystem(new InputSystem(Window, world_camera));
+            entity_manager.AddSystem(new InputSystem(input_manager, world_camera));
             entity_manager.AddSystem(new CameraSystem(world_camera));
-            entity_manager.AddSystem(new SelectionSystem(Window, world_camera));
+            entity_manager.AddSystem(new SelectionSystem(input_manager, world_camera));
             entity_manager.AddSystem(new AISystem());
             entity_manager.AddSystem(new PhysicSystem());
             entity_manager.AddSystem(new CollisionSystem());
             entity_manager.AddSystem(new ChunkSystem());
             entity_manager.AddSystem(new GraphicSystem(world_camera, resource_loader.Manager));
             entity_manager.AddSystem(new ParticleSystem(world_camera, resource_loader.Manager));
-            entity_manager.AddSystem(new GUISystem(Window, screen_camera, resource_loader.Manager));
+            entity_manager.AddSystem(new GUISystem(input_manager, screen_camera, resource_loader.Manager));
 
             Entity[] entities = null;
             try

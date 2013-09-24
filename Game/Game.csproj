@@ -103,6 +103,9 @@
     <Compile Include="Graphics\Starfield.cs" />
     <Compile Include="Input\InputControlCommand.cs" />
     <Compile Include="Input\InputControlType.cs" />
+    <Compile Include="Input\InputKeyboardEventArgs.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\InputMouseEventArgs.cs" />
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="Resources\ResourceLoader.cs" />
     <Compile Include="State\GameState.cs" />
