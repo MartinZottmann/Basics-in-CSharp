@@ -26,7 +26,7 @@ namespace MartinZottmann.Game
         {
             base.OnLoad(e);
 
-            VSync = VSyncMode.On;
+            VSync = VSyncMode.Off;
 
             Console.WriteLine("Vendor: {0}", GL.GetString(StringName.Vendor));
             Console.WriteLine("Renderer: {0}", GL.GetString(StringName.Renderer));
@@ -87,16 +87,21 @@ namespace MartinZottmann.Game
 
         protected void Loop()
         {
-            const double target_delta_time = 30.0 / 1000.0;
+            const double update_min_dt = 10.0 / 1000.0;
+            const double update_max_dt = 30.0 / 1000.0;
+            var update_acc_dt = update_max_dt;
+            const double render_min_dt = 30.0 / 1000.0;
+            const double render_max_dt = 1000.0 / 1000.0;
+            var render_acc_dt = render_max_dt;
+            Stopwatch update_time = new Stopwatch();
+            Stopwatch render_time = new Stopwatch();
 
             MakeCurrent();
 
             game.State = new Running(this);
             game.Start();
 
-            Stopwatch update_time = new Stopwatch();
             update_time.Start();
-            Stopwatch render_time = new Stopwatch();
             render_time.Start();
 
             while (Exists && !IsExiting)
@@ -112,21 +117,41 @@ namespace MartinZottmann.Game
                     MakeCurrent();
                 }
 
-                var delta_time = update_time.Elapsed.TotalSeconds;
-                //update_time.Reset();
-                //update_time.Start();
+                var update_cur_dt = update_time.Elapsed.TotalSeconds;
                 update_time.Restart();
-                while (delta_time >= target_delta_time)
+                update_acc_dt += update_cur_dt;
+                if (update_acc_dt <= update_min_dt)
                 {
-                    game.Update(target_delta_time);
-                    delta_time -= target_delta_time;
+                    // Skip update
                 }
-                game.Update(delta_time);
+                else if (update_acc_dt >= update_max_dt)
+                {
+                    game.Update(update_max_dt);
+                    update_acc_dt -= update_max_dt;
+                }
+                else
+                {
+                    game.Update(update_max_dt);
+                    update_acc_dt -= update_max_dt;
+                }
 
-                game.Render(render_time.Elapsed.TotalSeconds);
-                //render_time.Reset();
-                //render_time.Start();
+                var render_cur_dt = render_time.Elapsed.TotalSeconds;
                 render_time.Restart();
+                render_acc_dt += render_cur_dt;
+                if (render_acc_dt <= render_min_dt)
+                {
+                    // Skip render
+                }
+                else if (render_acc_dt >= render_max_dt)
+                {
+                    game.Render(render_max_dt);
+                    render_acc_dt -= render_max_dt;
+                }
+                else
+                {
+                    game.Render(render_cur_dt);
+                    render_acc_dt -= render_cur_dt;
+                }
             }
 
             Context.MakeCurrent(null);
