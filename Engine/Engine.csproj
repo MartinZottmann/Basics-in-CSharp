@@ -44,6 +44,7 @@
     <Compile Include="Entities\NodeEventArgs.cs" />
     <Compile Include="Entities\NodeList.cs" />
     <Compile Include="Entities\OptionalComponentAttribute.cs" />
+    <Compile Include="FrameController.cs" />
     <Compile Include="Serialization\ObjectReference.cs" />
     <Compile Include="Serialization\SerializationReader.cs" />
     <Compile Include="Serialization\SerializationWriter.cs" />
