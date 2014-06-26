@@ -35,14 +35,24 @@ namespace MartinZottmann.Game.Entities.Components
         [XmlIgnore]
         public Matrix4d OrientationMatrix
         {
-            get { return Matrix4d.CreateFromQuaternion(ref Orientation); }
+            get
+            {
+                Matrix4d result;
+                Matrix4d.CreateFromQuaternion(ref Orientation, out result);
+                return result;
+            }
             set { Orientation = value.ExtractRotation(); }
         }
 
         [XmlIgnore]
         public Matrix4d InverseOrientationMatrix
         {
-            get { return Matrix4d.CreateFromQuaternion(ref Orientation).Inverted(); }
+            get
+            {
+                Matrix4d result;
+                Matrix4d.CreateFromQuaternion(ref Orientation, out result);
+                return result.Inverted();
+            }
             set { Orientation = value.Inverted().ExtractRotation(); }
         }
 

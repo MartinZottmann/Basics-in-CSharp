@@ -42,7 +42,7 @@ namespace MartinZottmann.Game.Entities.GUI
             );
 
             Model = new Model();
-            Model.Mode = BeginMode.Lines;
+            Model.Mode = PrimitiveType.Lines;
             Model.Mesh(mesh);
             Model.Program = resource_manager.Programs["normal"];
             Model.Texture = null;

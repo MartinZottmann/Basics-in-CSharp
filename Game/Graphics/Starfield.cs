@@ -18,7 +18,7 @@ namespace MartinZottmann.Game.Graphics
                 vertex_data[i] = GetStar();
 
             Mesh(new Mesh<VertexP3C4, uint>(vertex_data));
-            Mode = BeginMode.Points;
+            Mode = PrimitiveType.Points;
         }
 
         public void Update(double delta_time)

@@ -30,14 +30,14 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             //OpenGL.Info.Uniform(Id);
 
             int info;
-            GL.GetProgram(Id, ProgramParameter.InfoLogLength, out info);
+            GL.GetProgram(Id, GetProgramParameterName.InfoLogLength, out info);
             if (info > 1)
             {
                 string info_log;
                 GL.GetProgramInfoLog((int)Id, out info_log);
                 Console.WriteLine(info_log);
             }
-            GL.GetProgram(Id, ProgramParameter.LinkStatus, out info);
+            GL.GetProgram(Id, GetProgramParameterName.LinkStatus, out info);
             if (info != 1)
                 throw new Exception("LinkProgram failed");
 #endif
@@ -47,7 +47,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 int count;
 
                 // Setup Uniform Location
-                GL.GetProgram(Id, ProgramParameter.ActiveUniforms, out count);
+                GL.GetProgram(Id, GetProgramParameterName.ActiveUniforms, out count);
                 for (uint i = 0; i < count; i++)
                 {
                     var name = GL.GetActiveUniformName((int)Id, (int)i);
@@ -55,7 +55,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 }
 
                 // Setup Uniform Block Index
-                GL.GetProgram(Id, ProgramParameter.ActiveUniformBlocks, out count);
+                GL.GetProgram(Id, GetProgramParameterName.ActiveUniformBlocks, out count);
                 for (uint i = 0; i < count; i++)
                 {
                     var name = GL.GetActiveUniformBlockName((int)Id, (int)i);

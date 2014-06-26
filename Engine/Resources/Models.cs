@@ -72,7 +72,7 @@ namespace MartinZottmann.Engine.Resources
 
             var model = new Model();
             model.Mesh(new Mesh<VertexP3N3T2, uint>(vertices, indices.ToArray()));
-            model.Mode = BeginMode.Triangles;
+            model.Mode = PrimitiveType.Triangles;
             return model;
         }
     }

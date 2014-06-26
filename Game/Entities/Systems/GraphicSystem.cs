@@ -223,7 +223,7 @@ namespace MartinZottmann.Game.Entities.Systems
                     }
                 }
             );
-            graphic_node.ModelDebugOrientation.Mode = BeginMode.Lines;
+            graphic_node.ModelDebugOrientation.Mode = PrimitiveType.Lines;
             graphic_node.ModelDebugOrientation.Program = ResourceManager.Programs["normal"];
         }
 
@@ -266,7 +266,7 @@ namespace MartinZottmann.Game.Entities.Systems
             };
             graphic_node.ModelDebugPhysic = new Model();
             graphic_node.ModelDebugPhysic.Mesh(new Mesh<VertexP3, uint>(verticies));
-            graphic_node.ModelDebugPhysic.Mode = BeginMode.Lines;
+            graphic_node.ModelDebugPhysic.Mode = PrimitiveType.Lines;
             graphic_node.ModelDebugPhysic.Program = ResourceManager.Programs["primitive_colored"];
         }
 #endif

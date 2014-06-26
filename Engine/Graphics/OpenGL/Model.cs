@@ -6,7 +6,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 {
     public class Model : IDisposable
     {
-        public BeginMode Mode { get; set; }
+        public PrimitiveType Mode { get; set; }
 
         public Program Program { get; set; }
 
@@ -18,7 +18,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public Model()
         {
-            Mode = BeginMode.Triangles;
+            Mode = PrimitiveType.Triangles;
             VertexArrayObject = new VertexArrayObject();
         }
 

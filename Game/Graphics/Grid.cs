@@ -24,7 +24,7 @@ namespace MartinZottmann.Game.Graphics
             }
 
             Mesh(new Mesh<VertexP3C4, uint>(vertices));
-            Mode = BeginMode.Lines;
+            Mode = PrimitiveType.Lines;
         }
     }
 }

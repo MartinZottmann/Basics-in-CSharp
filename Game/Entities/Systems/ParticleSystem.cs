@@ -116,7 +116,7 @@ namespace MartinZottmann.Game.Entities.Systems
 
             p.Model = new Model();
             p.Model.Mesh(new Mesh<VertexP3C4, uint>(p.Verticies));
-            p.Model.Mode = BeginMode.Points;
+            p.Model.Mode = PrimitiveType.Points;
             p.Model.Program = ResourceManager.Programs["particle"];
             p.Model.Texture = ResourceManager.Textures["Resources/Textures/particle-dot.png"];
 

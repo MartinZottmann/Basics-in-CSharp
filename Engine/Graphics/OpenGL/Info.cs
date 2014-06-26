@@ -17,12 +17,11 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
 
         public static unsafe uint[] AttachedShaders(uint program)
         {
-            int icount = 0;
-            int* count = (int*)&icount;
-            GL.GetProgram(program, ProgramParameter.AttachedShaders, count);
+            int count;
+            GL.GetProgram(program, GetProgramParameterName.AttachedShaders, out count);
 
-            uint[] shaders = new uint[*count];
-            GL.GetAttachedShaders(program, *count, count, shaders);
+            uint[] shaders = new uint[count];
+            GL.GetAttachedShaders(program, count, out count, shaders);
 
             return shaders;
         }
@@ -42,26 +41,26 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             }
 
             Console.WriteLine("ProgramParameters {0} (", program);
-            foreach (ProgramParameter parameter in (ProgramParameter[])Enum.GetValues(typeof(ProgramParameter)))
+            foreach (GetProgramParameterName parameter in (GetProgramParameterName[])Enum.GetValues(typeof(GetProgramParameterName)))
             {
                 if (
                     !geometry_shader
                     && (
-                        parameter == ProgramParameter.GeometryInputType
-                        || parameter == ProgramParameter.GeometryOutputType
-                        || parameter == ProgramParameter.GeometryShaderInvocations
-                        || parameter == ProgramParameter.GeometryVerticesOut
+                        parameter == GetProgramParameterName.GeometryInputType
+                        || parameter == GetProgramParameterName.GeometryOutputType
+                        || parameter == GetProgramParameterName.GeometryShaderInvocations
+                        || parameter == GetProgramParameterName.GeometryVerticesOut
                     )
                 )
                     continue;
                 if (
                     !tesslation_shader
                     && (
-                        parameter == ProgramParameter.TessControlOutputVertices
-                        || parameter == ProgramParameter.TessGenMode
-                        || parameter == ProgramParameter.TessGenPointMode
-                        || parameter == ProgramParameter.TessGenSpacing
-                        || parameter == ProgramParameter.TessGenVertexOrder
+                        parameter == GetProgramParameterName.TessControlOutputVertices
+                        || parameter == GetProgramParameterName.TessGenMode
+                        || parameter == GetProgramParameterName.TessGenPointMode
+                        || parameter == GetProgramParameterName.TessGenSpacing
+                        || parameter == GetProgramParameterName.TessGenVertexOrder
                     )
                 )
                     continue;
@@ -87,7 +86,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
         {
             int count, info;
             Console.WriteLine("Uniform {0} (", program);
-            GL.GetProgram(program, ProgramParameter.ActiveUniforms, out count);
+            GL.GetProgram(program, GetProgramParameterName.ActiveUniforms, out count);
             for (uint i = 0; i < count; i++)
             {
                 Console.WriteLine("\t{0}: {1} (", i, GL.GetActiveUniformName((int)program, (int)i));
@@ -99,7 +98,7 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
                 }
                 Console.WriteLine("\t)");
             }
-            GL.GetProgram(program, ProgramParameter.ActiveUniformBlocks, out count);
+            GL.GetProgram(program, GetProgramParameterName.ActiveUniformBlocks, out count);
             for (uint i = 0; i < count; i++)
             {
                 Console.WriteLine("\t{0}: {1} (", i, GL.GetActiveUniformBlockName((int)program, (int)i));
@@ -118,9 +117,9 @@ namespace MartinZottmann.Engine.Graphics.OpenGL
             int count;
 
             Console.WriteLine("Attribue {0} (", program);
-            GL.GetProgram(program, ProgramParameter.ActiveAttributes, out count);
+            GL.GetProgram(program, GetProgramParameterName.ActiveAttributes, out count);
             int buffer_size;
-            GL.GetProgram(program, ProgramParameter.ActiveAttributeMaxLength, out buffer_size);
+            GL.GetProgram(program, GetProgramParameterName.ActiveAttributeMaxLength, out buffer_size);
             for (uint i = 0; i < count; i++)
             {
                 int size;
